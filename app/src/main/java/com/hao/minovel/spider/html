@@ -1,0 +1,15 @@
+<div class="pagelink" id="pagelink">
+ <em id="pagestats">1/505</em>
+ <a href="http://www.xbiquge.la/fenlei/1_1.html" class="first">1</a>
+ <a href="http://www.xbiquge.la/fenlei/1_1.html" class="pgroup">&lt;&lt;</a>
+ <strong>1</strong>
+ <a href="http://www.xbiquge.la/fenlei/1_2.html">2</a>
+ <a href="http://www.xbiquge.la/fenlei/1_3.html">3</a>
+ <a href="http://www.xbiquge.la/fenlei/1_4.html">4</a>
+ <a href="http://www.xbiquge.la/fenlei/1_5.html">5</a>
+ <a href="http://www.xbiquge.la/fenlei/1_6.html">6</a>
+ <a href="http://www.xbiquge.la/fenlei/1_2.html" class="next">&gt;</a>
+ <a href="http://www.xbiquge.la/fenlei/1_505.html" class="ngroup">&gt;&gt;</a>
+ <a href="http://www.xbiquge.la/fenlei/1_505.html" class="last">505</a>
+ <kbd><input name="page" type="text" size="4" maxlength="6" onkeydown="if(event.keyCode==13){window.location='http://www.xbiquge.la/fenlei/1_<{$page}>.html'.replace('<{$page|subdirectory}>', '/' + Math.floor(this.value / 1000)).replace('<{$page}>', this.value); return false;}"></kbd>
+</div>
