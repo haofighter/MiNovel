@@ -91,7 +91,7 @@ class WelcomeActivity : MiBaseActivity() {
     }
 
     private fun initPromision() {
-        val promissions = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
+        val promissions = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission_group.CAMERA)
 
         if (!dialog?.isShowing!!) {
             promiss = initPromission(promissions)
