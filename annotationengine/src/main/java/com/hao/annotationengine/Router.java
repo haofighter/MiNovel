@@ -69,7 +69,7 @@ public class Router {
         Set<String> strings = getFileNameByPackageName(mContext, routeClassPath);
 
         for (String str : strings) {
-            Map<String, BindInfo> map = new HashMap<>();
+            HashMap<String, BindInfo> map = new HashMap<>();
             ((BaseSaveInfo) Class.forName(str).getConstructor().newInstance()).loadInfo(map);
             allClass.putAll(map);
         }

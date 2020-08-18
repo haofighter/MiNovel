@@ -5,7 +5,6 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -60,8 +59,7 @@ public abstract class MiBaseActivity extends AppCompatActivity {
      * @param promision true 表示权限已拥有
      * @return
      */
-    protected boolean initPromission(String[] promision) {
-        boolean promiss = true;
+    protected void initPromission(String[] promision) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             List<String> promission = new ArrayList<>();
             for (int i = 0; i < promision.length; i++) {
@@ -70,7 +68,6 @@ public abstract class MiBaseActivity extends AppCompatActivity {
                 } else {
                     Log.i("promiss", "未申请：" + promision[i]);
                     promission.add(promision[i]);
-                    promiss = false;
                 }
             }
 
@@ -84,7 +81,6 @@ public abstract class MiBaseActivity extends AppCompatActivity {
                 requestPermissions(str, 0);
             }
         }
-        return promiss;
     }
 
 

@@ -100,10 +100,12 @@ public class AnnoteRealize extends AbstractProcessor {
 
         MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder("loadInfo")
                 .addModifiers(Modifier.PUBLIC)
+                .addAnnotation(Override.class)
                 .addParameter(altas);
 
 
         TypeSpec.Builder builder = TypeSpec.classBuilder("RouterContent")
+                .addSuperinterface(BaseSaveInfo.class)
                 .addModifiers(Modifier.PUBLIC);
         for (BindInfo bindInfo : bindInfos) {
             String classPath = ClassName.get((TypeElement) (bindInfo.getElement())).toString().replace(".class", "");

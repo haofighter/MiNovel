@@ -34,10 +34,6 @@ class WelcomeActivity : MiBaseActivity() {
      */
     private var isJumpMian = false
     /**
-     * 是否打开权限
-     */
-    private var promiss = false
-    /**
      * 当前页面执行的动画
      */
     private var valueAnimator: ValueAnimator = ValueAnimator.ofFloat(100f)
@@ -94,7 +90,7 @@ class WelcomeActivity : MiBaseActivity() {
         val promissions = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission_group.CAMERA)
 
         if (!dialog?.isShowing!!) {
-            promiss = initPromission(promissions)
+            initPromission(promissions)
         }
     }
 
@@ -109,8 +105,6 @@ class WelcomeActivity : MiBaseActivity() {
                     if (grantResults[index] == -1) {
                         initDialog()
                         dialog?.show()
-                    } else {
-                        promiss = true
                     }
                 }
             }
@@ -137,8 +131,8 @@ class WelcomeActivity : MiBaseActivity() {
             } else if (progress < 99) {
                 logo_advert.visibility = View.VISIBLE
             } else if (progress == 100f) {
-                Log.i("main", "animalIsStart=" + valueAnimator.isRunning + "   isJumpMian=" + isJumpMian + "   promiss=" + promiss);
-                if (valueAnimator.isRunning && !isJumpMian && promiss) {
+                Log.i("main", "animalIsStart=" + valueAnimator.isRunning + "   isJumpMian=" + isJumpMian)
+                if (valueAnimator.isRunning && !isJumpMian) {
                     isJumpMian = true
                     gotoMain()
                 }
@@ -157,7 +151,7 @@ class WelcomeActivity : MiBaseActivity() {
             val activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(this, pair1)
             val bundle = activityOptionsCompat.toBundle()
             bundle!!.putBoolean("animal", true)
-            Router.getInstance().build(RouterContent.MISHIFTACTIVITY, bundle, this).skip()
+            Router.getInstance().build(RouterContent.MICONTENTACTIVITY, bundle, this).skip()
 
             //          ActivityCompat.startActivity(this, intent, activityOptionsCompat.toBundle());
             //          intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

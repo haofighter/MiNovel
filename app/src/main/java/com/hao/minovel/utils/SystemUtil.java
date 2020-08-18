@@ -8,6 +8,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
@@ -16,7 +17,16 @@ import android.widget.EditText;
 
 import com.hao.minovel.BuildConfig;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.util.Collection;
+import java.util.Enumeration;
 import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 
 public class SystemUtil {
 
@@ -186,5 +196,146 @@ public class SystemUtil {
         }
         return localIntent;
     }
+
+    /*******************************************************************************/
+    /**
+     * 用于获取到系统的一些信息
+     */
+    public static class BuildProperties {
+
+        private final Properties properties;
+
+        private BuildProperties() throws IOException {
+            properties = new Properties();
+            properties.load(new FileInputStream(new File(Environment.getRootDirectory(), "build.prop")));
+        }
+
+        public boolean containsKey(final Object key) {
+            return properties.containsKey(key);
+        }
+
+        public boolean containsValue(final Object value) {
+            return properties.containsValue(value);
+        }
+
+        public Set<Map.Entry<Object, Object>> entrySet() {
+            return properties.entrySet();
+        }
+
+        public String getProperty(final String name) {
+            return properties.getProperty(name);
+        }
+
+        public String getProperty(final String name, final String defaultValue) {
+            return properties.getProperty(name, defaultValue);
+        }
+
+        public boolean isEmpty() {
+            return properties.isEmpty();
+        }
+
+        public Enumeration<Object> keys() {
+            return properties.keys();
+        }
+
+        public Set<Object> keySet() {
+            return properties.keySet();
+        }
+
+        public int size() {
+            return properties.size();
+        }
+
+        public Collection<Object> values() {
+            return properties.values();
+        }
+
+        public static BuildProperties newInstance() throws IOException {
+            return new BuildProperties();
+        }
+
+    }
+
+    private static final String KEY_EMUI_VERSION_CODE = "ro.build.version.emui";
+    private static final String KEY_MIUI_VERSION_CODE = "ro.miui.ui.version.code";
+    private static final String KEY_MIUI_VERSION_NAME = "ro.miui.ui.version.name";
+    private static final String KEY_MIUI_INTERNAL_STORAGE = "ro.miui.internal.storage";
+
+    private static boolean isPropertiesExist(String... keys) {
+        try {
+            BuildProperties prop = BuildProperties.newInstance();
+            for (String key : keys) {
+                String str = prop.getProperty(key);
+                if (str == null)
+                    return false;
+            }
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
+    public static boolean isEMUI() {
+        return isPropertiesExist(KEY_EMUI_VERSION_CODE);
+    }
+
+    public static boolean isMIUI() {
+        return isPropertiesExist(KEY_MIUI_VERSION_CODE, KEY_MIUI_VERSION_NAME, KEY_MIUI_INTERNAL_STORAGE);
+    }
+
+    public static boolean isFlyme() {
+        try {
+            final Method method = Build.class.getMethod("hasSmartBar");
+            return method != null;
+        } catch (final Exception e) {
+            return false;
+        }
+    }
+
+    /**
+     * 判断miui的版本     MiUIV7=5
+     * @return
+     */
+    static boolean isMiUIV7OrAbove() {
+        try {
+            final Properties properties = new Properties();
+            properties.load(new FileInputStream(new File(Environment.getRootDirectory(), "build.prop")));
+            String uiCode = properties.getProperty(KEY_MIUI_VERSION_CODE, null);
+            if (uiCode != null) {
+                int code = Integer.parseInt(uiCode);
+                return code >= 5;
+            } else {
+                return false;
+            }
+
+        } catch (final Exception e) {
+            return false;
+        }
+
+    }
+
+    /**
+     * 判断miui的版本     MiUIV6=4
+     * @return
+     */
+    private static boolean isMiUIV6OrAbove() {
+        try {
+            final Properties properties = new Properties();
+            properties.load(new FileInputStream(new File(Environment.getRootDirectory(), "build.prop")));
+            String uiCode = properties.getProperty(KEY_MIUI_VERSION_CODE, null);
+            if (uiCode != null) {
+                int code = Integer.parseInt(uiCode);
+                return code >= 4;
+            } else {
+                return false;
+            }
+
+        } catch (final Exception e) {
+            return false;
+        }
+
+    }
+
+    /*******************************************************************************/
 
 }
