@@ -4,14 +4,22 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:clipChildren="false"
     android:fitsSystemWindows="true"
     tools:context=".moudle.MiContentActivity">
 
 
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/view_content"
+    <com.hao.minovel.view.RoundLinearLayout
+        android:id="@+id/viewpager_parent"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></androidx.viewpager.widget.ViewPager>
+        android:layout_height="match_parent">
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/view_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipChildren="true"></androidx.viewpager.widget.ViewPager>
+    </com.hao.minovel.view.RoundLinearLayout>
 
     <LinearLayout
         android:id="@+id/content_mune"
@@ -19,5 +27,12 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:background="@color/white"
-        android:orientation="vertical"></LinearLayout>
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/change_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="改变页面" />
+    </LinearLayout>
 </androidx.drawerlayout.widget.DrawerLayout>
