@@ -8,11 +8,11 @@ import android.widget.TextView;
 import com.hao.minovel.R;
 import com.hao.minovel.base.MiBaseFragment;
 
-public class ShiftFragment extends MiBaseFragment {
+public class BookListFragment extends MiBaseFragment {
 
     public static MiBaseFragment newInstance() {
         Bundle args = new Bundle();
-        MiBaseFragment fragment = new ShiftFragment();
+        MiBaseFragment fragment = new BookListFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -26,12 +26,12 @@ public class ShiftFragment extends MiBaseFragment {
     @Override
     public void initView(View v) {
         TextView textView = v.findViewById(R.id.show_content);
-        textView.setText("书架");
+        textView.setText("书单");
     }
 
     @Override
     public void setRound(float offset) {
         super.setRound(offset);
-        Log.i("圆角", "ShiftFragment=" + offset);
+        Log.i("圆角","BookListFragment="+offset);
     }
 }

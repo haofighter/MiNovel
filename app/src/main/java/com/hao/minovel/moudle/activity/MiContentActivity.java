@@ -1,13 +1,14 @@
-package com.hao.minovel.moudle;
+package com.hao.minovel.moudle.activity;
 
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 
@@ -15,15 +16,15 @@ import com.hao.annotetion.annotation.Bind;
 import com.hao.minovel.R;
 import com.hao.minovel.base.MiBaseActivity;
 import com.hao.minovel.base.MiBaseFragment;
-import com.hao.minovel.moudle.adapter.MiContentViewPagerAdapter;
+import com.hao.minovel.moudle.adapter.ContentMuneAdapter;
 import com.hao.minovel.moudle.adapter.MiContentViewPagerAdapter1;
+import com.hao.minovel.moudle.entity.ContentMuneEntity;
+import com.hao.minovel.moudle.fragment.BookListFragment;
+import com.hao.minovel.moudle.fragment.SearchFragment;
 import com.hao.minovel.moudle.fragment.ShiftFragment;
-import com.hao.minovel.tinker.app.AppContext;
 import com.hao.minovel.utils.SystemUtil;
 import com.hao.minovel.view.RoundLinearLayout;
-import com.hao.minovel.view.viewpagerhelp.CardPageTransformer;
-import com.hao.minovel.view.viewpagerhelp.OnPageTransformerListener;
-import com.hao.minovel.view.viewpagerhelp.PageTransformerConfig;
+import com.hao.minovel.view.recycleviewhelp.RecycleViewDivider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,8 +34,9 @@ public class MiContentActivity extends MiBaseActivity {
     DrawerLayout drawerLayout;
     ViewPager viewContent;
     RoundLinearLayout viewpagerParent;
+    RecyclerView contentMune;
     boolean isShowDraw;
-    List<MiBaseFragment> viewList = new ArrayList<>();
+    List<ContentMuneEntity> muneList = new ArrayList<>();
 
 
     @Override
@@ -45,30 +47,39 @@ public class MiContentActivity extends MiBaseActivity {
     @Override
     protected void initView() {
         drawerLayout = findViewById(R.id.drawer_layout);
+        contentMune = findViewById(R.id.content_mune);
         viewpagerParent = findViewById(R.id.viewpager_parent);
         //取消阴影效果
         drawerLayout.setScrimColor(ContextCompat.getColor(this, R.color.transparent));
         viewContent = findViewById(R.id.view_content);
-
-
-        findViewById(R.id.change_date).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                viewContent.setCurrentItem((viewContent.getCurrentItem() + 1) % viewContent.getAdapter().getCount());
-            }
-        });
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-    }
 
     @Override
     protected void doElse() {
+        initMune();
+        initContentMune();
         initViewPage();
         dodrawerDrag();
+    }
+
+    private void initMune() {
+        muneList.add(new ContentMuneEntity(R.mipmap.bookshelf, "书架", ShiftFragment.newInstance()));
+        muneList.add(new ContentMuneEntity(R.mipmap.search, "搜索", SearchFragment.newInstance()));
+        muneList.add(new ContentMuneEntity(R.mipmap.booklist, "书单", BookListFragment.newInstance()));
+    }
+
+    private void initContentMune() {
+        contentMune.setLayoutManager(new LinearLayoutManager(this));
+        RecycleViewDivider recycleViewDivider = new RecycleViewDivider(this, LinearLayoutManager.HORIZONTAL, (int) SystemUtil.dp2px(this, 10), R.color.transparent);
+        contentMune.addItemDecoration(recycleViewDivider);
+        ContentMuneAdapter contentMuneAdapter = new ContentMuneAdapter(this, muneList, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewContent.setCurrentItem((Integer) v.getTag());
+            }
+        });
+        contentMune.setAdapter(contentMuneAdapter);
     }
 
     float lastslideOffset = 0;
@@ -119,30 +130,9 @@ public class MiContentActivity extends MiBaseActivity {
     }
 
 
-
     private void initViewPage() {
-        for (int i = 0; i < 5; i++) {
-            viewList.add(ShiftFragment.newInstance(i));
-        }
-        MiContentViewPagerAdapter1 viewPager = new MiContentViewPagerAdapter1(getSupportFragmentManager(), viewList, null);
-
-//        viewContent.setOffscreenPageLimit(viewList.size() * 2);
-//        viewContent.setPageTransformer(true, CardPageTransformer.getBuild()//建造者模式
-//                .addAnimationType(PageTransformerConfig.ROTATION)//默认动画 default animation rotation  旋转  当然 也可以一次性添加两个  后续会增加更多动画
-////                .setRotation(-45)//旋转角度
-//                .addAnimationType(PageTransformerConfig.ALPHA)//默认动画 透明度 暂时还有问题
-//                .setViewType(PageTransformerConfig.RIGHT)
-//                .setOnPageTransformerListener(new OnPageTransformerListener() {
-//                    @Override
-//                    public void onPageTransformerListener(View page, float position) {
-//                        //你也可以在这里对 page 实行自定义动画 cust anim
-//                    }
-//                })
-//                .setTranslationOffset(100)
-////                .setScaleOffset(80)
-//                .create(viewContent));
+        MiContentViewPagerAdapter1 viewPager = new MiContentViewPagerAdapter1(getSupportFragmentManager(), muneList, null);
         viewContent.setAdapter(viewPager);
-//        viewContent.setCurrentItem(viewList.size() - 1);
     }
 
 

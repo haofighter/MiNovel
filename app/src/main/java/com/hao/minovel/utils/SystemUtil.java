@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -30,6 +31,26 @@ import java.util.Properties;
 import java.util.Set;
 
 public class SystemUtil {
+
+    public static float dp2px(Context context, float dp) {
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, context.getResources().getDisplayMetrics());
+    }
+
+    public static float px2dp(Context context, float pxValue) {
+        return pxValue / context.getResources().getDisplayMetrics().density + 0.5f;
+    }
+
+    public static float px2sp(Context context, float pxValue) {
+        return pxValue / context.getResources().getDisplayMetrics().scaledDensity + 0.5f;
+    }
+
+    public static float sp2px(Context context, float pxValue) {
+        return TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_SP,
+                pxValue,
+                context.getResources().getDisplayMetrics());
+    }
+
 
     public static DisplayMetrics getScreenSize(Activity activity) {
         DisplayMetrics outMetrics = new DisplayMetrics();
@@ -301,6 +322,7 @@ public class SystemUtil {
 
     /**
      * 判断miui的版本     MiUIV7=5
+     *
      * @return
      */
     static boolean isMiUIV7OrAbove() {
@@ -323,6 +345,7 @@ public class SystemUtil {
 
     /**
      * 判断miui的版本     MiUIV6=4
+     *
      * @return
      */
     private static boolean isMiUIV6OrAbove() {

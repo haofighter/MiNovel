@@ -4,9 +4,10 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/gray"
     android:clipChildren="false"
     android:fitsSystemWindows="true"
-    tools:context=".moudle.MiContentActivity">
+    tools:context=".moudle.activity.MiContentActivity">
 
 
     <com.hao.minovel.view.RoundLinearLayout
@@ -21,18 +22,11 @@
             android:clipChildren="true"></androidx.viewpager.widget.ViewPager>
     </com.hao.minovel.view.RoundLinearLayout>
 
-    <LinearLayout
+    <com.hao.minovel.view.recycleviewhelp.MiRecycleView
         android:id="@+id/content_mune"
         android:layout_width="200dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:background="@color/white"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/change_date"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="改变页面" />
-    </LinearLayout>
+        android:orientation="vertical"></com.hao.minovel.view.recycleviewhelp.MiRecycleView>
 </androidx.drawerlayout.widget.DrawerLayout>

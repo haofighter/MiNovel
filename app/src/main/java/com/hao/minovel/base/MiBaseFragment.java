@@ -1,13 +1,17 @@
 package com.hao.minovel.base;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.TextView;
 
 import androidx.annotation.LayoutRes;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.hao.minovel.R;
@@ -40,7 +44,8 @@ public abstract class MiBaseFragment extends Fragment {
         roundLinearLayout.addView(content);
         roundLinearLayout.setCornerRadius((int) (maxRound * offset));
         initView(roundLinearLayout);
-        return roundLinearLayout;
+        container.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.transparent));
+        return v;
     }
 
     /**
@@ -60,7 +65,12 @@ public abstract class MiBaseFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+        su
+    per.onViewCreated(view, savedInstanceState);
+        ViewParent viewParent = roundLinearLayout.getParent().getParent();
+        if (viewParent instanceof View || viewParent instanceof ViewGroup) {
+            ((View) viewParent).setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.transparent));
+        }
     }
 
 }

@@ -1,4 +1,4 @@
-package com.hao.minovel.moudle
+package com.hao.minovel.moudle.activity
 
 import android.Manifest
 import android.animation.ValueAnimator

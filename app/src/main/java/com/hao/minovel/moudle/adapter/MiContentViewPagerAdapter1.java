@@ -12,6 +12,7 @@ import androidx.viewpager.widget.PagerAdapter;
 
 import com.hao.minovel.base.MiBaseFragment;
 import com.hao.minovel.log.MiLog;
+import com.hao.minovel.moudle.entity.ContentMuneEntity;
 
 import java.util.List;
 
@@ -22,11 +23,11 @@ import java.util.List;
  */
 
 public class MiContentViewPagerAdapter1 extends FragmentPagerAdapter {
-    private List<? extends MiBaseFragment> mFragments;
+    private List<ContentMuneEntity> mFragments;
     private String[] mTitles;
     private int nowCheck;
 
-    public MiContentViewPagerAdapter1(FragmentManager fm, List<? extends MiBaseFragment> mFragments, String[] mTitles) {
+    public MiContentViewPagerAdapter1(FragmentManager fm, List<ContentMuneEntity> mFragments, String[] mTitles) {
         super(fm);
         this.mFragments = mFragments;
         this.mTitles = mTitles;
@@ -34,7 +35,7 @@ public class MiContentViewPagerAdapter1 extends FragmentPagerAdapter {
 
     @Override
     public MiBaseFragment getItem(int position) {
-        return mFragments.get(position);
+        return mFragments.get(position).getFragment();
     }
 
     @Override
@@ -50,7 +51,7 @@ public class MiContentViewPagerAdapter1 extends FragmentPagerAdapter {
     public void setPageRound(float slideOffset, int currentItem) {
         this.nowCheck = currentItem;
         for (int i = 0; i < mFragments.size(); i++) {
-            mFragments.get(i).setRound(slideOffset);
+            mFragments.get(i).getFragment().setRound(slideOffset);
         }
     }
 }

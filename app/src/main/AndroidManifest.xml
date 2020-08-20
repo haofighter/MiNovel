@@ -16,8 +16,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".moudle.MiContentActivity"></activity>
-        <activity android:name=".moudle.WelcomeActivity">
+        <activity android:name=".moudle.activity.MiContentActivity"></activity>
+        <activity android:name=".moudle.activity.WelcomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
