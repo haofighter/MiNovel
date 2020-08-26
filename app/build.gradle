@@ -1,8 +1,14 @@
 apply plugin: 'com.android.application'
+apply plugin: 'org.greenrobot.greendao'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-apply plugin: 'org.greenrobot.greendao'
+
 apply plugin: 'kotlin-kapt'
+
+
+static def version() {
+    return 3
+}
 
 android {
     compileSdkVersion 29
@@ -36,6 +42,9 @@ android {
 
     }
 
+    greendao {
+        schemaVersion version()
+    }
 
     defaultConfig {
         applicationId "com.hao.minovel"
@@ -197,13 +206,14 @@ dependencies {
     implementation project(path: ':Annotetion')
     implementation project(path: ':annotationengine')
     /**********************************数据库***********************************/
-//    implementation 'org.greenrobot:greendao:3.2.2'
-//    implementation 'com.github.yuweiguocn:GreenDaoUpgradeHelper:v2.2.1'
-//    //配合对数据库进行加密
-//    implementation 'net.zetetic:android-database-sqlcipher:3.5.7@aar'
+    implementation 'org.greenrobot:greendao:3.2.2'
+    implementation 'com.github.yuweiguocn:GreenDaoUpgradeHelper:v2.2.1'
+    //配合对数据库进行加密
+    implementation 'net.zetetic:android-database-sqlcipher:3.5.7@aar'
 
-    //阴影效果
-    implementation 'com.github.lihangleo2:ShadowLayout:3.0.1'
+    /***************************************************************************/
+    implementation 'org.greenrobot:eventbus:3.2.0'
+    implementation 'com.tencent:mmkv:1.0.19'
 
 
 }

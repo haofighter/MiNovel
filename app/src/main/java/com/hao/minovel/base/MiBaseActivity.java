@@ -7,14 +7,25 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 
 import androidx.annotation.LayoutRes;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
+import com.hao.minovel.R;
+import com.hao.minovel.utils.StatusBarUtil;
 import com.hao.minovel.utils.SystemUtil;
+import com.hao.minovel.view.RoundLayout;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +40,14 @@ public abstract class MiBaseActivity extends AppCompatActivity {
         return super.dispatchTouchEvent(ev);
     }
 
-    protected void beforOnCreate() {
+    //设置状态拦颜色 默认为透明
+    protected boolean beforOnCreate() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        }
+        StatusBarUtil.setTranslucent(this);
+        StatusBarUtil.setStatubarTextColor(this, true);
+        return true;
     }
 
     @Override
@@ -41,12 +59,31 @@ public abstract class MiBaseActivity extends AppCompatActivity {
         doElse();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        EventBus.getDefault().unregister(this);
+    }
+
+
     protected abstract @LayoutRes
     int layoutId();
 
     protected abstract void initView();
 
     protected abstract void doElse();
+
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void eventBusOnEvent(Object o) {
+    }
+
+    ;
 
     //添加点击后不隐藏软键盘的view
     public void addViewForNotHideSoftInput(View v) {

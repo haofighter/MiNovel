@@ -1,8 +1,6 @@
 package com.hao.minovel.spider;
 
-import android.os.Looper;
 import android.util.Log;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -11,6 +9,8 @@ import java.net.URL;
 public class SpiderUtils {
     static int repeateCount = 0;
     static int maxRepeateCount = 3;
+
+
 
     /**
      * 通过网址获取到当前网页的html
@@ -48,11 +48,7 @@ public class SpiderUtils {
         } catch (Exception e) {
             if (repeateCount < maxRepeateCount) {
                 repeateCount++;
-                getHtml(urlHead, urlString);
-                if (Looper.getMainLooper() == Looper.myLooper()) {//
-                    Log.i("tag", "未获取到网页");
-                }
-                repeateCount = 0;
+                return getHtml(urlHead, urlString);
             }
         } finally {
             if (html.toString().equals("")) {
@@ -62,4 +58,6 @@ public class SpiderUtils {
             }
         }
     }
+
+
 }

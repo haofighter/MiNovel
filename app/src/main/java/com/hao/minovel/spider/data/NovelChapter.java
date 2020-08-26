@@ -3,11 +3,16 @@ package com.hao.minovel.spider.data;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Unique;
 
+@Entity
 public class NovelChapter implements Parcelable {
     private Long id;
     private String novelChapterListUrl;//小说的id
     private String chapterName;
+    @Unique
     private String chapterUrl;
     private String chapterContent;//本章小说内容
     private String nextChapterUrl;//下一章
@@ -122,7 +127,24 @@ public class NovelChapter implements Parcelable {
         this.createTime = in.readLong();
     }
 
+    @Generated(hash = 1894982023)
+    public NovelChapter(Long id, String novelChapterListUrl, String chapterName,
+            String chapterUrl, String chapterContent, String nextChapterUrl,
+            String beforChapterUrl, boolean isComplete, long createTime) {
+        this.id = id;
+        this.novelChapterListUrl = novelChapterListUrl;
+        this.chapterName = chapterName;
+        this.chapterUrl = chapterUrl;
+        this.chapterContent = chapterContent;
+        this.nextChapterUrl = nextChapterUrl;
+        this.beforChapterUrl = beforChapterUrl;
+        this.isComplete = isComplete;
+        this.createTime = createTime;
+    }
 
+    @Generated(hash = 922107813)
+    public NovelChapter() {
+    }
 
     public static final Creator<NovelChapter> CREATOR = new Creator<NovelChapter>() {
         @Override

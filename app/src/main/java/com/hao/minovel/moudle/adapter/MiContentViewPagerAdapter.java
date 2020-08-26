@@ -1,75 +1,57 @@
 package com.hao.minovel.moudle.adapter;
 
+
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.PagerAdapter;
 
-import com.hao.minovel.view.RoundLinearLayout;
+import com.hao.minovel.base.MiBaseFragment;
+import com.hao.minovel.log.MiLog;
+import com.hao.minovel.moudle.entity.ContentMuneEntity;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class MiContentViewPagerAdapter<T> extends PagerAdapter {
-    List<View> contents = new ArrayList<>();
-    int nowCheck = 0;
-    float progress = 0;//进度 0-1
+/**
+ * Created by 江俊超 on 2016/12/30 0030.
+ * <p>Gihub https://github.com/aohanyao</p>
+ * <p>所有ViewPager的适配器</p>
+ */
+
+public class MiContentViewPagerAdapter extends FragmentPagerAdapter {
+    private List<ContentMuneEntity> mFragments;
+    private String[] mTitles;
+    private int nowCheck;
+
+    public MiContentViewPagerAdapter(FragmentManager fm, List<ContentMuneEntity> mFragments, String[] mTitles) {
+        super(fm);
+        this.mFragments = mFragments;
+        this.mTitles = mTitles;
+    }
+
+    @Override
+    public MiBaseFragment getItem(int position) {
+        return mFragments.get(position).getFragment();
+    }
 
     @Override
     public int getCount() {
-        return contents.size();
+        return mFragments != null ? mFragments.size() : 0;
     }
 
-    public void addContents(List<View> content) {
-        this.contents.addAll(content);
-    }
-
-    public void addContent(View content) {
-        this.contents.add(content);
-    }
-
-
-    @NonNull
     @Override
-    public Object instantiateItem(@NonNull ViewGroup container, int position) {
-        View t = contents.get(position);
-        if (t instanceof RoundLinearLayout) {
-            ((RoundLinearLayout) t).setRoundMode(RoundLinearLayout.MODE_ALL);
-            ((RoundLinearLayout) t).setCornerRadius((int) (progress * 90));
+    public CharSequence getPageTitle(int position) {
+        return mTitles != null || mTitles.length > position ? mTitles[position] : "";
+    }
+
+    public void setPageRound(float slideOffset, int currentItem) {
+        this.nowCheck = currentItem;
+        for (int i = 0; i < mFragments.size(); i++) {
+            mFragments.get(i).getFragment().setRound(slideOffset);
         }
-        t.setTag(position);
-        container.addView(t);
-        Log.e("MiContentViewPager", "填充le一个view:" + ((View) t).getTag() + "      " + ((View) t).getWidth());
-        return t;
-    }
-
-    @Override
-    public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
-        View t = contents.get(position);
-        container.removeView(t);
-    }
-
-    @Override
-    public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
-        return view == object;
-    }
-
-    @Override
-    public int getItemPosition(@NonNull Object object) {
-        if (object instanceof View) {
-            if (nowCheck == (int) ((View) object).getTag()) {
-                return PagerAdapter.POSITION_NONE;
-            }
-        }
-        return super.getItemPosition(object);
-    }
-
-    public void setPageRound(float slideOffset, int nowCheck) {
-        progress = slideOffset;
-        this.nowCheck = nowCheck;
-        notifyDataSetChanged();
-//
     }
 }

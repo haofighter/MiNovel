@@ -25,3 +25,20 @@
 -dontwarn com.google.**
 
 -dontwarn com.android.**
+
+-keepattributes *Annotation*
+-keepclassmembers class * {
+    @org.greenrobot.eventbus.Subscribe <methods>;
+}
+
+-keep  class * extends  androidx.appcompat.app.AppCompatActivity{ *; }
+
+-keep enum org.greenrobot.eventbus.ThreadMode { *; }
+-keep  com.hao.minovel.spider.data.DaoMaster{*;}
+-keep  com.hao.minovel.spider.data.DaoSession{*;}
+
+
+# And if you use AsyncExecutor:
+-keepclassmembers class * extends org.greenrobot.eventbus.util.ThrowableFailureEvent {
+    <init>(java.lang.Throwable);
+}

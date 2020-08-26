@@ -1,15 +1,35 @@
 package com.hao.minovel.spider.data;
 
+import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Id;
+import org.greenrobot.greendao.annotation.Unique;
 
 /**
  * 热门小说
  */
+@Entity
 public class NovelTypeHot {
+    @Id(autoincrement = true)
     Long id;
     String type;//小说类型
+    @Unique
     String chapterlistUrl;//当前小说列表页
     long creatTime;
 
+
+    @Generated(hash = 263548452)
+    public NovelTypeHot(Long id, String type, String chapterlistUrl,
+            long creatTime) {
+        this.id = id;
+        this.type = type;
+        this.chapterlistUrl = chapterlistUrl;
+        this.creatTime = creatTime;
+    }
+
+    @Generated(hash = 275151802)
+    public NovelTypeHot() {
+    }
 
 
     public String getType() {

@@ -1,43 +1,51 @@
 package com.hao.minovel.moudle.activity;
 
+import android.os.Build;
+import android.transition.ChangeBounds;
+import android.transition.ChangeTransform;
+import android.transition.Fade;
+import android.transition.TransitionSet;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.ViewPager;
 
-
+import com.hao.annotationengine.Router;
 import com.hao.annotetion.annotation.Bind;
+import com.hao.date.RouterContent;
 import com.hao.minovel.R;
 import com.hao.minovel.base.MiBaseActivity;
-import com.hao.minovel.base.MiBaseFragment;
 import com.hao.minovel.moudle.adapter.ContentMuneAdapter;
-import com.hao.minovel.moudle.adapter.MiContentViewPagerAdapter1;
 import com.hao.minovel.moudle.entity.ContentMuneEntity;
-import com.hao.minovel.moudle.fragment.BookListFragment;
-import com.hao.minovel.moudle.fragment.SearchFragment;
-import com.hao.minovel.moudle.fragment.ShiftFragment;
 import com.hao.minovel.utils.SystemUtil;
-import com.hao.minovel.view.RoundLinearLayout;
+import com.hao.minovel.view.RoundLayout;
 import com.hao.minovel.view.recycleviewhelp.RecycleViewDivider;
 
 import java.util.ArrayList;
 import java.util.List;
 
+
 @Bind
-public class MiContentActivity extends MiBaseActivity {
+public class MiContentActivity extends MiBaseActivity implements View.OnClickListener {
     DrawerLayout drawerLayout;
-    ViewPager viewContent;
-    RoundLinearLayout viewpagerParent;
+    RoundLayout mi_activity;
     RecyclerView contentMune;
     boolean isShowDraw;
     List<ContentMuneEntity> muneList = new ArrayList<>();
 
+    @Override
+    protected boolean beforOnCreate() {
+        return super.beforOnCreate();
+    }
 
     @Override
     protected int layoutId() {
@@ -47,26 +55,33 @@ public class MiContentActivity extends MiBaseActivity {
     @Override
     protected void initView() {
         drawerLayout = findViewById(R.id.drawer_layout);
+        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        mi_activity = findViewById(R.id.mi_activity);
         contentMune = findViewById(R.id.content_mune);
-        viewpagerParent = findViewById(R.id.viewpager_parent);
-        //取消阴影效果
+        findViewById(R.id.stack).setOnClickListener(this);
+        findViewById(R.id.book_icon).setOnClickListener(this);
+        //取消空白部分灰色阴影效果
         drawerLayout.setScrimColor(ContextCompat.getColor(this, R.color.transparent));
-        viewContent = findViewById(R.id.view_content);
     }
 
 
     @Override
     protected void doElse() {
+        initTranslation();
         initMune();
         initContentMune();
         initViewPage();
         dodrawerDrag();
     }
 
+    @Override
+    public void eventBusOnEvent(Object o) {
+        Log.i("日志", "o=" + o);
+    }
+
+
     private void initMune() {
-        muneList.add(new ContentMuneEntity(R.mipmap.bookshelf, "书架", ShiftFragment.newInstance()));
-        muneList.add(new ContentMuneEntity(R.mipmap.search, "搜索", SearchFragment.newInstance()));
-        muneList.add(new ContentMuneEntity(R.mipmap.booklist, "书单", BookListFragment.newInstance()));
+//        muneList.add(new ContentMuneEntity(R.mipmap.bookshelf, "书架", ShiftFragment.newInstance().setFragmentListener(this)));
     }
 
     private void initContentMune() {
@@ -76,40 +91,37 @@ public class MiContentActivity extends MiBaseActivity {
         ContentMuneAdapter contentMuneAdapter = new ContentMuneAdapter(this, muneList, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                viewContent.setCurrentItem((Integer) v.getTag());
+
             }
         });
         contentMune.setAdapter(contentMuneAdapter);
     }
 
-    float lastslideOffset = 0;
+
+    float lastslideOffset;
 
     private void dodrawerDrag() {
         drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
             public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
-                Log.i("drawer", "slideOffset=" + slideOffset + "     drawerView=" + drawerView.getWidth());
-
-                viewpagerParent.setPadding((int) (drawerView.getWidth() * slideOffset), 0, 0, 0);
+                mi_activity.setPadding((int) (drawerView.getWidth() * slideOffset), 0, 0, 0);
                 ViewGroup.LayoutParams layoutParams = drawerLayout.getLayoutParams();
                 layoutParams.width = (int) (SystemUtil.getScreenSize(MiContentActivity.this).widthPixels + drawerView.getWidth() * slideOffset);
                 drawerLayout.setLayoutParams(layoutParams);
 
                 if (slideOffset == 1) {
-                    viewpagerParent.setPadding(drawerView.getWidth(), 0, 0, 0);
+                    mi_activity.setPadding(drawerView.getWidth(), 0, 0, 0);
                     layoutParams.width = SystemUtil.getScreenSize(MiContentActivity.this).widthPixels + drawerView.getWidth();
                     drawerLayout.setLayoutParams(layoutParams);
                 } else if ((slideOffset == 0)) {
-                    viewpagerParent.setPadding(0, 0, 0, 0);
+                    mi_activity.setPadding(0, 0, 0, 0);
                     layoutParams.width = SystemUtil.getScreenSize(MiContentActivity.this).widthPixels;
                     drawerLayout.setLayoutParams(layoutParams);
                 }
-                viewContent.setScaleX((float) (1 - (0.1 * slideOffset)));
-                viewContent.setScaleY((float) (1 - (0.1 * slideOffset)));
-                viewContent.setRotationY(slideOffset * -10);
+//                mi_activity.setScaleX((float) (1 - (0.1 * slideOffset)));
+//                mi_activity.setScaleY((float) (1 - (0.1 * slideOffset)));
+//                mi_activity.setRotationY(slideOffset * -10);
                 lastslideOffset = slideOffset;
-
-                ((MiContentViewPagerAdapter1) viewContent.getAdapter()).setPageRound(slideOffset, viewContent.getCurrentItem());
             }
 
             @Override
@@ -131,9 +143,46 @@ public class MiContentActivity extends MiBaseActivity {
 
 
     private void initViewPage() {
-        MiContentViewPagerAdapter1 viewPager = new MiContentViewPagerAdapter1(getSupportFragmentManager(), muneList, null);
-        viewContent.setAdapter(viewPager);
+//        MiContentViewPagerAdapter viewPager = new MiContentViewPagerAdapter(getSupportFragmentManager(), muneList, null);
+//        viewContent.setAdapter(viewPager);
     }
 
 
+    //转场动画
+    private void initTranslation() {
+        ImageView book_icon = findViewById(R.id.book_icon);
+        /**
+         * 1、设置相同的TransitionName
+         */
+//        ViewCompat.setTransitionName(book_icon, "avatar");
+        /**
+         * 2、设置WindowTransition,除指定的ShareElement外，其它所有View都会执行这个Transition动画
+         */
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setEnterTransition(new Fade());
+
+            getWindow().setExitTransition(new Fade());
+            /**
+             * 3、设置ShareElementTransition,指定的ShareElement会执行这个Transiton动画
+             */
+            TransitionSet transitionSet = new TransitionSet();
+            transitionSet.addTransition(new ChangeBounds());
+            transitionSet.addTransition(new ChangeTransform());
+            transitionSet.addTarget(book_icon);
+            getWindow().setSharedElementEnterTransition(transitionSet);
+            getWindow().setSharedElementExitTransition(transitionSet);
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.book_icon:
+                drawerLayout.openDrawer(Gravity.LEFT);
+                break;
+            case R.id.stack:
+                Router.getInstance().build(RouterContent.STACKACTIVITY, null).skip();
+                break;
+        }
+    }
 }

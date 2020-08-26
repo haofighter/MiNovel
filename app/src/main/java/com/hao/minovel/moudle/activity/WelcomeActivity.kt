@@ -17,6 +17,7 @@ import com.hao.date.RouterContent
 
 import com.hao.minovel.R
 import com.hao.minovel.base.MiBaseActivity
+import com.hao.minovel.moudle.miinterface.FragmentListener
 import com.hao.minovel.utils.BackCall
 import com.hao.minovel.utils.DialogUtils
 import com.hao.minovel.utils.SystemUtil
@@ -25,6 +26,11 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 @Bind
 class WelcomeActivity : MiBaseActivity() {
+    override fun eventBusOnEvent(o: Any?) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+
     /**
      * 判断动画是否在运行中
      */
@@ -43,10 +49,11 @@ class WelcomeActivity : MiBaseActivity() {
      */
     private var dialog: Dialog? = null;
 
-    override fun beforOnCreate() {
+    override fun beforOnCreate(): Boolean {
         // 隐藏状态栏
-        requestWindowFeature(Window.FEATURE_NO_TITLE)
+//        requestWindowFeature(Window.FEATURE_NO_TITLE)
         window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+        return super.beforOnCreate()
     }
 
     override fun layoutId(): Int {
@@ -57,6 +64,7 @@ class WelcomeActivity : MiBaseActivity() {
 //        novel_icon.visibility = View.VISIBLE
 //        logo_text.visibility = View.VISIBLE
 //        logo_advert.visibility = View.VISIBLE
+        logo_text.setOnClickListener { gotoMain() }
     }
 
     override fun doElse() {
@@ -152,7 +160,6 @@ class WelcomeActivity : MiBaseActivity() {
             val bundle = activityOptionsCompat.toBundle()
             bundle!!.putBoolean("animal", true)
             Router.getInstance().build(RouterContent.MICONTENTACTIVITY, bundle, this).skip()
-
             //          ActivityCompat.startActivity(this, intent, activityOptionsCompat.toBundle());
             //          intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             //          ActivityCompat.startActivity(App.getInstance(), intent, bundle);

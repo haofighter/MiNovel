@@ -5,18 +5,22 @@ import android.graphics.Canvas;
 import android.graphics.Path;
 import android.graphics.RectF;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.Nullable;
 
-public class RoundLinearLayout extends LinearLayout {
+/**
+ * 一个添加了阴影和圆角的RelativeLayout
+ */
+public class RoundLayout extends RelativeLayout {
     private Path mPath;
-    private int mRadius;
+    protected int mRadius;
+
 
     private int mWidth;
     private int mHeight;
     private int mLastRadius;
+
 
     public static final int MODE_NONE = 0;
     public static final int MODE_ALL = 1;
@@ -28,15 +32,15 @@ public class RoundLinearLayout extends LinearLayout {
     private int mRoundMode = MODE_ALL;
 
 
-    public RoundLinearLayout(Context context) {
+    public RoundLayout(Context context) {
         this(context, null, 0);
     }
 
-    public RoundLinearLayout(Context context, @Nullable AttributeSet attrs) {
+    public RoundLayout(Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public RoundLinearLayout(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public RoundLayout(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
@@ -114,4 +118,5 @@ public class RoundLinearLayout extends LinearLayout {
             super.draw(canvas);
         }
     }
+
 }

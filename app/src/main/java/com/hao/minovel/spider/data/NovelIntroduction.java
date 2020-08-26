@@ -1,11 +1,15 @@
 package com.hao.minovel.spider.data;
 
 
+import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Unique;
 
 
 /**
  * 小说简介 用于存储小说的名称，作者，地址等
  */
+@Entity
 public class NovelIntroduction {
     String novelName;//小说名
     String novelAutho;//作者
@@ -15,6 +19,7 @@ public class NovelIntroduction {
     String novelListUrl;//小说列表地址
     String novelNewChapterTitle;//最新章节
     String novelNewChapterUrl;//最新章节地址
+    @Unique
     String novelChapterListUrl;//章节列表地址
     String nowRead;//当前阅读的章节
     String nowReadID;//当前阅读的章节Id
@@ -24,6 +29,33 @@ public class NovelIntroduction {
     long creatTime;
 
 
+    @Generated(hash = 1794763955)
+    public NovelIntroduction(String novelName, String novelAutho, String novelCover,
+                             String novelIntroduce, String novelType, String novelListUrl,
+                             String novelNewChapterTitle, String novelNewChapterUrl,
+                             String novelChapterListUrl, String nowRead, String nowReadID,
+                             boolean isComplete, boolean isFav, boolean ishot, long creatTime) {
+        this.novelName = novelName;
+        this.novelAutho = novelAutho;
+        this.novelCover = novelCover;
+        this.novelIntroduce = novelIntroduce;
+        this.novelType = novelType;
+        this.novelListUrl = novelListUrl;
+        this.novelNewChapterTitle = novelNewChapterTitle;
+        this.novelNewChapterUrl = novelNewChapterUrl;
+        this.novelChapterListUrl = novelChapterListUrl;
+        this.nowRead = nowRead;
+        this.nowReadID = nowReadID;
+        this.isComplete = isComplete;
+        this.isFav = isFav;
+        this.ishot = ishot;
+        this.creatTime = creatTime;
+    }
+
+
+    @Generated(hash = 1432430798)
+    public NovelIntroduction() {
+    }
 
 
     @Override
