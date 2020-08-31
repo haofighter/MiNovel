@@ -11,6 +11,7 @@ import androidx.multidex.MultiDex;
 import com.hao.annotationengine.Router;
 import com.hao.minovel.tinker.TinkerManager;
 import com.hao.minovel.tinker.Log.MyLogImp;
+import com.hao.skin.SkinManager;
 import com.tencent.tinker.anno.DefaultLifeCycle;
 import com.tencent.tinker.entry.DefaultApplicationLike;
 import com.tencent.tinker.lib.tinker.Tinker;
@@ -26,6 +27,7 @@ public class AppLike extends DefaultApplicationLike {
     public AppLike(Application application, int tinkerFlags, boolean tinkerLoadVerifyFlag, long applicationStartElapsedTime, long applicationStartMillisTime, Intent tinkerResultIntent) {
         super(application, tinkerFlags, tinkerLoadVerifyFlag, applicationStartElapsedTime, applicationStartMillisTime, tinkerResultIntent);
         Router.init(application);
+        SkinManager.init(application);
     }
 
     /**

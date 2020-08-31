@@ -15,12 +15,12 @@
         android:background="@color/gray"
         android:paddingTop="10dp"></com.hao.minovel.view.recycleviewhelp.MiRecycleView>
 
-    <com.hao.lib.view.RecycleViewHelp.MiRecycleView
+    <com.hao.minovel.view.recycleviewhelp.MiRecycleView
         android:id="@+id/novel_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/gray_11"
-        android:paddingTop="10dp"></com.hao.lib.view.RecycleViewHelp.MiRecycleView>
+        android:paddingTop="10dp"></com.hao.minovel.view.recycleviewhelp.MiRecycleView>
 
 
 </androidx.drawerlayout.widget.DrawerLayout>

@@ -1,2 +1,2 @@
-include ':app', ':resuoce', ':Annotetion', ':annotationengine'
+include ':app', ':Annotetion', ':annotationengine', ':skin', ':sharelib', ':resource'
 rootProject.name='MiNovel'

@@ -1,6 +1,7 @@
 package com.hao.minovel.moudle.activity;
 
 import android.os.Build;
+import android.os.Environment;
 import android.transition.ChangeBounds;
 import android.transition.ChangeTransform;
 import android.transition.Fade;
@@ -29,6 +30,7 @@ import com.hao.minovel.moudle.entity.ContentMuneEntity;
 import com.hao.minovel.utils.SystemUtil;
 import com.hao.minovel.view.RoundLayout;
 import com.hao.minovel.view.recycleviewhelp.RecycleViewDivider;
+import com.hao.skin.SkinManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -181,7 +183,8 @@ public class MiContentActivity extends MiBaseActivity implements View.OnClickLis
                 drawerLayout.openDrawer(Gravity.LEFT);
                 break;
             case R.id.stack:
-                Router.getInstance().build(RouterContent.STACKACTIVITY, null).skip();
+//                Router.getInstance().build(RouterContent.STACKACTIVITY, null).skip();
+                SkinManager.getInstance().loadSkin(Environment.getExternalStorageDirectory()+"/resource-debug.apk");
                 break;
         }
     }
