@@ -24,5 +24,4 @@ class StackActivity : MiBaseActivity() {
         return R.layout.activity_stack;
     }
 
-
 }

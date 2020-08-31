@@ -163,7 +163,6 @@ class WelcomeActivity : MiBaseActivity() {
             //          ActivityCompat.startActivity(this, intent, activityOptionsCompat.toBundle());
             //          intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             //          ActivityCompat.startActivity(App.getInstance(), intent, bundle);
-
         }
 
     }

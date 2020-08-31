@@ -49,7 +49,7 @@ public class SkinManager extends Observable {
         SkinResources.init(application);
 
         //注册Activity生命周期,并设置被观察者
-        skinActivityLifecycle = new SkinAppActivityLifecycleCallbacks();
+        skinActivityLifecycle = new SkinAppActivityLifecycleCallbacks(this);
         application.registerActivityLifecycleCallbacks(skinActivityLifecycle);
 
         //加载上次使用保存的皮肤
@@ -64,7 +64,10 @@ public class SkinManager extends Observable {
      * @param skinPath 皮肤路径 如果为空则使用默认皮肤
      */
     public void loadSkin(String skinPath) {
-        if (!new File(skinPath).exists()) {
+        if(!new File(skinPath).exists()){
+            return;
+        }
+        if (!TextUtils.isEmpty(skinPath)) {
             //还原默认皮肤
             reset();
             SkinResources.getInstance().reset();
