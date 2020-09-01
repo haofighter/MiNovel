@@ -54,6 +54,7 @@ public class SystemUtil {
 
     /**
      * 获取状态栏高度
+     *
      * @param context
      * @return
      */
@@ -311,7 +312,9 @@ public class SystemUtil {
             }
             return true;
         } catch (IOException e) {
-            return false;
+            return !TextUtils.isEmpty(getSystemProperty(KEY_MIUI_VERSION_CODE, ""))
+                    || !TextUtils.isEmpty(getSystemProperty(KEY_MIUI_VERSION_NAME, ""))
+                    || !TextUtils.isEmpty(getSystemProperty(KEY_MIUI_INTERNAL_STORAGE, ""));
         }
     }
 
@@ -378,6 +381,19 @@ public class SystemUtil {
 
     }
 
+    private static String getSystemProperty(String key, String defaultValue) {
+        try {
+            Class<?> clz = Class.forName("android.os.SystemProperties");
+            Method get = clz.getMethod("get", String.class, String.class);
+            return (String) get.invoke(clz, key, defaultValue);
+        } catch (Exception e) {
+        }
+        return defaultValue;
+    }
+
+
     /*******************************************************************************/
+
+
 
 }

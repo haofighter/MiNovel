@@ -43,14 +43,6 @@ public abstract class MiBaseActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
-            // 隐藏状态栏
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        } else {
-            int flags = (View.SYSTEM_UI_FLAG_HIDE_NAVIGATION//隐藏导航栏
-                    | View.SYSTEM_UI_FLAG_FULLSCREEN); //隐藏状态栏
-            getWindow().getDecorView().setSystemUiVisibility(getWindow().getDecorView().getSystemUiVisibility() | flags);
-        }
 
         StatusBarUtil.setTranslucent(this);
         StatusBarUtil.setStatubarTextColor(this, true);
