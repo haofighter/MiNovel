@@ -64,10 +64,7 @@ public class SkinManager extends Observable {
      * @param skinPath 皮肤路径 如果为空则使用默认皮肤
      */
     public void loadSkin(String skinPath) {
-        if(!new File(skinPath).exists()){
-            return;
-        }
-        if (!TextUtils.isEmpty(skinPath)) {
+        if (!new File(skinPath).exists() || TextUtils.isEmpty(skinPath)) {
             //还原默认皮肤
             reset();
             SkinResources.getInstance().reset();

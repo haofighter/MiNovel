@@ -5,6 +5,7 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".moudle.activity.MiContentActivity">
 
     <com.hao.minovel.view.RoundLayout
@@ -13,52 +14,53 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <androidx.cardview.widget.CardView
+        <RelativeLayout
             android:id="@+id/title_item"
-            android:fitsSystemWindows="true"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            tools:ignore="MissingConstraints">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="10dp"
-                tools:ignore="MissingConstraints">
+            <ImageView
+                android:id="@+id/book_icon"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_marginRight="10dp"
+                android:src="@mipmap/shuji_black"
+                android:transitionName="book" />
 
-                <ImageView
-                    android:id="@+id/book_icon"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:layout_marginRight="10dp"
-                    android:src="@mipmap/shuji_black"
-                    android:transitionName="book" />
+            <ImageView
+                android:id="@+id/stack"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="20dp"
+                android:layout_toLeftOf="@+id/setting"
+                android:src="@mipmap/shop" />
 
-                <ImageView
-                    android:id="@+id/stack"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_toLeftOf="@+id/setting"
-                    android:src="@mipmap/shop" />
+            <ImageView
+                android:id="@+id/setting"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="10dp"
+                android:src="@mipmap/setting" />
 
-                <ImageView
-                    android:id="@+id/setting"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginLeft="10dp"
-                    android:src="@mipmap/setting" />
-            </RelativeLayout>
-        </androidx.cardview.widget.CardView>
 
+        </RelativeLayout>
+
+        <View
+            android:id="@+id/line1"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/title_item"
+            android:background="@color/gray_11" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/mi_book_show"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/title_item"
+            android:layout_below="@id/line1"
             android:background="@color/white" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton

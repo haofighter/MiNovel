@@ -6,6 +6,7 @@ import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
+import android.util.Log;
 
 /**
  * 加载资源文件
@@ -23,7 +24,7 @@ public class SkinResources {
     String skinPakageName;
 
     //是否使用默认皮肤
-    boolean isDefaultSkin;
+    boolean isDefaultSkin = true;
 
     public static SkinResources getInstance() {
         return instance;
@@ -60,29 +61,33 @@ public class SkinResources {
      * 1.通过原始app中的resId(R.color.XX)获取到自己的 名字
      * 2.根据名字和类型获取皮肤包中的ID
      */
-    public int getIdentifier(int resId){
-        if(isDefaultSkin){
+    public int getIdentifier(int resId) {
+        if (isDefaultSkin) {
             return resId;
         }
-        String resName=mAppResources.getResourceEntryName(resId);
-        String resType=mAppResources.getResourceTypeName(resId);
-        int skinId=skinResources.getIdentifier(resName,resType,skinPakageName);
-        return skinId;
+        try {
+            String resName = mAppResources.getResourceEntryName(resId);
+            String resType = mAppResources.getResourceTypeName(resId);
+            int skinId = skinResources.getIdentifier(resName, resType, skinPakageName);
+            return skinId;
+        } catch (Exception e) {
+            return resId;
+        }
     }
-
 
 
     /**
      * 输入主APP的ID，到皮肤APK文件中去找到对应ID的颜色值
+     *
      * @param resId
      * @return
      */
-    public int getColor(int resId){
-        if(isDefaultSkin){
+    public int getColor(int resId) {
+        if (isDefaultSkin) {
             return mAppResources.getColor(resId);
         }
-        int skinId=getIdentifier(resId);
-        if(skinId==0){
+        int skinId = getIdentifier(resId);
+        if (skinId == 0) {
             return mAppResources.getColor(resId);
         }
         return skinResources.getColor(skinId);

@@ -3,9 +3,10 @@ package com.hao.minovel.moudle.activity
 import android.Manifest
 import android.animation.ValueAnimator
 import android.app.Dialog
+import android.content.Intent
+import android.os.Build
 import android.util.Log
 import android.view.View
-import android.view.Window
 import android.view.WindowManager
 import android.view.animation.LinearInterpolator
 import androidx.core.app.ActivityOptionsCompat
@@ -15,19 +16,20 @@ import com.hao.annotationengine.Router
 import com.hao.annotetion.annotation.Bind
 import com.hao.date.RouterContent
 
-import com.hao.minovel.R
 import com.hao.minovel.base.MiBaseActivity
-import com.hao.minovel.moudle.miinterface.FragmentListener
 import com.hao.minovel.utils.BackCall
 import com.hao.minovel.utils.DialogUtils
 import com.hao.minovel.utils.SystemUtil
 import kotlinx.android.synthetic.main.activity_main.*
+import android.R
 
 
 @Bind
 class WelcomeActivity : MiBaseActivity() {
+    override fun doOnSetContent(v: View?) {
+    }
+
     override fun eventBusOnEvent(o: Any?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
 
@@ -45,19 +47,29 @@ class WelcomeActivity : MiBaseActivity() {
     private var valueAnimator: ValueAnimator = ValueAnimator.ofFloat(100f)
 
     /**
+     * 当前页面执行的动画
+     */
+    private var promisstion: Boolean = false
+
+    /**
      *
      */
     private var dialog: Dialog? = null;
 
     override fun beforOnCreate(): Boolean {
-        // 隐藏状态栏
-//        requestWindowFeature(Window.FEATURE_NO_TITLE)
-        window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+            // 隐藏状态栏
+            window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+        } else {
+            val flags = (View.SYSTEM_UI_FLAG_HIDE_NAVIGATION//隐藏导航栏
+                    or View.SYSTEM_UI_FLAG_FULLSCREEN)//隐藏状态栏
+            window.decorView.systemUiVisibility = window.decorView.systemUiVisibility or flags
+        }
         return super.beforOnCreate()
     }
 
     override fun layoutId(): Int {
-        return R.layout.activity_main
+        return com.hao.minovel.R.layout.activity_main
     }
 
     override fun initView() {
@@ -75,6 +87,7 @@ class WelcomeActivity : MiBaseActivity() {
 
     override fun onResume() {
         super.onResume()
+        initPromision()
     }
 
     private fun initDialog() {
@@ -82,10 +95,10 @@ class WelcomeActivity : MiBaseActivity() {
             dialog = DialogUtils.showInfoDialog(this, "提示", "您还未开启储存权限，是否设置", "去设置", "退出", object : BackCall<Int> {
                 override fun call(t: Int) {
                     when (t) {
-                        R.id.confirm -> {
+                        com.hao.minovel.R.id.confirm -> {
                             SystemUtil.getPhoneFrom(this@WelcomeActivity)
                         }
-                        R.id.cancel -> {
+                        com.hao.minovel.R.id.cancel -> {
                             finish()
                         }
                     }
@@ -95,10 +108,13 @@ class WelcomeActivity : MiBaseActivity() {
     }
 
     private fun initPromision() {
-        val promissions = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission_group.CAMERA)
+        val promissions = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
 
         if (!dialog?.isShowing!!) {
-            initPromission(promissions)
+            promisstion = initPromission(promissions)
+            if (!valueAnimator.isRunning && promisstion && !isJumpMian) {
+                gotoMain()
+            }
         }
     }
 
@@ -113,6 +129,8 @@ class WelcomeActivity : MiBaseActivity() {
                     if (grantResults[index] == -1) {
                         initDialog()
                         dialog?.show()
+                    } else {
+                        promisstion = promisstion && true
                     }
                 }
             }
@@ -124,7 +142,7 @@ class WelcomeActivity : MiBaseActivity() {
         if (animalIsStart) {
             return
         }
-        valueAnimator.duration = 1000
+        valueAnimator.duration = 2000
         valueAnimator.interpolator = LinearInterpolator()
         valueAnimator.addUpdateListener { valueAnimator ->
             val progress = valueAnimator.animatedValue as Float
@@ -140,9 +158,9 @@ class WelcomeActivity : MiBaseActivity() {
                 logo_advert.visibility = View.VISIBLE
             } else if (progress == 100f) {
                 Log.i("main", "animalIsStart=" + valueAnimator.isRunning + "   isJumpMian=" + isJumpMian)
-                if (valueAnimator.isRunning && !isJumpMian) {
-                    isJumpMian = true
+                if (valueAnimator.isRunning && !isJumpMian && promisstion) {
                     gotoMain()
+                    isJumpMian = true
                 }
                 animalIsStart = false
             }
@@ -164,7 +182,5 @@ class WelcomeActivity : MiBaseActivity() {
             //          intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             //          ActivityCompat.startActivity(App.getInstance(), intent, bundle);
         }
-
     }
-
 }

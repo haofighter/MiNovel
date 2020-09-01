@@ -11,8 +11,8 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -25,8 +25,10 @@ import com.hao.annotetion.annotation.Bind;
 import com.hao.date.RouterContent;
 import com.hao.minovel.R;
 import com.hao.minovel.base.MiBaseActivity;
+import com.hao.minovel.log.MiToast;
 import com.hao.minovel.moudle.adapter.ContentMuneAdapter;
 import com.hao.minovel.moudle.entity.ContentMuneEntity;
+import com.hao.minovel.tinker.app.AppContext;
 import com.hao.minovel.utils.SystemUtil;
 import com.hao.minovel.view.RoundLayout;
 import com.hao.minovel.view.recycleviewhelp.RecycleViewDivider;
@@ -35,14 +37,18 @@ import com.hao.skin.SkinManager;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.os.Environment.DIRECTORY_PODCASTS;
+
 
 @Bind
 public class MiContentActivity extends MiBaseActivity implements View.OnClickListener {
     DrawerLayout drawerLayout;
     RoundLayout mi_activity;
+    FrameLayout fl_warn;
     RecyclerView contentMune;
     boolean isShowDraw;
     List<ContentMuneEntity> muneList = new ArrayList<>();
+    long lastBackTime = 0;
 
     @Override
     protected boolean beforOnCreate() {
@@ -60,6 +66,8 @@ public class MiContentActivity extends MiBaseActivity implements View.OnClickLis
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         mi_activity = findViewById(R.id.mi_activity);
         contentMune = findViewById(R.id.content_mune);
+        fl_warn = findViewById(R.id.fl_warn);
+        findViewById(R.id.iv_warn_close).setOnClickListener(this);
         findViewById(R.id.stack).setOnClickListener(this);
         findViewById(R.id.book_icon).setOnClickListener(this);
         //取消空白部分灰色阴影效果
@@ -74,6 +82,12 @@ public class MiContentActivity extends MiBaseActivity implements View.OnClickLis
         initContentMune();
         initViewPage();
         dodrawerDrag();
+    }
+
+    @Override
+    protected void doOnSetContent(View v) {
+        int padding = (int) SystemUtil.dp2px(this, 10);
+        v.findViewById(R.id.title_item).setPadding(padding, SystemUtil.getStatusBarHeight(this) + padding, padding, padding);
     }
 
     @Override
@@ -149,6 +163,15 @@ public class MiContentActivity extends MiBaseActivity implements View.OnClickLis
 //        viewContent.setAdapter(viewPager);
     }
 
+    @Override
+    public void onBackPressed() {
+        if (System.currentTimeMillis() - lastBackTime > 2000) {
+            MiToast.show("再按一次退出应用");
+            lastBackTime = System.currentTimeMillis();
+        } else {
+            AppContext.finishAll();
+        }
+    }
 
     //转场动画
     private void initTranslation() {
@@ -183,8 +206,10 @@ public class MiContentActivity extends MiBaseActivity implements View.OnClickLis
                 drawerLayout.openDrawer(Gravity.LEFT);
                 break;
             case R.id.stack:
-//                Router.getInstance().build(RouterContent.STACKACTIVITY, null).skip();
-                SkinManager.getInstance().loadSkin(Environment.getExternalStorageDirectory()+"/resource-debug.apk");
+                Router.getInstance().build(RouterContent.STACKACTIVITY, null).skip();
+                break;
+            case R.id.iv_warn_close:
+                fl_warn.setVisibility(View.GONE);
                 break;
         }
     }

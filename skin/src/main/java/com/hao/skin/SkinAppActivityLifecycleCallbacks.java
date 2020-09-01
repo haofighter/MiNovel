@@ -30,30 +30,22 @@ public class SkinAppActivityLifecycleCallbacks implements Application.ActivityLi
 
     @Override
     public void onActivityCreated(@NonNull Activity activity, @Nullable Bundle savedInstanceState) {
+        LayoutInflater layoutInflater = activity.getLayoutInflater();
+        SkinLayoutInflaiterFactory skinLayoutInflaiterFactory = new SkinLayoutInflaiterFactory(activity);
         /**
          *  更新布局视图
          */
         //获得Activity的布局加载器
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
-            LayoutInflater layoutInflater = activity.getLayoutInflater();
-            try {
-                //Android 布局加载器 使用 mFactorySet 标记是否设置过Factory
-                //如设置过抛出异常
-                //设置 mFactorySet 标签为false
-                Field field = LayoutInflater.class.getDeclaredField("mFactorySet");
-                field.setAccessible(true);
-                field.setBoolean(layoutInflater, false);
+        try {
 
-                SkinLayoutInflaiterFactory skinLayoutInflaiterFactory = new SkinLayoutInflaiterFactory(activity);
-                LayoutInflaterCompat.setFactory2(layoutInflater, skinLayoutInflaiterFactory);
-                mLayoutInflaterFactories.put(activity, skinLayoutInflaiterFactory);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            Field mFactory2 = LayoutInflater.class.getDeclaredField("mFactory2");
+            mFactory2.setAccessible(true);
+            mFactory2.set(layoutInflater, skinLayoutInflaiterFactory);
+        } catch (Exception e) {
+            Log.i("日志", "报错了：" + e.getMessage());
         }
-
-//
-//        observable.addObserver(skinLayoutInflaiterFactory);
+        mLayoutInflaterFactories.put(activity, skinLayoutInflaiterFactory);
+        observable.addObserver(skinLayoutInflaiterFactory);
     }
 
     @Override

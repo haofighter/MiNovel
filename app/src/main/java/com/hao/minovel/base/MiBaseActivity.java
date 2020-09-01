@@ -10,18 +10,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 
 import androidx.annotation.LayoutRes;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 
-import com.hao.minovel.R;
+import com.hao.minovel.tinker.app.AppContext;
 import com.hao.minovel.utils.StatusBarUtil;
 import com.hao.minovel.utils.SystemUtil;
-import com.hao.minovel.view.RoundLayout;
 
 
 import org.greenrobot.eventbus.EventBus;
@@ -46,6 +43,15 @@ public abstract class MiBaseActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+            // 隐藏状态栏
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        } else {
+            int flags = (View.SYSTEM_UI_FLAG_HIDE_NAVIGATION//隐藏导航栏
+                    | View.SYSTEM_UI_FLAG_FULLSCREEN); //隐藏状态栏
+            getWindow().getDecorView().setSystemUiVisibility(getWindow().getDecorView().getSystemUiVisibility() | flags);
+        }
+
         StatusBarUtil.setTranslucent(this);
         StatusBarUtil.setStatubarTextColor(this, true);
         return true;
@@ -53,9 +59,12 @@ public abstract class MiBaseActivity extends AppCompatActivity {
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        beforOnCreate();
+        boolean isfull = beforOnCreate();
         super.onCreate(savedInstanceState);
-        setContentView(layoutId());
+        View v = LayoutInflater.from(this).inflate(layoutId(), null);
+        doOnSetContent(v);
+        setContentView(v);
+        AppContext.addActivity(this);
         initView();
         doElse();
     }
@@ -80,11 +89,12 @@ public abstract class MiBaseActivity extends AppCompatActivity {
 
     protected abstract void doElse();
 
+    protected abstract void doOnSetContent(View v);
+
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void eventBusOnEvent(Object o) {
     }
 
-    ;
 
     //添加点击后不隐藏软键盘的view
     public void addViewForNotHideSoftInput(View v) {
@@ -97,15 +107,18 @@ public abstract class MiBaseActivity extends AppCompatActivity {
      * @param promision true 表示权限已拥有
      * @return
      */
-    protected void initPromission(String[] promision) {
+    protected Boolean initPromission(String[] promision) {
+        boolean promiss = true;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             List<String> promission = new ArrayList<>();
             for (int i = 0; i < promision.length; i++) {
                 if (checkSelfPermission(promision[i]) == PackageManager.PERMISSION_GRANTED) {
                     Log.i("promiss", promision[i]);
+                    promiss = promiss && true;
                 } else {
                     Log.i("promiss", "未申请：" + promision[i]);
                     promission.add(promision[i]);
+                    promiss = promiss && false;
                 }
             }
 
@@ -114,14 +127,16 @@ public abstract class MiBaseActivity extends AppCompatActivity {
                 str[i] = promission.get(i);
             }
 
-
             if (str.length != 0) {
                 requestPermissions(str, 0);
             }
         }
+        return promiss;
     }
 
-
+    /**
+     * 申请未知应用安装权限
+     */
     private void checkUnkonwApp() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             if (!getPackageManager().canRequestPackageInstalls()) {
@@ -130,5 +145,11 @@ public abstract class MiBaseActivity extends AppCompatActivity {
                 startActivityForResult(intent, 19900);
             }
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        AppContext.removeActivity(this);
     }
 }
