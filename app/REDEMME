@@ -1,0 +1,11 @@
+开发过程中呢的问题点：
+1.使用jsoup获取网页时出现 java.io.IOException: Cleartext HTTP traffic to xxx.xxx.xxx.xxx not permitted
+答：兼容9.0以上版本的额时候，9.0默认是禁止所有的http，所以需要进行相关的配置操作
+   （1）在AndroidManifest.xml中添加android:usesCleartextTraffic="true"
+   （2）二为了适配更高版本则需要创建一个network_security_config.xml
+        内容：<?xml version="1.0" encoding="utf-8"?>
+            <network-security-config>
+              <base-config cleartextTrafficPermitted="true"/>
+            </network-security-config>
+        添加至AndroidManifest.xml中的networkSecurityConfig属性中
+

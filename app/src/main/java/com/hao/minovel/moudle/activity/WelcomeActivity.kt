@@ -3,15 +3,11 @@ package com.hao.minovel.moudle.activity
 import android.Manifest
 import android.animation.ValueAnimator
 import android.app.Dialog
-import android.content.Intent
 import android.os.Build
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.view.animation.LinearInterpolator
-import androidx.core.app.ActivityOptionsCompat
-import androidx.core.util.Pair
-import androidx.core.view.ViewCompat
 import com.hao.annotationengine.Router
 import com.hao.annotetion.annotation.Bind
 import com.hao.date.RouterContent
@@ -21,7 +17,11 @@ import com.hao.minovel.utils.BackCall
 import com.hao.minovel.utils.DialogUtils
 import com.hao.minovel.utils.SystemUtil
 import kotlinx.android.synthetic.main.activity_main.*
-import android.R
+import androidx.core.app.ActivityOptionsCompat
+import androidx.core.view.ViewCompat
+import com.hao.minovel.moudle.service.ServiceManage
+import com.hao.minovel.tinker.app.AppContext
+import androidx.core.util.Pair
 
 
 @Bind
@@ -112,8 +112,11 @@ class WelcomeActivity : MiBaseActivity() {
 
         if (!dialog?.isShowing!!) {
             promisstion = initPromission(promissions)
-            if (!valueAnimator.isRunning && promisstion && !isJumpMian) {
-                gotoMain()
+            if (promisstion) {
+                ServiceManage.getInstance().startBackRunService(AppContext.application)
+                if (!valueAnimator.isRunning && !isJumpMian) {
+                    gotoMain()
+                }
             }
         }
     }
@@ -131,6 +134,7 @@ class WelcomeActivity : MiBaseActivity() {
                         dialog?.show()
                     } else {
                         promisstion = promisstion && true
+                        initPromision()
                     }
                 }
             }
@@ -157,7 +161,7 @@ class WelcomeActivity : MiBaseActivity() {
             } else if (progress < 99) {
                 logo_advert.visibility = View.VISIBLE
             } else if (progress == 100f) {
-                Log.i("main", "animalIsStart=" + valueAnimator.isRunning + "   isJumpMian=" + isJumpMian)
+                Log.i("main", "animalIsStart=" + valueAnimator.isRunning + "   isJumpMian=" + isJumpMian + "    " + promisstion)
                 if (valueAnimator.isRunning && !isJumpMian && promisstion) {
                     gotoMain()
                     isJumpMian = true
@@ -169,8 +173,11 @@ class WelcomeActivity : MiBaseActivity() {
     }
 
     private fun gotoMain() {
+        if (isJumpMian) {
+            return
+        }
         synchronized(this) {
-            val pair1 = Pair<View, String>(novel_icon, ViewCompat.getTransitionName(novel_icon))
+            val pair1 = Pair<View, String>(novel_icon, ViewCompat.getTransitionName(novel_icon).toString())
             /**
              * 生成带有共享元素的Bundle，这样系统才会知道这几个元素需要做动画
              */

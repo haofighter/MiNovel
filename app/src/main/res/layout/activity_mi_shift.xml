@@ -71,11 +71,12 @@
             android:layout_alignParentBottom="true"
             android:layout_margin="30dp"
             android:scaleType="centerInside"
-            android:src="@mipmap/search"
-            app:backgroundTint="@color/white"
-            app:elevation="10dp"
             app:fabSize="normal"
-            app:rippleColor="@color/gray" />
+            app:elevation="10dp"
+            android:clickable="true"
+            app:rippleColor="@color/gray"
+            app:backgroundTint="@color/white"
+            android:src="@mipmap/search" />
 
         <FrameLayout
             android:id="@+id/fl_warn"

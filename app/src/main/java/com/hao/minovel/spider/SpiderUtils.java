@@ -1,6 +1,7 @@
 package com.hao.minovel.spider;
 
 import android.util.Log;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -9,7 +10,6 @@ import java.net.URL;
 public class SpiderUtils {
     static int repeateCount = 0;
     static int maxRepeateCount = 3;
-
 
 
     /**
@@ -51,11 +51,7 @@ public class SpiderUtils {
                 return getHtml(urlHead, urlString);
             }
         } finally {
-            if (html.toString().equals("")) {
-                return null;
-            } else {
-                return html.toString();
-            }
+            return html.toString();
         }
     }
 

@@ -28,6 +28,7 @@ import com.hao.minovel.base.MiBaseActivity;
 import com.hao.minovel.log.MiToast;
 import com.hao.minovel.moudle.adapter.ContentMuneAdapter;
 import com.hao.minovel.moudle.entity.ContentMuneEntity;
+import com.hao.minovel.moudle.service.ServiceManage;
 import com.hao.minovel.tinker.app.AppContext;
 import com.hao.minovel.utils.SystemUtil;
 import com.hao.minovel.view.RoundLayout;
@@ -170,6 +171,7 @@ public class MiContentActivity extends MiBaseActivity implements View.OnClickLis
             lastBackTime = System.currentTimeMillis();
         } else {
             AppContext.finishAll();
+            ServiceManage.getInstance().unBindBackRunService(AppContext.application);
         }
     }
 

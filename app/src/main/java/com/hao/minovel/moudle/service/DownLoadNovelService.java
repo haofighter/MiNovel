@@ -29,10 +29,10 @@ import java.util.concurrent.LinkedBlockingQueue;
  * 用于更新获取小说相关数据
  * 创建一个前台服务 防止GC回收
  */
-public class
-DownLoadNovelService extends Service {
+public class DownLoadNovelService extends Service {
 
     private String nowScreenTag = "";
+    private boolean isrun = true;
 
 //    List<NovolDownTask> tag = new ArrayList<NovolDownTask>() {
 //        @Override
@@ -132,7 +132,7 @@ DownLoadNovelService extends Service {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                while (true) {
+                while (isrun) {
                     try {
                         NovolDownTask novolDownTask = tag.take();
                         Log.i("小说服务", "小说任务中的线程名：" + Thread.currentThread().getName());
@@ -210,6 +210,7 @@ DownLoadNovelService extends Service {
     @Override
     public void onDestroy() {
         Log.i("小说服务", "onDestroy: ");
+        isrun = false;
         super.onDestroy();
     }
 
@@ -254,6 +255,7 @@ DownLoadNovelService extends Service {
         Log.i("小说服务", "dump: ");
         super.dump(fd, writer, args);
     }
+
 
     public enum NovelDownTag {
         none, allTitle, allDetail, novelDetail, singlechaptercontent, novelallchaptercontent, noveltype, noveltypelist
