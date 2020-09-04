@@ -2,6 +2,9 @@ package com.hao.minovel.moudle.entity;
 
 import com.hao.minovel.base.MiBaseFragment;
 
+/**
+ * 主页菜单栏
+ */
 public class ContentMuneEntity {
     int itmeImgId;
     String muneItemm;

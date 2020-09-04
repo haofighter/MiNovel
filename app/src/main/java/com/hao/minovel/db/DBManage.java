@@ -4,6 +4,8 @@ import android.database.Cursor;
 import android.util.Log;
 
 
+import com.hao.minovel.moudle.entity.ReadInfo;
+import com.hao.minovel.moudle.entity.ReadInfoDao;
 import com.hao.minovel.spider.data.NovelChapter;
 import com.hao.minovel.spider.data.NovelChapterDao;
 import com.hao.minovel.spider.data.NovelContent;
@@ -17,7 +19,7 @@ import com.hao.minovel.spider.data.NovelTypeHotDao;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DbManage {
+public class DBManage {
     /**
      * 批量添加小说数据
      *
@@ -162,7 +164,6 @@ public class DbManage {
     }
 
 
-
     public static void getNovelTypeByAllNovel() {
         NovelIntroductionDao novelIntroductionDao = DBCore.getDaoSession().getNovelIntroductionDao();
         String strSql = "select * from NOVEL_INTRODUCTION order by NOVEL_TYPE";
@@ -230,5 +231,25 @@ public class DbManage {
 
     public static List<NovelTypeHot> checkedNovelHotByType(String type) {
         return DBCore.getDaoSession().getNovelTypeHotDao().queryBuilder().where(NovelTypeHotDao.Properties.Type.eq(type)).limit(6).list();
+    }
+
+    /**
+     * 查询所有已阅读的小说信息
+     *
+     * @return
+     */
+    public static List<ReadInfo> checkedAllReadInfo() {
+        ReadInfoDao readInfoDao = DBCore.getDaoSession().getReadInfoDao();
+        return readInfoDao.queryBuilder().orderDesc(ReadInfoDao.Properties.Date).list();
+    }
+
+    /**
+     * 删除保存的小说阅读信息
+     *
+     * @param readInfo
+     */
+    public static void removeReadInfo(ReadInfo readInfo) {
+        ReadInfoDao readInfoDao = DBCore.getDaoSession().getReadInfoDao();
+        readInfoDao.delete(readInfo);
     }
 }

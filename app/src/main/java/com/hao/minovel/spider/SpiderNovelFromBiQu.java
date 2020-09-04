@@ -1,10 +1,9 @@
 package com.hao.minovel.spider;
 
 
-import android.text.TextUtils;
 import android.util.Log;
 
-import com.hao.minovel.db.DbManage;
+import com.hao.minovel.db.DBManage;
 import com.hao.minovel.log.MiLog;
 import com.hao.minovel.spider.data.NovelChapter;
 import com.hao.minovel.spider.data.NovelIntroduction;
@@ -28,11 +27,11 @@ public class SpiderNovelFromBiQu {
      * 获取当前站所有小说信息
      */
     public static boolean getAllNovel() {
-        String html = SpiderUtils.getHtml(BiQuMainUrl, "xiaoshuodaquan/");
-        if (html == null) {
+        SpiderResponse spiderResponse = SpiderUtils.getHtml(BiQuMainUrl, "xiaoshuodaquan/");
+        if (spiderResponse.code != 0) {
             return false;
         }
-        Document doc = Jsoup.parse(html);
+        Document doc = Jsoup.parse(spiderResponse.result);
         Elements rows = doc.select("div[class=novellist]");
         List<NovelIntroduction> novelIntroductions = new ArrayList<>();
         for (int i = 0; i < rows.size(); i++) {
@@ -50,17 +49,16 @@ public class SpiderNovelFromBiQu {
                 Log.i("小说", "名称=" + novelIntroduction.getNovelName() + "   作者：" + novelIntroduction.getNovelAutho() + "     主页地址：" + novelIntroduction.getNovelChapterListUrl());
             }
         }
-        DbManage.addNovelIntrodution(novelIntroductions);
+        DBManage.addNovelIntrodution(novelIntroductions);
         return true;
     }
 
     public static boolean getAllNovelDetailInfo(NovelIntroduction novelIntroduction) {
-        String htmlNovelChapterList = SpiderUtils.getHtml(BiQuMainUrl, novelIntroduction.getNovelChapterListUrl());
-        if (htmlNovelChapterList == null) {
+        SpiderResponse htmlNovelChapterList = SpiderUtils.getHtml(BiQuMainUrl, novelIntroduction.getNovelChapterListUrl());
+        if (htmlNovelChapterList.code != 0) {
             return false;
         }
-        return getAllNovelDetailInfo(novelIntroduction, htmlNovelChapterList);
-//        getNovelAllChapterTitle(novelIntroduction);
+        return getAllNovelDetailInfo(novelIntroduction, htmlNovelChapterList.result);
     }
 
     //完善小说详情小说详情
@@ -74,7 +72,7 @@ public class SpiderNovelFromBiQu {
             novelIntroduction.setNovelNewChapterTitle(htmlNovelChapterListDoc.select("div#info").select("p").get(3).select("a").text());
             novelIntroduction.setNovelIntroduce(htmlNovelChapterListDoc.select("div#intro").select("p").get(1).text());
             novelIntroduction.setIsComplete(true);
-            DbManage.addNovelIntrodution(novelIntroduction);
+            DBManage.addNovelIntrodution(novelIntroduction);
             getNovelAllChapterTitle(novelIntroduction, htmlNovelChapterListDoc);
         } catch (Exception e) {
             return false;
@@ -93,7 +91,7 @@ public class SpiderNovelFromBiQu {
                 chapters.add(new NovelChapter((long) i, novelIntroduction.getNovelChapterListUrl(), chapterName, CheckedUrl(chapterUrl), "", "", "", false, i));
                 Log.i("下载章节", "chapterName=" + chapterName);
             }
-            DbManage.addNovelChapter(chapters);
+            DBManage.addNovelChapter(chapters);
         } catch (Exception e) {
             return false;
         }
@@ -104,12 +102,13 @@ public class SpiderNovelFromBiQu {
         if (novelChapter.getChapterUrl() == null || novelChapter.getChapterUrl().equals("")) {
             return false;
         }
-        String htmlNovelChapterList = SpiderUtils.getHtml(BiQuMainUrl, novelChapter.getChapterUrl());
-        if (htmlNovelChapterList == null) {
+
+        SpiderResponse htmlNovelChapterList = SpiderUtils.getHtml(BiQuMainUrl, novelChapter.getChapterUrl());
+        if (htmlNovelChapterList.code != 0) {
             return false;
         }
 
-        Document htmlNovelChapterListDoc = Jsoup.parse(htmlNovelChapterList);
+        Document htmlNovelChapterListDoc = Jsoup.parse(htmlNovelChapterList.result);
         Elements frist = htmlNovelChapterListDoc.select("div[class=box_con]");
         Elements second = frist.select("div[class=bookname]");
         novelChapter.setChapterName(second.select("h1").text());
@@ -126,7 +125,7 @@ public class SpiderNovelFromBiQu {
         }
         novelChapter.setChapterContent(frist.select("div#content").html().replace(" ", "").replace("\n", "").replace("<br>&nbsp;&nbsp;&nbsp;&nbsp;", "\n  ").replace("<br>", "").replace("&nbsp;", "").split("<p>")[0]);
         novelChapter.setIsComplete(true);
-        DbManage.updateNovelChapter(novelChapter);
+        DBManage.updateNovelChapter(novelChapter);
 
         return true;
     }
@@ -141,12 +140,12 @@ public class SpiderNovelFromBiQu {
     }
 
     public static boolean getNovelType() {
-        String html = SpiderUtils.getHtml(BiQuMainUrl, "");
+        SpiderResponse html = SpiderUtils.getHtml(BiQuMainUrl, "");
         Log.i("小说分类", "html：" + html);
-        if (TextUtils.isEmpty(html)) {
+        if (html.code != 0) {
             return false;
         }
-        Document doc = Jsoup.parse(html);
+        Document doc = Jsoup.parse(html.result);
         Elements rows = doc.select("div[class=nav]");
         Elements type = rows.select("li");
         List<NovelType> novelTypes = new ArrayList<>();
@@ -159,14 +158,14 @@ public class SpiderNovelFromBiQu {
             Log.i("小说分类", "类别：" + novelType.getType() + "   地址：" + novelType.getListUrl());
             novelTypes.add(novelType);
         }
-        DbManage.addNovelType(novelTypes);
+        DBManage.addNovelType(novelTypes);
 
         return true;
     }
 
     //查询未完善的章节 进行数据完善
     public static boolean getAllNovelContent(NovelIntroduction novelIntroduction) {
-        NovelChapter novelChapter = DbManage.checkNovelAllNoChapterContent(novelIntroduction);
+        NovelChapter novelChapter = DBManage.checkNovelAllNoChapterContent(novelIntroduction);
         if (novelChapter != null) {
             return getNovelContent(novelChapter);
         } else {
@@ -174,12 +173,12 @@ public class SpiderNovelFromBiQu {
         }
     }
 
-    public static boolean getTypeNovelList(NovelType novelType) {
-        String html = SpiderUtils.getHtml(BiQuMainUrl, novelType.getListUrl());
-        if (html == null) {
-            return false;
+    public static int getTypeNovelList(NovelType novelType) {
+        SpiderResponse html = SpiderUtils.getHtml(BiQuMainUrl, novelType.getListUrl());
+        if (html.code != 0) {
+            return html.code;
         }
-        Document doc = Jsoup.parse(html);
+        Document doc = Jsoup.parse(html.result);
         Elements rows = doc.select("div#newscontent");
         Elements list = rows.select("div[class=l]");
 
@@ -192,14 +191,14 @@ public class SpiderNovelFromBiQu {
         if (novelType.getListUrl().equals("") || novelType.getNextListUrl().equals("")) {
             MiLog.i("完善列表数据失败", novelTypeListContennt.html());
         } else {
-            DbManage.addNovelType(novelType);
+            DBManage.addNovelType(novelType);
             NovelType nextNovelType = new NovelType();
             nextNovelType.setCreatTime(System.currentTimeMillis());
             nextNovelType.setListUrl(novelType.getNextListUrl());
             nextNovelType.setLastListUrl(novelType.getListUrl());
             nextNovelType.setFrom(novelType.getFrom());
             nextNovelType.setType(novelType.getType());
-            DbManage.addNovelType(nextNovelType);
+            DBManage.addNovelType(nextNovelType);
             Log.i("加载数据  存储下一页数据", nextNovelType.toString());
         }
 
@@ -212,7 +211,7 @@ public class SpiderNovelFromBiQu {
             String newChaptername = e.select("span[class=s3]").text();
             String newChapterUrl = e.select("span[class=s3]").attr("href");
             String author = e.select("span[class=s5]").text();
-            NovelIntroduction novelIntroduction = DbManage.checkNovelByUrl(novelUrl);
+            NovelIntroduction novelIntroduction = DBManage.checkNovelByUrl(novelUrl);
             if (novelIntroduction == null) {
                 novelIntroduction = new NovelIntroduction();
                 novelIntroduction.setNovelName(name);
@@ -227,7 +226,7 @@ public class SpiderNovelFromBiQu {
             novelIntroductions.add(novelIntroduction);
             Log.i("小说", "名称=" + novelIntroduction.getNovelName() + "   作者：" + novelIntroduction.getNovelAutho() + "     主页地址：" + novelIntroduction.getNovelChapterListUrl() + "  " + novelIntroduction.getNovelType());
         }
-        DbManage.addNovelIntrodution(novelIntroductions);
+        DBManage.addNovelIntrodution(novelIntroductions);
 
 
         List<NovelTypeHot> novelTypeHots = new ArrayList<>();
@@ -238,7 +237,7 @@ public class SpiderNovelFromBiQu {
             String name = e.select("a").select("img").attr("alt");
             String cover = e.select("a").select("img").attr("src");
             String auther = e.select("dl").select("dt").select("span").text();
-            NovelIntroduction novelIntroduction = DbManage.checkNovelByUrl(novelUrl);
+            NovelIntroduction novelIntroduction = DBManage.checkNovelByUrl(novelUrl);
             if (novelIntroduction == null) {
                 novelIntroduction = new NovelIntroduction();
                 novelIntroduction.setNovelType(novelType.getType());
@@ -246,12 +245,12 @@ public class SpiderNovelFromBiQu {
                 novelIntroduction.setNovelName(name);
                 novelIntroduction.setNovelChapterListUrl(novelUrl);
                 novelIntroduction.setCreatTime(System.currentTimeMillis());
-                DbManage.addNovelIntrodution(novelIntroduction);
+                DBManage.addNovelIntrodution(novelIntroduction);
             } else if (!novelIntroduction.isComplete()) {
                 novelIntroduction.setNovelCover(cover);
                 novelIntroduction.setNovelAutho(auther);
                 novelIntroduction.setNovelType(novelType.getType());
-                DbManage.addNovelIntrodution(novelIntroduction);
+                DBManage.addNovelIntrodution(novelIntroduction);
             }
 
 
@@ -262,7 +261,7 @@ public class SpiderNovelFromBiQu {
 
             Log.i("小说", "保存热门：" + novelTypeHot.getType() + "      " + novelTypeHot.getChapterlistUrl() + "       " + auther + "      " + cover + "      " + name);
         }
-        DbManage.addNovelTypeHot(novelTypeHots);
-        return true;
+        DBManage.addNovelTypeHot(novelTypeHots);
+        return html.code;
     }
 }

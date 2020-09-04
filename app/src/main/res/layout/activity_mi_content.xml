@@ -56,27 +56,11 @@
             android:layout_below="@id/title_item"
             android:background="@color/gray_11" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/mi_book_show"
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/view_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/line1"
-            android:background="@color/white" />
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/search"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
-            android:layout_margin="30dp"
-            android:scaleType="centerInside"
-            app:fabSize="normal"
-            app:elevation="10dp"
-            android:clickable="true"
-            app:rippleColor="@color/gray"
-            app:backgroundTint="@color/white"
-            android:src="@mipmap/search" />
+            android:layout_below="@id/line1" />
 
         <FrameLayout
             android:id="@+id/fl_warn"

@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 
-import com.hao.minovel.db.DbManage;
+import com.hao.minovel.db.DBManage;
 
 import static android.content.Context.BIND_AUTO_CREATE;
 
@@ -44,7 +44,7 @@ public class ServiceManage {
 //                    novelUsedUpdate.setLastUpdatime(System.currentTimeMillis());
                 binder.sendCmd(new NovolDownTask(DownLoadNovelService.NovelDownTag.allTitle));
 //                }
-                DbManage.getNovelTypeByAllNovel();
+                DBManage.getNovelTypeByAllNovel();
             }
         }
     };

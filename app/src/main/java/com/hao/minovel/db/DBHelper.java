@@ -3,7 +3,7 @@ package com.hao.minovel.db;
 import android.content.Context;
 
 import com.github.yuweiguocn.library.greendao.MigrationHelper;
-import com.hao.minovel.spider.data.DaoMaster;
+import com.hao.minovel.moudle.entity.DaoMaster;
 import com.hao.minovel.spider.data.NovelChapterDao;
 import com.hao.minovel.spider.data.NovelIntroductionDao;
 import com.hao.minovel.spider.data.NovelTypeDao;

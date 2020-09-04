@@ -1,46 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.recyclerview.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/welcome_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white">
 
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:gravity="center">
-
-        <ImageView
-            android:id="@+id/novel_icon"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_gravity="center"
-            android:src="@mipmap/shuji_black"
-            android:transitionName="book"
-            android:visibility="invisible"/>
-
-        <TextView
-            android:id="@+id/logo_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
-            android:letterSpacing="0.1"
-            android:text="我的地盘，我做主"
-            android:textColor="@color/black"
-            android:textSize="20sp"
-            android:textStyle="italic"
-            android:visibility="invisible"/>
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/logo_advert"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="50dp"
-        android:text="爱阅读，爱生活"
-        android:visibility="invisible" />
-</RelativeLayout>
+</androidx.recyclerview.widget.RecyclerView>

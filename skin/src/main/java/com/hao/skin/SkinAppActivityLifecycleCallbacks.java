@@ -37,7 +37,6 @@ public class SkinAppActivityLifecycleCallbacks implements Application.ActivityLi
          */
         //获得Activity的布局加载器
         try {
-
             Field mFactory2 = LayoutInflater.class.getDeclaredField("mFactory2");
             mFactory2.setAccessible(true);
             mFactory2.set(layoutInflater, skinLayoutInflaiterFactory);

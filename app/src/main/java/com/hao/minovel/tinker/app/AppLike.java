@@ -2,20 +2,13 @@ package com.hao.minovel.tinker.app;
 
 import android.annotation.TargetApi;
 import android.app.Application;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Build;
-import android.os.IBinder;
 
 import androidx.multidex.MultiDex;
 
 import com.hao.annotationengine.Router;
-import com.hao.minovel.db.DbManage;
-import com.hao.minovel.moudle.service.DownLoadNovelBinder;
-import com.hao.minovel.moudle.service.DownLoadNovelService;
-import com.hao.minovel.moudle.service.NovolDownTask;
 import com.hao.minovel.tinker.TinkerManager;
 import com.hao.minovel.tinker.Log.MyLogImp;
 import com.hao.skin.SkinManager;
@@ -25,7 +18,6 @@ import com.tencent.tinker.lib.tinker.Tinker;
 import com.tencent.tinker.lib.tinker.TinkerInstaller;
 import com.tencent.tinker.loader.shareutil.ShareConstants;
 
-import static android.content.Context.BIND_AUTO_CREATE;
 
 @SuppressWarnings("unused")
 @DefaultLifeCycle(application = "com.hao.minovel.tinker.app.App",

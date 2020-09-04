@@ -14,8 +14,8 @@ import android.util.Log;
 import androidx.annotation.RequiresApi;
 
 import com.hao.minovel.R;
-import com.hao.minovel.db.DbManage;
-import com.hao.minovel.moudle.activity.StackActivity;
+import com.hao.minovel.db.DBManage;
+import com.hao.minovel.moudle.activity.MiContentActivity;
 import com.hao.minovel.spider.SpiderNovelFromBiQu;
 import com.hao.minovel.spider.data.NovelChapter;
 import com.hao.minovel.spider.data.NovelIntroduction;
@@ -103,7 +103,7 @@ public class DownLoadNovelService extends Service {
     public void onCreate() {
         super.onCreate();
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        Intent notificationIntent = new Intent(this, StackActivity.class);
+        Intent notificationIntent = new Intent(this, MiContentActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
                 notificationIntent, 0);
         Notification.Builder builder = new Notification.Builder(this)
@@ -170,7 +170,7 @@ public class DownLoadNovelService extends Service {
                     tag.add(new NovolDownTask(NovelDownTag.allDetail));
                     break;
                 case allDetail://完善所有的小说的介绍信息
-                    NovelIntroduction novelIntroduction = DbManage.getNoCompleteDetailNovelInfo();
+                    NovelIntroduction novelIntroduction = DBManage.getNoCompleteDetailNovelInfo();
                     if (novelIntroduction != null) {
                         SpiderNovelFromBiQu.getAllNovelDetailInfo(novelIntroduction);
                     }

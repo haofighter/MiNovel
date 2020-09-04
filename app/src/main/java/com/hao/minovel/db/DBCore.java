@@ -4,8 +4,8 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
 
-import com.hao.minovel.spider.data.DaoMaster;
-import com.hao.minovel.spider.data.DaoSession;
+import com.hao.minovel.moudle.entity.DaoMaster;
+import com.hao.minovel.moudle.entity.DaoSession;
 
 import org.greenrobot.greendao.async.AsyncSession;
 

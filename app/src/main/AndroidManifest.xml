@@ -19,16 +19,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         android:usesCleartextTraffic="true">
-        <activity android:name=".moudle.activity.StackActivity"></activity>
         <activity android:name=".moudle.activity.MiContentActivity">
-
-        </activity>
-        <activity android:name=".moudle.activity.WelcomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".moudle.activity.WelcomeActivity">
+
         </activity>
 
         <service
