@@ -22,7 +22,6 @@ import java.util.List;
 public class SpiderNovelFromBiQu {
     public static final String BiQuMainUrl = "http://www.xbiquge.la/";
 
-
     /**
      * 获取当前站所有小说信息
      */

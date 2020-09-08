@@ -105,7 +105,7 @@ public class MiContentActivity extends MiBaseActivity implements View.OnClickLis
     private void changePage(int page) {
         ContentMuneEntity contentMuneEntity = muneList.get(page);
         if (contentMuneEntity.getFragment() instanceof StackFragment) {//表示当前页为书库页
-
+            ((ContentMuneAdapter) contentMune.getAdapter()).setType(ContentMuneAdapter.Type.stack);
         }
     }
 

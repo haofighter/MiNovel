@@ -13,7 +13,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
 import com.hao.minovel.R;
+import com.hao.minovel.db.DBManage;
 import com.hao.minovel.moudle.entity.ContentMuneEntity;
+import com.hao.minovel.spider.data.NovelType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +23,14 @@ import java.util.List;
 public class ContentMuneAdapter extends RecyclerView.Adapter<ViewHolder> {
     Context mContext;
     List<ContentMuneEntity> muneEntityList = new ArrayList<>();
+    List<NovelType> novelTypes = new ArrayList<>();
     View.OnClickListener onClickListener;
+    Type type = Type.mune;
+
+    public enum Type {
+        mune,//菜单
+        stack//书库
+    }
 
 
     public ContentMuneAdapter(Context mContext, List<ContentMuneEntity> muneEntityList, View.OnClickListener onClickListener) {
@@ -47,7 +56,11 @@ public class ContentMuneAdapter extends RecyclerView.Adapter<ViewHolder> {
 
         } else {
             int index = position - 1;
-            ((MuneViewHolder) holder).setDate(muneEntityList.get(index), onClickListener, index);
+            if (type == Type.stack) {
+                ((MuneViewHolder) holder).setDate(novelTypes.get(index), onClickListener, index);
+            } else if (type == Type.stack) {
+                ((MuneViewHolder) holder).setDate(muneEntityList.get(index), onClickListener, index);
+            }
         }
     }
 
@@ -56,13 +69,30 @@ public class ContentMuneAdapter extends RecyclerView.Adapter<ViewHolder> {
         if (position == 0) {
             return 0;
         } else {
-            return 1;
+            if (type == Type.stack) {
+                return 2;
+            } else {
+                return 2;
+            }
         }
     }
 
     @Override
     public int getItemCount() {
-        return muneEntityList.size() + 1;
+        if (type == Type.stack) {
+            return novelTypes.size() + 1;
+        } else {
+            return muneEntityList.size() + 1;
+        }
+    }
+
+    public void setType(Type type) {
+        this.type = type;
+        novelTypes = DBManage.getNovelType();
+        if (novelTypes == null || novelTypes.size() == 0) {
+            this.type = Type.mune;
+        }
+        notifyDataSetChanged();
     }
 
     class MuneViewHolder extends ViewHolder {
@@ -80,6 +110,12 @@ public class ContentMuneAdapter extends RecyclerView.Adapter<ViewHolder> {
         public void setDate(ContentMuneEntity contentMuneEntity, View.OnClickListener onClickListener, int index) {
             textView.setText(contentMuneEntity.getMuneItemm());
             imageView.setBackgroundResource(contentMuneEntity.getItmeImgId());
+            itemView.setTag(index);
+            itemView.setOnClickListener(onClickListener);
+        }
+
+        public void setDate(NovelType novelType, View.OnClickListener onClickListener, int index) {
+            textView.setText(novelType.getType());
             itemView.setTag(index);
             itemView.setOnClickListener(onClickListener);
         }

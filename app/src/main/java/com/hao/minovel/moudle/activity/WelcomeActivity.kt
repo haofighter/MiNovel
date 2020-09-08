@@ -20,6 +20,8 @@ import kotlinx.android.synthetic.main.activity_main.*
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.view.ViewCompat
 import androidx.core.util.Pair
+import com.hao.minovel.moudle.service.ServiceManage
+import com.hao.minovel.tinker.app.AppContext
 
 
 @Bind
@@ -112,7 +114,7 @@ class WelcomeActivity : MiBaseActivity() {
             promisstion = initPromission(promissions)
             if (promisstion) {
                 //开启小说服务 进行该网站小说遍历
-//                ServiceManage.getInstance().startBackRunService(AppContext.application)
+                ServiceManage.getInstance().startBackRunService(AppContext.application)
                 if (!valueAnimator.isRunning && !isJumpMian) {
                     gotoMain()
                 }
