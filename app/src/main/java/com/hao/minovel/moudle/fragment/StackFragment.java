@@ -20,7 +20,7 @@ public class StackFragment extends MiBaseFragment {
 
     @Override
     public int onlayout() {
-        return R.layout.activity_main;
+        return R.layout.fragment_shelf;
     }
 
     @Override

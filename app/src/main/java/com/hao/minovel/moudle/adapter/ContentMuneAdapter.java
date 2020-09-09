@@ -58,7 +58,7 @@ public class ContentMuneAdapter extends RecyclerView.Adapter<ViewHolder> {
             int index = position - 1;
             if (type == Type.stack) {
                 ((MuneViewHolder) holder).setDate(novelTypes.get(index), onClickListener, index);
-            } else if (type == Type.stack) {
+            } else if (type == Type.mune) {
                 ((MuneViewHolder) holder).setDate(muneEntityList.get(index), onClickListener, index);
             }
         }
@@ -69,11 +69,7 @@ public class ContentMuneAdapter extends RecyclerView.Adapter<ViewHolder> {
         if (position == 0) {
             return 0;
         } else {
-            if (type == Type.stack) {
-                return 2;
-            } else {
-                return 2;
-            }
+            return 1;
         }
     }
 

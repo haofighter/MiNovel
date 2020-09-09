@@ -5,6 +5,7 @@ import android.transition.ChangeBounds;
 import android.transition.ChangeTransform;
 import android.transition.Fade;
 import android.transition.TransitionSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,7 @@ import com.hao.minovel.base.MiBaseActivity;
 import com.hao.minovel.log.MiToast;
 import com.hao.minovel.moudle.adapter.ContentMuneAdapter;
 import com.hao.minovel.moudle.adapter.MiContentViewPagerAdapter;
+import com.hao.minovel.moudle.adapter.ShiftAdapter;
 import com.hao.minovel.moudle.entity.ContentMuneEntity;
 import com.hao.minovel.moudle.fragment.ShiftFragment;
 import com.hao.minovel.moudle.fragment.StackFragment;
@@ -104,8 +106,11 @@ public class MiContentActivity extends MiBaseActivity implements View.OnClickLis
 
     private void changePage(int page) {
         ContentMuneEntity contentMuneEntity = muneList.get(page);
+        viewContent.setCurrentItem(page);
         if (contentMuneEntity.getFragment() instanceof StackFragment) {//表示当前页为书库页
             ((ContentMuneAdapter) contentMune.getAdapter()).setType(ContentMuneAdapter.Type.stack);
+        } else {
+            ((ContentMuneAdapter) contentMune.getAdapter()).setType(ContentMuneAdapter.Type.mune);
         }
     }
 
@@ -125,6 +130,22 @@ public class MiContentActivity extends MiBaseActivity implements View.OnClickLis
             }
         });
         contentMune.setAdapter(contentMuneAdapter);
+        viewContent.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                Log.i("滑动", "" + position);
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                changePage(position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
 
