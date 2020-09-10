@@ -144,6 +144,10 @@ public class Router {
         return this.build(path, bundle, null);
     }
 
+    public BindDetailInfo build(String path) {
+        return this.build(path, null, null);
+    }
+
 
     public BindDetailInfo build(String path, Bundle bundle, Activity activity) {
         mActivity = activity;

@@ -26,6 +26,7 @@ import com.hao.minovel.tinker.app.AppContext
 
 @Bind
 class WelcomeActivity : MiBaseActivity() {
+
     override fun doOnSetContent(v: View?) {
     }
 
@@ -72,7 +73,7 @@ class WelcomeActivity : MiBaseActivity() {
         return com.hao.minovel.R.layout.activity_main
     }
 
-    override fun initView() {
+    override fun initView(v: View) {
 //        novel_icon.visibility = View.VISIBLE
 //        logo_text.visibility = View.VISIBLE
 //        logo_advert.visibility = View.VISIBLE
@@ -151,8 +152,6 @@ class WelcomeActivity : MiBaseActivity() {
         valueAnimator.interpolator = LinearInterpolator()
         valueAnimator.addUpdateListener { valueAnimator ->
             val progress = valueAnimator.animatedValue as Float
-            Log.i("动画进度", "$progress   $isJumpMian")
-
             if (progress > 10 && progress < 75) {
                 novel_icon.visibility = View.VISIBLE
                 logo_text.visibility = View.VISIBLE
@@ -162,7 +161,6 @@ class WelcomeActivity : MiBaseActivity() {
             } else if (progress < 99) {
                 logo_advert.visibility = View.VISIBLE
             } else if (progress == 100f) {
-                Log.i("main", "animalIsStart=" + valueAnimator.isRunning + "   isJumpMian=" + isJumpMian + "    " + promisstion)
                 if (valueAnimator.isRunning && !isJumpMian && promisstion) {
                     gotoMain()
                     isJumpMian = true
@@ -185,7 +183,7 @@ class WelcomeActivity : MiBaseActivity() {
             val activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(this, pair1)
             val bundle = activityOptionsCompat.toBundle()
             bundle!!.putBoolean("animal", true)
-            Router.getInstance().build(RouterContent.MICONTENTACTIVITY, bundle, this).skip()
+            Router.getInstance().build(RouterContent.SHIFTACTIVITY, bundle, this).skip()
             //          ActivityCompat.startActivity(this, intent, activityOptionsCompat.toBundle());
             //          intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             //          ActivityCompat.startActivity(App.getInstance(), intent, bundle);

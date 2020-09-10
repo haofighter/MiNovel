@@ -55,7 +55,7 @@
                     android:clickable="false"
                     android:focusable="false"
                     android:scaleType="fitXY"
-                    android:src="@color/gray_dd"
+                    android:src="@color/gray_ee"
                     android:transitionName="img_cover" />
 
                 <View
@@ -117,7 +117,7 @@
                     android:clickable="false"
                     android:focusable="false"
                     android:scaleType="fitXY"
-                    android:src="@color/gray_dd"
+                    android:src="@color/gray_ee"
                     android:transitionName="img_cover" />
 
 
@@ -180,7 +180,7 @@
                     android:clickable="false"
                     android:focusable="false"
                     android:scaleType="fitXY"
-                    android:src="@color/gray_dd"
+                    android:src="@color/gray_ee"
                     android:transitionName="img_cover" />
 
                 <View

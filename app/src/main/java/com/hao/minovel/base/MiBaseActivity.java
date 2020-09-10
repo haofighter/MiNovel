@@ -16,6 +16,7 @@ import androidx.annotation.LayoutRes;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.hao.minovel.moudle.entity.JumpInfo;
 import com.hao.minovel.tinker.app.AppContext;
 import com.hao.minovel.utils.StatusBarUtil;
 import com.hao.minovel.utils.SystemUtil;
@@ -57,7 +58,7 @@ public abstract class MiBaseActivity extends AppCompatActivity {
         doOnSetContent(v);
         setContentView(v);
         AppContext.addActivity(this);
-        initView();
+        initView(v);
         doElse();
     }
 
@@ -77,7 +78,7 @@ public abstract class MiBaseActivity extends AppCompatActivity {
     protected abstract @LayoutRes
     int layoutId();
 
-    protected abstract void initView();
+    protected abstract void initView(View v);
 
     protected abstract void doElse();
 
@@ -85,6 +86,19 @@ public abstract class MiBaseActivity extends AppCompatActivity {
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void eventBusOnEvent(Object o) {
+        if (o instanceof String) {
+            eventBusOnEvent((String) o);
+        } else if (o instanceof JumpInfo) {
+            eventBusOnEvent((JumpInfo) o);
+        }
+    }
+
+    public void eventBusOnEvent(String str) {
+
+    }
+
+    public void eventBusOnEvent(JumpInfo str) {
+
     }
 
 

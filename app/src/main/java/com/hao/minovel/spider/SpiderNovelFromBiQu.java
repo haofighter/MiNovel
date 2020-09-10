@@ -45,7 +45,7 @@ public class SpiderNovelFromBiQu {
                 novelIntroduction.setCreatTime(System.currentTimeMillis());
 //                novelIntroduction.setNovelType(novelType);
                 novelIntroductions.add(novelIntroduction);
-                Log.i("小说", "名称=" + novelIntroduction.getNovelName() + "   作者：" + novelIntroduction.getNovelAutho() + "     主页地址：" + novelIntroduction.getNovelChapterListUrl());
+//                Log.i("小说", "名称=" + novelIntroduction.getNovelName() + "   作者：" + novelIntroduction.getNovelAutho() + "     主页地址：" + novelIntroduction.getNovelChapterListUrl());
             }
         }
         DBManage.addNovelIntrodution(novelIntroductions);
@@ -88,7 +88,7 @@ public class SpiderNovelFromBiQu {
                 String chapterUrl = selectChapter.get(i).select("a").attr("href");
                 String chapterName = selectChapter.get(i).select("a").text();
                 chapters.add(new NovelChapter((long) i, novelIntroduction.getNovelChapterListUrl(), chapterName, CheckedUrl(chapterUrl), "", "", "", false, i));
-                Log.i("下载章节", "chapterName=" + chapterName);
+//                Log.i("下载章节", "chapterName=" + chapterName);
             }
             DBManage.addNovelChapter(chapters);
         } catch (Exception e) {
@@ -140,7 +140,6 @@ public class SpiderNovelFromBiQu {
 
     public static boolean getNovelType() {
         SpiderResponse html = SpiderUtils.getHtml(BiQuMainUrl, "");
-        Log.i("小说分类", "html：" + html);
         if (html.code != 0) {
             return false;
         }
@@ -154,11 +153,9 @@ public class SpiderNovelFromBiQu {
             novelType.setType(type.get(i).select("a").text());
             novelType.setListUrl(type.get(i).select("a").attr("href"));
             novelType.setCreatTime(System.currentTimeMillis());
-            Log.i("小说分类", "类别：" + novelType.getType() + "   地址：" + novelType.getListUrl());
             novelTypes.add(novelType);
         }
         DBManage.addNovelType(novelTypes);
-
         return true;
     }
 

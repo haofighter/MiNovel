@@ -10,7 +10,7 @@ import java.io.File;
 
 public class MiLog {
     static boolean isShowLog = true;
-    static boolean isSaveLog = true;
+    static boolean isSaveLog = false;
 
 
     public static void i(String tag, String msg) {

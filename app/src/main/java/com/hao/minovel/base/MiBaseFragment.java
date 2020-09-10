@@ -22,17 +22,10 @@ import com.hao.minovel.view.RoundLayout;
 public abstract class MiBaseFragment extends Fragment {
     String TAG = this.getClass().getName();
     protected RoundLayout roundLinearLayout;
-    Object flag;
     float offset;
     int maxRound = 90;
     protected FragmentListener fragmentListener;
 
-    public MiBaseFragment() {
-    }
-
-    public MiBaseFragment(Object flag) {
-        this.flag = flag;
-    }
 
     public abstract @LayoutRes
     int onlayout();

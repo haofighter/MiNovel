@@ -15,7 +15,7 @@ import androidx.annotation.RequiresApi;
 
 import com.hao.minovel.R;
 import com.hao.minovel.db.DBManage;
-import com.hao.minovel.moudle.activity.MiContentActivity;
+import com.hao.minovel.moudle.activity.ShiftActivity;
 import com.hao.minovel.spider.SpiderNovelFromBiQu;
 import com.hao.minovel.spider.data.NovelChapter;
 import com.hao.minovel.spider.data.NovelIntroduction;
@@ -103,7 +103,7 @@ public class DownLoadNovelService extends Service {
     public void onCreate() {
         super.onCreate();
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        Intent notificationIntent = new Intent(this, MiContentActivity.class);
+        Intent notificationIntent = new Intent(this, ShiftActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
                 notificationIntent, 0);
         Notification.Builder builder = new Notification.Builder(this)

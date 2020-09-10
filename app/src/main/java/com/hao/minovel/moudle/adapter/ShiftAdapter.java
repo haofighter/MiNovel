@@ -1,6 +1,8 @@
 package com.hao.minovel.moudle.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,8 +15,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.hao.date.RouterContent;
 import com.hao.minovel.R;
 import com.hao.minovel.db.DBManage;
+import com.hao.minovel.moudle.entity.JumpInfo;
 import com.hao.minovel.moudle.entity.ReadInfo;
 import com.hao.minovel.spider.data.NovelChapter;
 import com.hao.minovel.spider.data.NovelIntroduction;
@@ -162,11 +166,11 @@ public class ShiftAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 public void onClick(View v) {
                     ReadInfo readInfo = (ReadInfo) v.getTag();
                     if (tv_watch.getText().equals("继续阅读")) {
-//                        Intent intent = new Intent(mContext, ReadNovelActivity.class);
-//                        intent.putExtra("novelChapter", DbManage.checkNovelChaptterById(readInfo.getNovelChapterListUrl(), readInfo.getNovelChapterUrl()));
-//                        mContext.startActivity(intent);
+                        Bundle bundle = new Bundle();
+                        bundle.putParcelable("novelChapter", DBManage.checkNovelChaptterById(readInfo.getNovelChapterListUrl(), readInfo.getNovelChapterUrl()));
+//                        EventBus.getDefault().post(new JumpInfo(RouterContent.SHIFTACTIVITY, null));
                     } else {
-                        EventBus.getDefault().post("toStack");
+                        EventBus.getDefault().post(new JumpInfo(RouterContent.STACKACTIVITY, null));
                     }
                 }
             });

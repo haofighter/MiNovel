@@ -1,19 +1,14 @@
 package com.hao.minovel.moudle.entity;
 
-import com.hao.minovel.base.MiBaseFragment;
-
-/**
- * 主页菜单栏
- */
-public class ContentMuneEntity {
+public class ShiftMuneEntity {
     int itmeImgId;
     String muneItemm;
-    MiBaseFragment fragment;
+    String routerActivityTag;
 
-    public ContentMuneEntity(int itmeImgId, String muneItemm, MiBaseFragment fragment) {
+    public ShiftMuneEntity(int itmeImgId, String muneItemm, String routerActivityTag) {
         this.itmeImgId = itmeImgId;
         this.muneItemm = muneItemm;
-        this.fragment = fragment;
+        this.routerActivityTag = routerActivityTag;
     }
 
     public int getItmeImgId() {
@@ -32,11 +27,11 @@ public class ContentMuneEntity {
         this.muneItemm = muneItemm;
     }
 
-    public MiBaseFragment getFragment() {
-        return fragment;
+    public String getRouterActivityTag() {
+        return routerActivityTag;
     }
 
-    public void setFragment(MiBaseFragment fragment) {
-        this.fragment = fragment;
+    public void setRouterActivityTag(String routerActivityTag) {
+        this.routerActivityTag = routerActivityTag;
     }
 }

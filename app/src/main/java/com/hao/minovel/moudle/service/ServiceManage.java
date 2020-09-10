@@ -58,4 +58,8 @@ public class ServiceManage {
     public void unBindBackRunService(Application application) {
         application.unbindService(connection);
     }
+
+    public DownLoadNovelBinder<Object> getBinder() {
+        return binder;
+    }
 }
