@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -32,12 +33,13 @@ public class NovelListAdapter extends MiBaseAdapter<RecyclerView.ViewHolder> {
 
 
     int count;
+    boolean loadState = true;//true 正在加载  false 加载失败
 
-    /**
-     * 是否需要动画
-     */
-    boolean isNeedLoadAnimal = false;
 
+    public void setLoadState(boolean loadState) {
+        this.loadState = loadState;
+        notifyDate();
+    }
 
     /**
      * 小说类型
@@ -83,10 +85,7 @@ public class NovelListAdapter extends MiBaseAdapter<RecyclerView.ViewHolder> {
 
     public NovelListAdapter(Context context, boolean isNeedLoadAnimal) {
         this.context = context;
-        this.isNeedLoadAnimal = isNeedLoadAnimal;
-        if (isNeedLoadAnimal) {
-            isOpen = true;
-        }
+        this.isOpen = isNeedLoadAnimal;
     }
 
 
@@ -94,13 +93,13 @@ public class NovelListAdapter extends MiBaseAdapter<RecyclerView.ViewHolder> {
         novelIntroductions.clear();
         novelIntroductions.addAll(novelIntros);
         count = novelIntroductions == null ? 0 : novelIntroductions.size();
-        notifyDataSetChanged();
+        notifyDate();
     }
 
     public void addDate(List<NovelIntroduction> novelIntros) {
         novelIntroductions.addAll(novelIntros);
         count = novelIntroductions.size();
-        notifyDataSetChanged();
+        notifyDate();
     }
 
 
@@ -109,17 +108,21 @@ public class NovelListAdapter extends MiBaseAdapter<RecyclerView.ViewHolder> {
     }
 
 
-    public boolean isOpen() {
-        return isOpen;
-    }
-
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        if (viewType == 1) {
+        if (viewType == 0) {
+            View v = LayoutInflater.from(context).inflate(R.layout.novel_list_null, null);
+            v.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+            return new ReloadViewHolder(v);
+        } else if (viewType == 1) {
             View v = LayoutInflater.from(context).inflate(R.layout.novel_list_item, null);
             v.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             return new HotNovelViewHolder(v);
+        } else if (viewType == 3) {
+            View v = LayoutInflater.from(context).inflate(R.layout.novel_list_load, null);
+            v.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            return new LoadViewHolder(v);
         } else {
             View v = LayoutInflater.from(context).inflate(R.layout.novel_list_item2, null);
             v.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -129,44 +132,50 @@ public class NovelListAdapter extends MiBaseAdapter<RecyclerView.ViewHolder> {
 
     @Override
     public int getItemViewType(int position) {
-        if (novelIntroductions.get(position).isIshot()) {
-            return 1;
+        if (count != 0) {
+            if (position < count) {
+                if (novelIntroductions.get(position).isIshot()) {
+                    return 1;
+                } else {
+                    return 2;
+                }
+            } else {
+                return 3;
+            }
         } else {
-            return 2;
+            return 0;
         }
     }
 
-    public void setItemOnClickListener(AdapterView.OnItemClickListener onItemClickListener) {
+    public NovelListAdapter setItemOnClickListener(AdapterView.OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
+        return this;
     }
 
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        if (isNeedLoadAnimal) {
-            startAnimal(holder, position);
-        }
         holder.itemView.setTag(position);
-        NovelIntroduction novelIntroduction = novelIntroductions.get(position);
-        if (novelIntroduction.isIshot()) {
-            ((HotNovelViewHolder) holder).setDate(novelIntroduction);
-        } else {
-            ((NearUpViewHolder) holder).setDate(novelIntroduction);
+        if (count != 0) {
+            if (position < count) {
+                NovelIntroduction novelIntroduction = novelIntroductions.get(position);
+                if (novelIntroduction.isIshot()) {
+                    ((HotNovelViewHolder) holder).setDate(novelIntroduction);
+                } else {
+                    ((NearUpViewHolder) holder).setDate(novelIntroduction);
+                }
+            } else {
+                ((LoadViewHolder) holder).setLoadInfo(loadState);
+                loadState = true;
+            }
+            super.onBindViewHolder(holder, position);
         }
     }
 
     @Override
     public int getItemCount() {
-        return count;
+        return count + 1;
     }
-
-    public void changeDisOrHide() {
-        if (!isInAnimal) {
-            isOpen = !isOpen;
-            notifyDataSetChanged();
-        }
-    }
-
 
     public void setType(String type) {
         this.type = type;
@@ -178,6 +187,10 @@ public class NovelListAdapter extends MiBaseAdapter<RecyclerView.ViewHolder> {
             novelIntroduction.setIshot(true);
             novelIntroductions.add(0, novelIntroduction);
         }
+        notifyDate();
+    }
+
+    public void notifyDate() {
         notifyDataSetChanged();
     }
 
@@ -265,5 +278,58 @@ public class NovelListAdapter extends MiBaseAdapter<RecyclerView.ViewHolder> {
             });
         }
     }
+
+    class ReloadViewHolder extends RecyclerView.ViewHolder {
+        View view;
+        TextView reload;
+
+        public ReloadViewHolder(@NonNull View itemView) {
+            super(itemView);
+            view = itemView;
+            reload = view.findViewById(R.id.reload);
+            reload.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (onItemClickListener == null) {
+                        return;
+                    }
+                    onItemClickListener.onItemClick(null, view, (Integer) view.getTag(), view.getId());
+                }
+            });
+        }
+    }
+
+    class LoadViewHolder extends RecyclerView.ViewHolder {
+        View load_layout;
+        ProgressBar progress;
+        TextView load_info;
+
+        public LoadViewHolder(@NonNull View itemView) {
+            super(itemView);
+            load_layout = itemView;
+            progress = load_layout.findViewById(R.id.progress);
+            load_info = load_layout.findViewById(R.id.load_info);
+            load_layout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (onItemClickListener == null) {
+                        return;
+                    }
+                    onItemClickListener.onItemClick(null, view, (Integer) view.getTag(), view.getId());
+                }
+            });
+        }
+
+        public void setLoadInfo(boolean loadState) {
+            if (loadState) {
+                load_info.setText("正在加载");
+                progress.setVisibility(View.VISIBLE);
+            } else {
+                load_info.setText("加载失败,点击重新加载");
+                progress.setVisibility(View.GONE);
+            }
+        }
+    }
+
 
 }

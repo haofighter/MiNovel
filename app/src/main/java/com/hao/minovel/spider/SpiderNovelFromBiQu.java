@@ -18,6 +18,9 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.hao.minovel.spider.SpiderUtils.Success;
+import static com.hao.minovel.spider.SpiderUtils.UNKNOWNERR;
+
 
 public class SpiderNovelFromBiQu {
     public static final String BiQuMainUrl = "http://www.xbiquge.la/";
@@ -25,10 +28,10 @@ public class SpiderNovelFromBiQu {
     /**
      * 获取当前站所有小说信息
      */
-    public static boolean getAllNovel() {
+    public static int getAllNovel() {
         SpiderResponse spiderResponse = SpiderUtils.getHtml(BiQuMainUrl, "xiaoshuodaquan/");
         if (spiderResponse.code != 0) {
-            return false;
+            return spiderResponse.code;
         }
         Document doc = Jsoup.parse(spiderResponse.result);
         Elements rows = doc.select("div[class=novellist]");
@@ -49,19 +52,19 @@ public class SpiderNovelFromBiQu {
             }
         }
         DBManage.addNovelIntrodution(novelIntroductions);
-        return true;
+        return spiderResponse.code;
     }
 
-    public static boolean getAllNovelDetailInfo(NovelIntroduction novelIntroduction) {
+    public static int getAllNovelDetailInfo(NovelIntroduction novelIntroduction) {
         SpiderResponse htmlNovelChapterList = SpiderUtils.getHtml(BiQuMainUrl, novelIntroduction.getNovelChapterListUrl());
         if (htmlNovelChapterList.code != 0) {
-            return false;
+            return htmlNovelChapterList.code;
         }
         return getAllNovelDetailInfo(novelIntroduction, htmlNovelChapterList.result);
     }
 
     //完善小说详情小说详情
-    public static boolean getAllNovelDetailInfo(NovelIntroduction novelIntroduction, String html) {
+    public static int getAllNovelDetailInfo(NovelIntroduction novelIntroduction, String html) {
         String htmlNovelChapterList = html;
         try {
             Document htmlNovelChapterListDoc = Jsoup.parse(htmlNovelChapterList);
@@ -74,9 +77,9 @@ public class SpiderNovelFromBiQu {
             DBManage.addNovelIntrodution(novelIntroduction);
             getNovelAllChapterTitle(novelIntroduction, htmlNovelChapterListDoc);
         } catch (Exception e) {
-            return false;
+            return UNKNOWNERR;
         }
-        return true;
+        return Success;
     }
 
     public static boolean getNovelAllChapterTitle(NovelIntroduction novelIntroduction, Document html) {
@@ -97,14 +100,14 @@ public class SpiderNovelFromBiQu {
         return true;
     }
 
-    public static boolean getNovelContent(NovelChapter novelChapter) {
+    public static int getNovelContent(NovelChapter novelChapter) {
         if (novelChapter.getChapterUrl() == null || novelChapter.getChapterUrl().equals("")) {
-            return false;
+            return UNKNOWNERR;
         }
 
         SpiderResponse htmlNovelChapterList = SpiderUtils.getHtml(BiQuMainUrl, novelChapter.getChapterUrl());
         if (htmlNovelChapterList.code != 0) {
-            return false;
+            return htmlNovelChapterList.code;
         }
 
         Document htmlNovelChapterListDoc = Jsoup.parse(htmlNovelChapterList.result);
@@ -126,7 +129,7 @@ public class SpiderNovelFromBiQu {
         novelChapter.setIsComplete(true);
         DBManage.updateNovelChapter(novelChapter);
 
-        return true;
+        return htmlNovelChapterList.code;
     }
 
     //用于URL的检测
@@ -138,10 +141,10 @@ public class SpiderNovelFromBiQu {
         }
     }
 
-    public static boolean getNovelType() {
+    public static int getNovelType() {
         SpiderResponse html = SpiderUtils.getHtml(BiQuMainUrl, "");
         if (html.code != 0) {
-            return false;
+            return html.code;
         }
         Document doc = Jsoup.parse(html.result);
         Elements rows = doc.select("div[class=nav]");
@@ -156,16 +159,16 @@ public class SpiderNovelFromBiQu {
             novelTypes.add(novelType);
         }
         DBManage.addNovelType(novelTypes);
-        return true;
+        return html.code;
     }
 
     //查询未完善的章节 进行数据完善
-    public static boolean getAllNovelContent(NovelIntroduction novelIntroduction) {
+    public static int getAllNovelContent(NovelIntroduction novelIntroduction) {
         NovelChapter novelChapter = DBManage.checkNovelAllNoChapterContent(novelIntroduction);
         if (novelChapter != null) {
             return getNovelContent(novelChapter);
         } else {
-            return false;
+            return UNKNOWNERR;
         }
     }
 

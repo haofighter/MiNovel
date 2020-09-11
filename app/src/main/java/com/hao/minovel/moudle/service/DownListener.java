@@ -22,5 +22,5 @@ public abstract class DownListener {
 
     public abstract void startDown();
 
-    public abstract void endDown();
+    public abstract void endDown(int state);
 }
