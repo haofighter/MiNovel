@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/readbook_config"
+    android:layout_width="match_parent"
+    android:layout_height="600dp"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/none"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+    </LinearLayout>
+
+    <include layout="@layout/mune_setting" />
+
+    <include layout="@layout/from_setting" />
+
+    <include layout="@layout/back_setting" />
+</LinearLayout>

@@ -18,14 +18,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         android:usesCleartextTraffic="true">
+        <activity android:name=".moudle.activity.NovelDetailActivity"></activity>
         <activity
             android:name=".moudle.activity.StackActivity"
             android:launchMode="singleTop" />
         <activity
             android:name=".moudle.activity.ShiftActivity"
-            android:launchMode="singleTop">
-
-        </activity>
+            android:launchMode="singleTop"></activity>
         <activity android:name=".moudle.activity.WelcomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

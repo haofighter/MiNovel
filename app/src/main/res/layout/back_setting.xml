@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/background_setting"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="horizontal"
+    android:padding="20dp">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center">
+
+        <com.hao.minovel.view.NiceImageView
+            android:id="@+id/bg_black"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@mipmap/bg_readbook_black"
+            app:iscircle="true" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center">
+
+        <com.hao.minovel.view.NiceImageView
+            android:id="@+id/bg_yellow"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@mipmap/bg_readbook_yellow"
+            app:iscircle="true" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center">
+
+        <com.hao.minovel.view.NiceImageView
+            android:id="@+id/bg_green"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@mipmap/bg_readbook_green"
+            app:iscircle="true" />
+    </LinearLayout>
+
+</LinearLayout>

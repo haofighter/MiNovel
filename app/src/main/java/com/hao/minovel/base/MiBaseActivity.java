@@ -43,8 +43,9 @@ public abstract class MiBaseActivity extends AppCompatActivity {
     protected boolean beforOnCreate() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        }
 
+        }
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
         StatusBarUtil.setTranslucent(this);
         StatusBarUtil.setStatubarTextColor(this, true);
         return true;

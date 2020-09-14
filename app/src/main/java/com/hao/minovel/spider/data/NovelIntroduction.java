@@ -1,6 +1,9 @@
 package com.hao.minovel.spider.data;
 
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Unique;
@@ -10,7 +13,7 @@ import org.greenrobot.greendao.annotation.Unique;
  * 小说简介 用于存储小说的名称，作者，地址等
  */
 @Entity
-public class NovelIntroduction {
+public class NovelIntroduction implements Parcelable {
     String novelName;//小说名
     String novelAutho;//作者
     String novelCover;//封面
@@ -57,6 +60,60 @@ public class NovelIntroduction {
     public NovelIntroduction() {
     }
 
+
+    protected NovelIntroduction(Parcel in) {
+        novelName = in.readString();
+        novelAutho = in.readString();
+        novelCover = in.readString();
+        novelIntroduce = in.readString();
+        novelType = in.readString();
+        novelListUrl = in.readString();
+        novelNewChapterTitle = in.readString();
+        novelNewChapterUrl = in.readString();
+        novelChapterListUrl = in.readString();
+        nowRead = in.readString();
+        nowReadID = in.readString();
+        isComplete = in.readByte() != 0;
+        isFav = in.readByte() != 0;
+        ishot = in.readByte() != 0;
+        creatTime = in.readLong();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(novelName);
+        dest.writeString(novelAutho);
+        dest.writeString(novelCover);
+        dest.writeString(novelIntroduce);
+        dest.writeString(novelType);
+        dest.writeString(novelListUrl);
+        dest.writeString(novelNewChapterTitle);
+        dest.writeString(novelNewChapterUrl);
+        dest.writeString(novelChapterListUrl);
+        dest.writeString(nowRead);
+        dest.writeString(nowReadID);
+        dest.writeByte((byte) (isComplete ? 1 : 0));
+        dest.writeByte((byte) (isFav ? 1 : 0));
+        dest.writeByte((byte) (ishot ? 1 : 0));
+        dest.writeLong(creatTime);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<NovelIntroduction> CREATOR = new Creator<NovelIntroduction>() {
+        @Override
+        public NovelIntroduction createFromParcel(Parcel in) {
+            return new NovelIntroduction(in);
+        }
+
+        @Override
+        public NovelIntroduction[] newArray(int size) {
+            return new NovelIntroduction[size];
+        }
+    };
 
     @Override
     public String toString() {

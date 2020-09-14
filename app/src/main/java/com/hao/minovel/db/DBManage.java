@@ -252,4 +252,10 @@ public class DBManage {
         ReadInfoDao readInfoDao = DBCore.getDaoSession().getReadInfoDao();
         readInfoDao.delete(readInfo);
     }
+
+
+    public static ReadInfo checkedReadInfo(String novelDetailUrl) {
+        ReadInfoDao readInfoDao = DBCore.getDaoSession().getReadInfoDao();
+        return readInfoDao.queryBuilder().where(ReadInfoDao.Properties.NovelChapterListUrl.eq(novelDetailUrl)).limit(1).unique();
+    }
 }

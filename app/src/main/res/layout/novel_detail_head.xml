@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="180dp"
+                android:background="@color/gray_55"
+                android:gravity="center_vertical"
+                android:orientation="vertical"
+                android:paddingLeft="130dp"
+                android:paddingTop="45dp">
+
+                <TextView
+                    android:id="@+id/novel_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="小说标题"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_title"
+                    android:transitionName="novel_title" />
+
+                <TextView
+                    android:id="@+id/novel_author"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="小说标题"
+                    android:textColor="@color/gray_ee"
+                    android:textSize="@dimen/text_second" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/novel_type"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/shape_coner_white_5dp"
+                        android:paddingLeft="6dp"
+                        android:paddingTop="3dp"
+                        android:paddingRight="6dp"
+                        android:paddingBottom="3dp"
+                        android:textColor="@color/gray_55"
+                        android:textSize="@dimen/text_four" />
+
+                    <TextView
+                        android:id="@+id/novel_lenth"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:background="@drawable/shape_coner_white_5dp"
+                        android:paddingLeft="6dp"
+                        android:paddingTop="3dp"
+                        android:paddingRight="6dp"
+                        android:paddingBottom="3dp"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_four"
+                        android:visibility="gone" />
+                </LinearLayout>
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white_44"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/novel_introduce"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:baselineAligned="false"
+                    android:ellipsize="end"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="20dp"
+                    android:paddingTop="20dp"
+                    android:paddingRight="20dp"
+                    android:text="小说简介"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_second" />
+
+                <TextView
+                    android:id="@+id/more_or_part"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"
+                    android:layout_gravity="right"
+                    android:layout_marginRight="20dp"
+                    android:text="更多"
+                    android:textColor="@color/Blue" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@drawable/shape_line_gray" />
+
+                <LinearLayout
+                    android:id="@+id/novel_now_read_ll"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="10dp"
+                        android:text="当前阅读："
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_second" />
+
+                    <TextView
+                        android:id="@+id/novel_now_read"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="1"
+                        android:ellipsize="end"
+                        android:gravity="right|center_vertical"
+                        android:lines="1"
+                        android:textColor="@color/black" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="10dp"
+                        android:text="最新章节"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_second" />
+
+                    <TextView
+                        android:id="@+id/novel_last_chaper"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="1"
+                        android:ellipsize="end"
+                        android:gravity="right|center_vertical"
+                        android:lines="1"
+                        android:textColor="@color/black" />
+                </LinearLayout>
+
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="150dp"
+            android:layout_height="250dp"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/novel_detail_image"
+                android:layout_width="100dp"
+                android:layout_height="150dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="45dp"
+                android:transitionName="cover" />
+        </LinearLayout>
+    </RelativeLayout>
+
+
+</LinearLayout>

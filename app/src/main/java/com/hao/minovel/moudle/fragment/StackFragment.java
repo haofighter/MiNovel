@@ -3,6 +3,7 @@ package com.hao.minovel.moudle.fragment;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -15,6 +16,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.hao.annotationengine.Router;
+import com.hao.date.RouterContent;
 import com.hao.minovel.R;
 import com.hao.minovel.base.MiBaseFragment;
 import com.hao.minovel.db.DBManage;
@@ -69,6 +72,9 @@ public class StackFragment extends MiBaseFragment {
                     loadDate();
                 } else {
                     NovelIntroduction novelIntroduction = ((NovelListAdapter) recyclerView.getAdapter()).getItem(position);
+                    Bundle bundle = new Bundle();
+                    bundle.putParcelable("novelDetail", novelIntroduction);
+                    Router.getInstance().build(RouterContent.NOVELDETAILACTIVITY, bundle).skip();
                 }
             }
         });

@@ -13,10 +13,14 @@ import com.hao.minovel.moudle.adapter.StackPageAdapter
 import com.hao.minovel.moudle.adapter.StackMuneAdapter
 import com.hao.minovel.moudle.entity.StackTypeEntity
 import com.hao.minovel.moudle.fragment.StackFragment
+import com.hao.minovel.moudle.service.ServiceManage
 import com.hao.minovel.spider.data.NovelType
+import com.hao.minovel.tinker.app.AppContext
 import com.hao.minovel.utils.SystemUtil
+import com.hao.minovel.utils.ToastUtils
 import kotlinx.android.synthetic.main.activity_stack.*
 import kotlinx.android.synthetic.main.head_view.*
+import java.lang.Exception
 
 /**
  * 书库
@@ -84,8 +88,13 @@ class StackActivity : MiMuneActivity(), View.OnClickListener {
 
 
     private fun changePage(index: Int) {
-        title_name.text = (show_stack.adapter as StackPageAdapter).getmFragments()[index].muneItemm
-        (mune.adapter as StackMuneAdapter).setCheck(index)
+        try {
+            title_name.text = (show_stack.adapter as StackPageAdapter).getmFragments()[index].muneItemm
+            (mune.adapter as StackMuneAdapter).setCheck(index)
+        } catch (e: Exception) {
+            ToastUtils.showMessage("加载书库失败")
+            ServiceManage.getInstance().startBackRunService(AppContext.application)
+        }
     }
 
 }
