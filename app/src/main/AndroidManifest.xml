@@ -18,19 +18,22 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         android:usesCleartextTraffic="true">
+        <activity android:name=".moudle.activity.ReadNovelActivity" />
         <activity android:name=".moudle.activity.NovelDetailActivity"></activity>
         <activity
             android:name=".moudle.activity.StackActivity"
             android:launchMode="singleTop" />
         <activity
             android:name=".moudle.activity.ShiftActivity"
-            android:launchMode="singleTop"></activity>
-        <activity android:name=".moudle.activity.WelcomeActivity">
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".moudle.activity.WelcomeActivity">
+
         </activity>
 
         <service

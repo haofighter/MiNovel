@@ -17,6 +17,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+            <include layout="@layout/read_novel_page" />
+
         </com.hao.minovel.view.minovelread.PullViewLayout>
 
         <include layout="@layout/readbook_config" />

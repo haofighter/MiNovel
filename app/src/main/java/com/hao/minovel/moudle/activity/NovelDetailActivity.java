@@ -3,6 +3,7 @@ package com.hao.minovel.moudle.activity;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -11,7 +12,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.hao.annotationengine.Router;
 import com.hao.annotetion.annotation.Bind;
+import com.hao.date.RouterContent;
 import com.hao.minovel.R;
 import com.hao.minovel.base.MiBaseActivity;
 import com.hao.minovel.db.DBManage;
@@ -45,6 +48,7 @@ public class NovelDetailActivity extends MiBaseActivity implements View.OnClickL
     ImageView novelDetailImage;
     TextView moreOrPart;
     SwipeRefreshLayout refreshLayout;
+    ReadInfo readInfo;
 
 
     @Override
@@ -66,11 +70,14 @@ public class NovelDetailActivity extends MiBaseActivity implements View.OnClickL
         novelDetailImage = v.findViewById(R.id.novel_detail_image);
         moreOrPart = v.findViewById(R.id.more_or_part);
         moreOrPart.setOnClickListener(this);
+        v.findViewById(R.id.start_read).setOnClickListener(this);
     }
 
     @Override
     protected void doElse() {
+
         novelDetail = getIntent().getParcelableExtra("novelDetail");
+        readInfo = DBManage.checkedReadInfo(novelDetail.getNovelChapterListUrl());
     }
 
 
@@ -78,7 +85,6 @@ public class NovelDetailActivity extends MiBaseActivity implements View.OnClickL
     public void onResume() {
         super.onResume();
         refreshLayout.setRefreshing(true);
-        ReadInfo readInfo = DBManage.checkedReadInfo(novelDetail.getNovelChapterListUrl());
         if (readInfo != null) {
             startRead.setText("继续阅读");
         } else {
@@ -145,7 +151,7 @@ public class NovelDetailActivity extends MiBaseActivity implements View.OnClickL
                         EventBus.getDefault().post("loadErr");
                     }
                 }
-            }, true));
+            }));
         }
     }
 
@@ -171,6 +177,23 @@ public class NovelDetailActivity extends MiBaseActivity implements View.OnClickL
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.novel_now_read:
+//                Router.getInstance().build(RouterContent.READNOVELACTIVITY).skip();
+                break;
+            case R.id.start_read:
+                Bundle bundle = new Bundle();
+                if (((TextView) v).getText().toString().equals("继续阅读")) {
+                    NovelChapter novelChapter = DBManage.checkNovelChaptterById(readInfo.getNovelChapterListUrl(), readInfo.getNovelChapterUrl());
+                    bundle.putParcelable("novelChapter", novelChapter);
+                    Router.getInstance().build(RouterContent.READNOVELACTIVITY,bundle).skip();
+                } else if (((TextView) v).getText().toString().equals("开始阅读")) {
+                    List<NovelChapter> novelChapters = DBManage.getChapterById(novelDetail.getNovelChapterListUrl());
+                    if (novelChapters.size() > 0) {
+                        bundle.putParcelable("novelChapter", novelChapters.get(0));
+                        Router.getInstance().build(RouterContent.READNOVELACTIVITY,bundle).skip();
+                    } else {
+                        initDate();
+                    }
+                }
                 break;
             case R.id.more_or_part:
                 if (novelIntroduce.getMaxLines() != 3) {

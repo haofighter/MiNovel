@@ -1,11 +1,10 @@
 package com.hao.minovel.moudle.service;
 
-public class NovolDownTask {
+public class NovolDownTask<T> {
 
     DownLoadNovelService.NovelDownTag novelDownTag;
-    Object object;
+    T object;
     DownListener downListener;
-    boolean isScreenTask;
     String tag;
 
 
@@ -13,16 +12,15 @@ public class NovolDownTask {
         this(novelDownTag, null);
     }
 
-    public NovolDownTask(DownLoadNovelService.NovelDownTag novelDownTag, Object object) {
-        this(novelDownTag, object, null, false);
+    public NovolDownTask(DownLoadNovelService.NovelDownTag novelDownTag, T object) {
+        this(novelDownTag, object, null);
     }
 
 
-    public NovolDownTask(DownLoadNovelService.NovelDownTag novelDownTag, Object object, DownListener downListener, boolean isScreenTask) {
+    public NovolDownTask(DownLoadNovelService.NovelDownTag novelDownTag, T object, DownListener downListener) {
         this.novelDownTag = novelDownTag;
         this.object = object;
         this.downListener = downListener;
-        this.isScreenTask = isScreenTask;
         tag = "task" + (System.currentTimeMillis() + Math.round(10000));
     }
 
@@ -31,7 +29,7 @@ public class NovolDownTask {
     }
 
 
-    public Object getObject() {
+    public T getObject() {
         return object;
     }
 

@@ -81,10 +81,6 @@ public class DownLoadNovelService extends Service {
             try {
                 Log.i("小说服务", "添加任务=" + o.getNovelDownTag());
                 tag.add(o);
-                if (o.getDownListener() != null) {
-                    Log.i("小说服务", "设置当前前置任务tag=" + o.getDownListener().getTag());
-                    nowScreenTag = o.getDownListener().getTag();
-                }
             } catch (Exception e) {
                 tag.add(o);
             }
@@ -167,40 +163,41 @@ public class DownLoadNovelService extends Service {
                 case none://不做任何操作
                     break;
                 case allTitle://下载所有的小说标题
-                    loadState=SpiderNovelFromBiQu.getAllNovel();
+                    loadState = SpiderNovelFromBiQu.getAllNovel();
                     tag.add(new NovolDownTask(NovelDownTag.allDetail));
                     break;
                 case allDetail://完善所有的小说的介绍信息
                     NovelIntroduction novelIntroduction = DBManage.getNoCompleteDetailNovelInfo();
                     if (novelIntroduction != null) {
-                        loadState=SpiderNovelFromBiQu.getAllNovelDetailInfo(novelIntroduction);
+                        loadState = SpiderNovelFromBiQu.getAllNovelDetailInfo(novelIntroduction);
                     }
                     break;
                 case novelDetail://下载单本小说的信息 包含章节信息
-                    loadState= SpiderNovelFromBiQu.getAllNovelDetailInfo((NovelIntroduction) novolDownTask.getObject());
+                    loadState = SpiderNovelFromBiQu.getAllNovelDetailInfo((NovelIntroduction) novolDownTask.getObject());
                     break;
                 case singlechaptercontent://下载单章内容
-                    loadState=SpiderNovelFromBiQu.getNovelContent((NovelChapter) novolDownTask.getObject());
+                    loadState = SpiderNovelFromBiQu.getNovelContent((NovelChapter) novolDownTask.getObject());
                     break;
                 case novelallchaptercontent://下载小说的所有内容
-                    loadState=SpiderNovelFromBiQu.getAllNovelContent((NovelIntroduction) novolDownTask.getObject());
+                    loadState = SpiderNovelFromBiQu.getAllNovelContent((NovelIntroduction) novolDownTask.getObject());
                     break;
                 case noveltype://获取小说分类
-                    loadState=SpiderNovelFromBiQu.getNovelType();
+                    loadState = SpiderNovelFromBiQu.getNovelType();
                     break;
                 case noveltypelist://通过类别来获取小说列表
                     NovelType novelType = (NovelType) novolDownTask.getObject();
-                    loadState= SpiderNovelFromBiQu.getTypeNovelList(novelType);
+                    loadState = SpiderNovelFromBiQu.getTypeNovelList(novelType);
                     break;
             }
-            if (novolDownTask.downListener != null && novolDownTask.downListener.getTag().equals(nowScreenTag)) {
+            try {
                 novolDownTask.downListener.endDown(loadState);
+            } catch (Exception e) {
+                Log.i("小说服务", "任务执行完成执行回调出错:" + e.getMessage());
             }
             Log.i("小说服务", "任务执行完成" + novolDownTask.getNovelDownTag());
         }
     }
 
-    ;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {

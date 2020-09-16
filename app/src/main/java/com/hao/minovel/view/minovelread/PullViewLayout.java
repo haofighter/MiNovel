@@ -24,12 +24,12 @@ public class PullViewLayout extends FrameLayout {
     PullViewLayoutListener pullViewLayoutListener;
 
     Context mcontext;
-    List<NovelViewInfo> allView = new ArrayList<NovelViewInfo>() {
+    List<NovelPageInfo> allView = new ArrayList<NovelPageInfo>() {
         @Override
-        public boolean add(NovelViewInfo novelViewInfo) {
+        public boolean add(NovelPageInfo novelViewInfo) {
             try {
                 for (int i = 0; i < size(); i++) {
-                    if (novelViewInfo.getChapterName().equals(get(i).chapterName)) {
+                    if (novelViewInfo.getNovelChapterUrl().equals(get(i).getNovelChapterUrl())) {
                         return false;
                     }
                 }
@@ -39,8 +39,8 @@ public class PullViewLayout extends FrameLayout {
             return super.add(novelViewInfo);
         }
     };
-    List<View> head = new ArrayList<>();//前面未填充的view
-    List<View> end = new ArrayList<>();//后续未填充的view
+    List<NovelPageInfo> head = new ArrayList<>();//前面未填充的view
+    List<NovelPageInfo> end = new ArrayList<>();//后续未填充的view
     View fristPage;//前一页
     View contentPage;//显示页
     View nextPage;//后一页

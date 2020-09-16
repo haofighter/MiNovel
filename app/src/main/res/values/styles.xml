@@ -33,10 +33,24 @@
     </declare-styleable>
 
     <declare-styleable name="NovelTextView">
-        <attr name="type">
+        <attr name="texttype">
+            <enum name="normal" value="0" />
+            <enum name="bold" value="1" />
+            <enum name="italic" value="2" />
+        </attr>
+        <!--enum 枚举定义  flag 属性定义可使用多个属性-->
+        <attr name="typefaceName">
             <flag name="normal" value="0" />
             <flag name="bold" value="1" />
             <flag name="italic" value="2" />
         </attr>
+        <attr name="padding" format="dimension" />
+        <attr name="padding_left" format="dimension" />
+        <attr name="padding_right" format="dimension" />
+        <attr name="padding_top" format="dimension" />
+        <attr name="padding_bottom" format="dimension" />
+        <attr name="line_spacing" format="dimension" />
+        <attr name="word_spacing" format="dimension" />
+        <attr name="orientationVer" format="boolean" />
     </declare-styleable>
 </resources>

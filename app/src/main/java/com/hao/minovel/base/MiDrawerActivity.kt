@@ -6,10 +6,12 @@ import android.view.ViewGroup
 import androidx.drawerlayout.widget.DrawerLayout
 import com.hao.minovel.R
 import com.hao.minovel.view.RoundLayout
+import kotlinx.android.synthetic.main.activity_mi_drawer.*
 
 public abstract class MiDrawerActivity : MiBaseActivity() {
     lateinit var drawerLayout: DrawerLayout
     lateinit var contentShow: RoundLayout
+    lateinit var contentDrawer: RoundLayout
 
     override fun layoutId(): Int {
         return R.layout.activity_mi_drawer
@@ -25,11 +27,21 @@ public abstract class MiDrawerActivity : MiBaseActivity() {
     override fun doOnSetContent(v: View) {
         drawerLayout = v.findViewById(R.id.drawer_layout)
         contentShow = v.findViewById(R.id.content_show)
-        contentShow.addView(LayoutInflater.from(this).inflate(layoutContentId(), null))
-        var drawer = LayoutInflater.from(this).inflate(layoutDrawerId(), null)
+        contentDrawer = v.findViewById(R.id.content_drawer)
+
+
         var layoutParam = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+
+
+        var drawer = LayoutInflater.from(this).inflate(layoutDrawerId(), null)
         drawer.layoutParams = layoutParam
-        v.findViewById<RoundLayout>(R.id.content_drawer).addView(drawer)
+        contentDrawer.addView(drawer)
+
+        var content = LayoutInflater.from(this).inflate(layoutContentId(), null)
+        content.layoutParams = layoutParam
+        contentShow.addView(content)
+
+
     }
 
 

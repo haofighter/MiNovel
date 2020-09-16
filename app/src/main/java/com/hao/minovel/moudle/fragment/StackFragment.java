@@ -178,8 +178,9 @@ public class StackFragment extends MiBaseFragment {
                         nowLoadNovetype = oldNovelType;
                         handler.sendMessage(handler.obtainMessage(LOAD_ERR, nowLoadNovetype.getType()));
                     }
+
                 }
-            }, true));
+            }));
             return true;
         }
     }
@@ -189,6 +190,4 @@ public class StackFragment extends MiBaseFragment {
         super.setRound(offset);
         Log.i("圆角", "BookListFragment=" + offset);
     }
-
-
 }
