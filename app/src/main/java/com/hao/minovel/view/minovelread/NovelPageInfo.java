@@ -11,7 +11,7 @@ public class NovelPageInfo {
     private List<String> pageContent=new ArrayList<>();//当前章节内容
     private String novelChapterUrl;//当前章节小说所属id 用于获取下一章或上一章内容
     private String noveChapterListUrl;//
-    private View novelTextView;//当前页展示的小说界面
+    private View view;//当前页展示的小说界面
 
 
     public int getPage() {
@@ -55,11 +55,11 @@ public class NovelPageInfo {
         this.pageContent = pageContent;
     }
 
-    public View getNovelTextView() {
-        return novelTextView;
+    public View getView() {
+        return view;
     }
 
-    public void setNovelTextView(View novelTextView) {
-        this.novelTextView = novelTextView;
+    public void setView(View view) {
+        this.view = view;
     }
 }

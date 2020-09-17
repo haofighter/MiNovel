@@ -1,8 +1,12 @@
 package com.hao.minovel.moudle.activity;
 
 
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
+
+import androidx.annotation.NonNull;
 
 import com.hao.annotetion.annotation.Bind;
 import com.hao.minovel.R;
@@ -12,13 +16,16 @@ import com.hao.minovel.moudle.service.DownLoadNovelService;
 import com.hao.minovel.moudle.service.NovolDownTask;
 import com.hao.minovel.moudle.service.ServiceManage;
 import com.hao.minovel.spider.data.NovelChapter;
+import com.hao.minovel.view.minovelread.ChapterInfo;
 import com.hao.minovel.view.minovelread.NovelTextView;
+import com.hao.minovel.view.minovelread.PullViewLayout;
 
 
 @Bind
 public class ReadNovelActivity extends MiDrawerActivity {
     NovelChapter novelChapter;//当前页下载的小说内容
     NovelTextView novelTextView;
+    PullViewLayout novel_show;
 
     @Override
     public int layoutDrawerId() {
@@ -33,6 +40,7 @@ public class ReadNovelActivity extends MiDrawerActivity {
     @Override
     protected void initView(View v) {
         novelTextView = v.findViewById(R.id.novel_content);
+        novel_show = v.findViewById(R.id.novel_show);
     }
 
     @Override
@@ -41,6 +49,18 @@ public class ReadNovelActivity extends MiDrawerActivity {
         novelChapter = getIntent().getParcelableExtra("novelChapter");
         loadDate();
     }
+
+    Handler handler = new Handler() {
+        @Override
+        public void dispatchMessage(@NonNull Message msg) {
+            super.dispatchMessage(msg);
+            switch (msg.what) {
+                case 0:
+                    novel_show.addChapter((NovelChapter) msg.obj, true);
+                    break;
+            }
+        }
+    };
 
     private void loadDate() {
         if (TextUtils.isEmpty(novelChapter.getChapterContent())) {
@@ -57,7 +77,7 @@ public class ReadNovelActivity extends MiDrawerActivity {
 
                 @Override
                 public void endDown(int state) {
-                    novelTextView.getNovelTextViewHelp().initDate(novelTextView, novelChapter);
+                    handler.sendMessage(handler.obtainMessage(0, novelChapter));
                 }
             }));
         }

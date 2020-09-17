@@ -2,10 +2,18 @@ package com.hao.minovel.spider.data;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
+
+import com.hao.minovel.view.minovelread.NovelPageInfo;
 
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Unique;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @Entity
 public class NovelChapter implements Parcelable {
@@ -87,8 +95,6 @@ public class NovelChapter implements Parcelable {
     }
 
 
-
-
     @Override
     public int describeContents() {
         return 0;
@@ -129,8 +135,8 @@ public class NovelChapter implements Parcelable {
 
     @Generated(hash = 1894982023)
     public NovelChapter(Long id, String novelChapterListUrl, String chapterName,
-            String chapterUrl, String chapterContent, String nextChapterUrl,
-            String beforChapterUrl, boolean isComplete, long createTime) {
+                        String chapterUrl, String chapterContent, String nextChapterUrl,
+                        String beforChapterUrl, boolean isComplete, long createTime) {
         this.id = id;
         this.novelChapterListUrl = novelChapterListUrl;
         this.chapterName = chapterName;
@@ -157,4 +163,9 @@ public class NovelChapter implements Parcelable {
             return new NovelChapter[size];
         }
     };
+
+    public List<String> getFromatContentArray() {
+        String[] strs = getChapterContent().split("\n");
+        return Arrays.asList(strs);
+    }
 }
