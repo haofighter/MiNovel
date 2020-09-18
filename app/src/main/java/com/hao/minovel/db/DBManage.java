@@ -145,7 +145,7 @@ public class DBManage {
 
 
     public static List<NovelChapter> getChapterById(String chaptyrlerList) {
-        return DBCore.getDaoSession().getNovelChapterDao().queryBuilder().where(NovelChapterDao.Properties.NovelChapterListUrl.eq(chaptyrlerList)).list();
+        return DBCore.getDaoSession().getNovelChapterDao().queryBuilder().where(NovelChapterDao.Properties.NovelChapterListUrl.eq(chaptyrlerList)).orderAsc(NovelChapterDao.Properties.CreateTime).list();
 
     }
 

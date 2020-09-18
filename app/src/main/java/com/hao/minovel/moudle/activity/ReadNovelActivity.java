@@ -56,7 +56,7 @@ public class ReadNovelActivity extends MiDrawerActivity {
             super.dispatchMessage(msg);
             switch (msg.what) {
                 case 0:
-                    novel_show.addChapter((NovelChapter) msg.obj, true);
+                    novel_show.addChapter((NovelChapter) msg.obj);
                     break;
             }
         }
@@ -80,6 +80,8 @@ public class ReadNovelActivity extends MiDrawerActivity {
                     handler.sendMessage(handler.obtainMessage(0, novelChapter));
                 }
             }));
+        } else {
+            handler.sendMessage(handler.obtainMessage(0, novelChapter));
         }
     }
 }

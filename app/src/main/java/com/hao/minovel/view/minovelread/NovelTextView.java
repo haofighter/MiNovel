@@ -14,11 +14,12 @@ import com.hao.minovel.R;
 import com.hao.minovel.utils.SystemUtil;
 import com.hao.minovel.utils.TypeFaceUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
 public class NovelTextView extends AppCompatTextView {
-    List<String> textArray;
+    List<String> textArray = new ArrayList<>();
     float wordSpacingExtra;//字间距
     float textPadingVar = 0;//垂直方向的间隔距离
     float textPadingHor = 0;//横向方向的间隔距离
@@ -105,6 +106,10 @@ public class NovelTextView extends AppCompatTextView {
     @Override
     protected void onDraw(Canvas canvas) {
         try {
+            Log.i("显示", this.toString() + "onDraw");
+            if (textArray.size() == 0 || lineNum == 0 || lineTextNum == 0) {
+                return;
+            }
             Paint paint = getPaint();
             paint.setTextSize(getTextSize());
             paint.setFakeBoldText(false);
@@ -133,8 +138,57 @@ public class NovelTextView extends AppCompatTextView {
     }
 
 
-    public void setDate(List<String> fromatContentArray) {
-        textArray = fromatContentArray;
-        invalidate();
+    private List<String> fromateArray(String content) {
+        List<String> textArray = new ArrayList<>();
+        String[] strs = content.split("\n");
+        for (int i = 0; i < strs.length; i++) {
+            if (strs[i].length() <= lineTextNum) {
+                textArray.add(strs[i]);
+                continue;
+            }
+            if (strs[i].length() % lineTextNum == 0) {//刚好整除  此段文字刚好后被整数行容纳
+                for (int j = 0; j < strs[i].length() / lineTextNum; j++) {
+                    textArray.add(strs[i].substring(j * lineTextNum, (j + 1) * lineTextNum));
+                }
+            } else {
+                int needLineNum = strs[i].length() / lineTextNum + 1;
+                for (int k = 0; k < needLineNum; k++) {//获取到每段的字符串 判断能够容纳几行
+                    String nowLineText = "";
+                    if (k < needLineNum - 1) {
+                        nowLineText = strs[i].substring(k * lineTextNum, (k + 1) * lineTextNum);
+                    } else {
+                        nowLineText = strs[i].substring(k * lineTextNum, strs[i].length());
+                    }
+                    textArray.add(nowLineText);
+                }
+            }
+        }
+        Log.i("显示", "格式化：" + lineNum + "      " + lineSpacingExtra);
+        return textArray;
+    }
+
+
+    public boolean setDate(String content, int index) {
+        List<String> strings = fromateArray(content);
+        Log.i("显示", strings.size() + "      " + lineNum);
+        if (strings.size() > (index + 1) * lineNum) {
+            int start = index * lineNum;
+            int end = (index + 1) * lineNum;
+            textArray = strings.subList(start, end);
+            invalidate();
+            return true;
+        } else if (strings.size() >= index * lineNum && strings.size() < (index + 1) * lineNum) {
+            int start = index * lineNum;
+            int end = strings.size();
+            textArray = strings.subList(start, end);
+            invalidate();
+            return false;
+        } else {
+            return false;
+        }
+    }
+
+    public List<String> getTextArray() {
+        return textArray;
     }
 }

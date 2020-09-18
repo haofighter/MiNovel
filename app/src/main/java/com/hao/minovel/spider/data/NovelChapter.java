@@ -164,8 +164,4 @@ public class NovelChapter implements Parcelable {
         }
     };
 
-    public List<String> getFromatContentArray() {
-        String[] strs = getChapterContent().split("\n");
-        return Arrays.asList(strs);
-    }
 }
