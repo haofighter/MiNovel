@@ -2,6 +2,7 @@ package com.hao.minovel.moudle.activity
 
 import android.view.Gravity
 import android.view.View
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -17,7 +18,6 @@ import com.hao.minovel.moudle.service.ServiceManage
 import com.hao.minovel.spider.data.NovelType
 import com.hao.minovel.tinker.app.AppContext
 import com.hao.minovel.utils.SystemUtil
-import com.hao.minovel.utils.ToastUtils
 import kotlinx.android.synthetic.main.activity_stack.*
 import kotlinx.android.synthetic.main.head_view.*
 import java.lang.Exception
@@ -92,7 +92,7 @@ class StackActivity : MiMuneActivity(), View.OnClickListener {
             title_name.text = (show_stack.adapter as StackPageAdapter).getmFragments()[index].muneItemm
             (mune.adapter as StackMuneAdapter).setCheck(index)
         } catch (e: Exception) {
-            ToastUtils.showMessage("加载书库失败")
+            Toast.makeText(this@StackActivity, "错误：加载书库失败", Toast.LENGTH_LONG).show();
             ServiceManage.getInstance().startBackRunService(AppContext.application)
         }
     }

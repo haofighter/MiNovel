@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.hao.annotationengine.Router;
@@ -26,9 +27,7 @@ import com.hao.minovel.moudle.service.NovolDownTask;
 import com.hao.minovel.moudle.service.ServiceManage;
 import com.hao.minovel.spider.data.NovelChapter;
 import com.hao.minovel.spider.data.NovelIntroduction;
-import com.hao.minovel.tinker.app.App;
 import com.hao.minovel.tinker.app.AppContext;
-import com.hao.minovel.utils.ToastUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -93,7 +92,7 @@ public class NovelDetailActivity extends MiBaseActivity implements View.OnClickL
         if (novelDetail.getNovelChapterListUrl() != null && !"".equals(novelDetail.getNovelChapterListUrl())) {
             initDate();
         } else {
-            ToastUtils.INSTANCE.showMessage("暂未获取到小说数据");
+            Toast.makeText(this, "暂未获取到小说数据", Toast.LENGTH_LONG).show();
             finish();
         }
     }
@@ -168,7 +167,7 @@ public class NovelDetailActivity extends MiBaseActivity implements View.OnClickL
                 initDate();
                 break;
             case "loadErr":
-                ToastUtils.INSTANCE.showMessage("加载失败");
+                Toast.makeText(this, "加载失败", Toast.LENGTH_LONG).show();
                 break;
         }
     }
@@ -184,12 +183,12 @@ public class NovelDetailActivity extends MiBaseActivity implements View.OnClickL
                 if (((TextView) v).getText().toString().equals("继续阅读")) {
                     NovelChapter novelChapter = DBManage.checkNovelChaptterById(readInfo.getNovelChapterListUrl(), readInfo.getNovelChapterUrl());
                     bundle.putParcelable("novelChapter", novelChapter);
-                    Router.getInstance().build(RouterContent.READNOVELACTIVITY,bundle).skip();
+                    Router.getInstance().build(RouterContent.READNOVELACTIVITY, bundle).skip();
                 } else if (((TextView) v).getText().toString().equals("开始阅读")) {
                     List<NovelChapter> novelChapters = DBManage.getChapterById(novelDetail.getNovelChapterListUrl());
                     if (novelChapters.size() > 0) {
                         bundle.putParcelable("novelChapter", novelChapters.get(0));
-                        Router.getInstance().build(RouterContent.READNOVELACTIVITY,bundle).skip();
+                        Router.getInstance().build(RouterContent.READNOVELACTIVITY, bundle).skip();
                     } else {
                         initDate();
                     }

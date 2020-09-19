@@ -2,19 +2,15 @@ package com.hao.minovel.view.minovelread;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -22,54 +18,18 @@ import com.hao.minovel.R;
 import com.hao.minovel.spider.data.NovelChapter;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class PullViewLayout extends FrameLayout {
     int dragState = -1;//0  左滑,1 右滑  -1滑动完成
-    int chapterIndex = 0;//当前contentPage显示的章节处于list中的位置
+    int chapterIndex = 0;//章节位于list中的位置
     int contentPageIndex = 0;//当前contentPage显示的章节处于list中的位置
-
+    NovelTextViewHelp novelTextViewHelp;//小说阅读页的配置信息
     Context mcontext;
-//    MiNovelArrayList<NovelChapter> allView = new MiNovelArrayList<NovelChapter>() {
-//        @Override
-//        boolean addNovelChaper(int index, NovelChapter novelChapter) {
-//            try {
-//                for (int i = 0; i < size(); i++) {
-//                    if (novelChapter.getChapterUrl().equals(get(i).getChapterUrl())) {
-//                        return false;
-//                    } else if (TextUtils.isEmpty(novelChapter.getChapterContent())) {
-//                        return false;
-//                    }
-//                }
-//            } catch (Exception e) {
-//                return false;
-//            }
-//            add(index, novelChapter);
-//            return true;
-//        }
-//
-//        @Override
-//        public boolean add(NovelChapter novelChapter) {
-//            try {
-//                for (int i = 0; i < size(); i++) {
-//                    if (novelChapter.getChapterUrl().equals(get(i).getChapterUrl())) {
-//                        return false;
-//                    } else if (TextUtils.isEmpty(novelChapter.getChapterContent())) {
-//                        return false;
-//                    }
-//                }
-//            } catch (Exception e) {
-//                return false;
-//            }
-//            return super.add(novelChapter);
-//        }
-//
-//    };
-
     View fristPage;//前一页
     View contentPage;//显示页
     View nextPage;//后一页
     View cachePage;//缓存页 翻页后需要被移除的一页
+    PullViewLayoutListener listener;//监听
 
 
     public PullViewLayout(@NonNull Context context) {
@@ -85,78 +45,159 @@ public class PullViewLayout extends FrameLayout {
         mcontext = context;
     }
 
-    int index;
 
+    ArrayList<ChapterInfo> allDate = new ArrayList<ChapterInfo>() {
 
-    List<List<View>> allView = new ArrayList<>();
+        @Override
+        public boolean add(ChapterInfo chapterInfo) {
+            for (int i = 0; i < size(); i++) {
+                if (chapterInfo.getNowChapterUrl().equals(get(i).getNowChapterUrl())) {
+                    return false;
+                }
+            }
+            return super.add(chapterInfo);
+        }
+
+        @Override
+        public void add(int index, ChapterInfo chapterInfo) {
+            boolean isContent = false;
+            for (int i = 0; i < size(); i++) {
+                if (chapterInfo.getNowChapterUrl().equals(get(i).getNowChapterUrl())) {
+                    isContent = true;
+                }
+            }
+            if (!isContent) {
+                super.add(index, chapterInfo);
+            }
+        }
+    };
 
     //针对当前数据进行初始化
-    public List<View> initView(List<View> views, NovelChapter novelChapter) {
+    public void fromatDate(NovelChapter novelChapter, boolean ishead) {
         View v = LayoutInflater.from(getContext()).inflate(R.layout.read_novel_page, null);
         addView(v, 0);
         v.post(new Runnable() {
             @Override
             public void run() {
-                Log.i("显示", v.toString());
-                if (((NovelTextView) v.findViewById(R.id.novel_content)).setDate(novelChapter.getChapterContent(), index)) {
-                    Log.i("显示", v.findViewById(R.id.novel_content).toString() + "\n" +
-                            ((NovelTextView) v.findViewById(R.id.novel_content)).getTextArray().toString());
-                    index++;
-                    initView(views, novelChapter);
+                NovelTextView novelTextView = v.findViewById(R.id.novel_content);
+                novelTextViewHelp = novelTextView.getNovelTextViewHelp();
+                ChapterInfo chapterInfo = new ChapterInfo(novelChapter.getChapterUrl(), novelChapter.getChapterName(), novelChapter.getChapterContent());
+                chapterInfo.setNovelTextViewHelp(novelTextViewHelp);
+                if (ishead) {
+                    allDate.add(0, chapterInfo);
                 } else {
-                    allView.add(views);
+                    allDate.add(chapterInfo);
+                }
+                removeView(v);
+                if (contentPage == null) {
+                    initContentPage(LayoutInflater.from(getContext()).inflate(R.layout.read_novel_page, null));
+                }
+                if (nextPage == null) {
+                    initNextPage(LayoutInflater.from(getContext()).inflate(R.layout.read_novel_page, null));
+                }
+                if (fristPage == null) {
+                    initFirstPage(LayoutInflater.from(getContext()).inflate(R.layout.read_novel_page, null));
                 }
             }
         });
-        views.add(v);
-        return views;
     }
 
+    private void initContentPage(View v) {
+        TextView novel_page = v.findViewById(R.id.novel_page);
+        TextView novel_title = v.findViewById(R.id.novel_title);
+        NovelTextView novelTextView = v.findViewById(R.id.novel_content);
+        novelTextView.setNovelTextViewHelp(novelTextViewHelp);
+        ChapterInfo nowChapterInfo = allDate.get(chapterIndex);
+        if (contentPageIndex >= nowChapterInfo.getPage()) {
+            contentPageIndex = nowChapterInfo.getPage() - 1;
+        }
+        novelTextView.setTextArray(nowChapterInfo.getNovelPageInfos(), contentPageIndex);
+        novel_page.setText((contentPageIndex + 1) + "/" + nowChapterInfo.getPage() + "");
+        novel_title.setText(nowChapterInfo.getChapterName());
+        contentPage = v;
+        addView(contentPage);
+    }
 
-    public void addChapter(NovelChapter chapterInfo) {
-        if (allView.size() == 0) {
-            List<View> fristView = new ArrayList<>();
-            initView(fristView, chapterInfo);
-            Log.i("显示", chapterInfo.getChapterContent());
+    private void initNextPage(View v) {
+        TextView novel_page = v.findViewById(R.id.novel_page);
+        TextView novel_title = v.findViewById(R.id.novel_title);
+        NovelTextView novelTextView = v.findViewById(R.id.novel_content);
+        novelTextView.setNovelTextViewHelp(novelTextViewHelp);
+        ChapterInfo nowChapterInfo = allDate.get(chapterIndex);
+        if (contentPageIndex + 1 >= allDate.get(chapterIndex).getPage()) {//如果下一页数据超出本章页数，需要取下一章数据
+            if (chapterIndex + 1 < allDate.size()) {//如果有下一章
+                PageInfo pageInfo = new PageInfo(chapterIndex + 1, 0);
+                nowChapterInfo = allDate.get(chapterIndex + 1);
+                novel_title.setText(nowChapterInfo.getChapterName());
+                novelTextView.setTextArray(nowChapterInfo.getNovelPageInfos(), 0);
+                novel_page.setText(pageInfo.getContentIndex() + "/" + nowChapterInfo.getPage() + "");
+                v.setTag(pageInfo);
+                nextPage = v;
+            } else {
+                Toast.makeText(mcontext, "没有下一章的数据", Toast.LENGTH_SHORT).show();
+            }
         } else {
+            PageInfo pageInfo = new PageInfo(chapterIndex, contentPageIndex + 1);
+            novelTextView.setTextArray(nowChapterInfo.getNovelPageInfos(), contentPageIndex + 1);
+            novel_page.setText(pageInfo.getContentIndex() + "/" + nowChapterInfo.getPage() + "");
+            novel_title.setText(nowChapterInfo.getChapterName());
+            v.setTag(pageInfo);
+            nextPage = v;
+        }
 
+        if (nextPage != null) {
+            addView(nextPage, 0);
+        } else {
+            if (listener != null) {
+                listener.loadMore();
+            }
+            Toast.makeText(mcontext, "没有下一页", Toast.LENGTH_SHORT).show();
         }
     }
 
+    //是否切换了章节
+    private void initFirstPage(View v) {
+        TextView novel_page = v.findViewById(R.id.novel_page);
+        TextView novel_title = v.findViewById(R.id.novel_title);
+        NovelTextView novelTextView = v.findViewById(R.id.novel_content);
+        novelTextView.setNovelTextViewHelp(novelTextViewHelp);
+        ChapterInfo nowChapterInfo = allDate.get(chapterIndex);
+        if (contentPageIndex - 1 < 0) {
+            if (chapterIndex - 1 >= 0) {//如果有上一章
+                PageInfo pageInfo = new PageInfo(chapterIndex - 1, nowChapterInfo.getPage() - 1);
+                nowChapterInfo = allDate.get(chapterIndex - 1);
+                novel_title.setText(nowChapterInfo.getChapterName());
+                novelTextView.setTextArray(nowChapterInfo.getNovelPageInfos(), pageInfo.getContentIndex());
+                v.setTag(chapterIndex - 1);
+                novel_page.setText(pageInfo.getContentIndex() + "/" + nowChapterInfo.getPage() + "");
+                fristPage = v;
+            } else {
+                Toast.makeText(mcontext, "没有上一章的数据", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            PageInfo pageInfo = new PageInfo(chapterIndex, contentPageIndex - 1);
+            novel_title.setText(nowChapterInfo.getChapterName());
+            novelTextView.setTextArray(nowChapterInfo.getNovelPageInfos(), pageInfo.getContentIndex());
+            novel_page.setText(pageInfo.getContentIndex() + "/" + nowChapterInfo.getPage() + "");
+            v.setTag(pageInfo);
+            fristPage = v;
+        }
+        if (fristPage != null) {
+            fristPage.setTranslationX(-getWidth());
+            addView(fristPage);
+        } else {
+            if (listener != null) {
+                listener.loadBefor();
+            }
+            Toast.makeText(mcontext, "没有上一页", Toast.LENGTH_SHORT).show();
+        }
 
-//    //获取到当前页的上一页数据
-//    private NovelPageInfo getPreviousPage() {
-//        ChapterInfo nowChapter = allView.get(nowChapterPage);
-//        if (nowChapter != null) {
-//            if (nowChapterPageIndex - 1 >= 0) {
-//                return nowChapter.getNovelPageInfos().get(nowChapterPageIndex - 1);
-//            } else {
-//                if (nowChapterPage - 1 >= 0) {
-//                    if (allView.get(nowChapterPage - 1).getNovelPageInfos().size() > 0) {
-//                        return allView.get(nowChapterPage + 1).getNovelPageInfos().get(allView.get(nowChapterPage + 1).getNovelPageInfos().size() - 1);
-//                    }
-//                }
-//            }
-//        }
-//        return null;
-//    }
-//
-//    //获取到当前页的下一页数据
-//    private NovelPageInfo getNextPage() {
-//        ChapterInfo nowChapter = allView.get(nowChapterPage);
-//        if (nowChapter != null) {
-//            if (nowChapter.getNovelPageInfos().size() - 1 > nowChapterPageIndex + 1) {
-//                return nowChapter.getNovelPageInfos().get(nowChapterPageIndex + 1);
-//            } else {
-//                if (allView.size() - 1 > nowChapterPage + 1) {
-//                    if (allView.get(nowChapterPage + 1).getNovelPageInfos().size() > 0) {
-//                        return allView.get(nowChapterPage + 1).getNovelPageInfos().get(0);
-//                    }
-//                }
-//            }
-//        }
-//        return null;
-//    }
+    }
+
+
+    public void addChapter(NovelChapter chapterInfo, boolean ishead) {
+        fromatDate(chapterInfo, ishead);
+    }
 
 
     float downX = 0;
@@ -270,19 +311,28 @@ public class PullViewLayout extends FrameLayout {
     }
 
     public void changeNextPage() {//下一页
-        index++;
+        contentPageIndex++;
         cachePage = fristPage;
         fristPage = contentPage;
         contentPage = nextPage;
+        chapterIndex = ((PageInfo) contentPage.getTag()).getChapterIndex();
+        contentPageIndex = ((PageInfo) contentPage.getTag()).getContentIndex();
+        nextPage = null;
+        removeView(cachePage);
+        initNextPage(LayoutInflater.from(getContext()).inflate(R.layout.read_novel_page, null));
     }
 
     @Nullable
     public void changeLastPage() {//上一页
+        contentPageIndex--;
         cachePage = nextPage;
         nextPage = contentPage;
         contentPage = fristPage;
+        chapterIndex = ((PageInfo) contentPage.getTag()).getChapterIndex();
+        contentPageIndex = ((PageInfo) contentPage.getTag()).getContentIndex();
         fristPage = null;
-
+        removeView(cachePage);
+        initFirstPage(LayoutInflater.from(getContext()).inflate(R.layout.read_novel_page, null));
     }
 
     @Nullable
@@ -326,7 +376,6 @@ public class PullViewLayout extends FrameLayout {
                 float moveShift = -getWidth() + (moveX - downX) * (1 - (float) animation.getAnimatedValue());
                 fristPage.setTranslationX(moveShift);
                 if ((float) animation.getAnimatedValue() == 1) {
-//                    fristPage.setTranslationX(-fristPage.getLeft());
                     dragState = -1;
                     return;
                 }
@@ -334,8 +383,6 @@ public class PullViewLayout extends FrameLayout {
                 float moveShift = -(moveX - downX) * (1 - (float) animation.getAnimatedValue());
                 contentPage.setTranslationX(-moveShift);
                 if ((float) animation.getAnimatedValue() == 1) {
-//                    Log.i("手势", "修正 " + -contentPage.getLeft());
-//                    contentPage.setTranslationX(-contentPage.getLeft());
                     dragState = -1;
                     return;
                 }
@@ -344,39 +391,25 @@ public class PullViewLayout extends FrameLayout {
     };
 
 
-    public void clear() {
-        removeAllViews();
-        fristPage = null;//前一页
-        contentPage = null;//显示页
-        nextPage = null;//后一页
-        cachePage = null;//缓存页 翻页后需要被移除的一页
-    }
-
-
     public interface PullViewLayoutListener {
-        void noDate();
+        public void loadMore();
 
-        void nextPage(NovelPageInfo v);
+        public void loadBefor();
 
-        void lastPage(NovelPageInfo v);
-
-        void needLoadDate(boolean isHead);
-
-        void noLast();
-
-        void noNext();
-
-        void onClickCenter();
-
-        boolean onTouch();
-
-        void onStart(NovelPageInfo v);
-
+        public void update();
     }
 
-
-    abstract class MiNovelArrayList<T> extends ArrayList<T> {
-        abstract boolean addNovelChaper(int index, T t);
+    public void setListener(PullViewLayoutListener listener) {
+        this.listener = listener;
     }
 
+    public void setNovelTextViewConfit(NovelTextViewHelp novelTextViewHelp) {
+        this.novelTextViewHelp = novelTextViewHelp;
+        for (int i = 0; i < allDate.size(); i++) {
+            allDate.get(i).setNovelTextViewHelp(novelTextViewHelp);
+        }
+        initContentPage(contentPage);
+        initNextPage(nextPage);
+        initFirstPage(fristPage);
+    }
 }
