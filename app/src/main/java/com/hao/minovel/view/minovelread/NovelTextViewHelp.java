@@ -2,11 +2,13 @@ package com.hao.minovel.view.minovelread;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.util.Log;
 
 import com.hao.minovel.R;
 import com.hao.minovel.utils.SystemUtil;
+import com.hao.minovel.utils.TypeFaceUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +29,7 @@ public class NovelTextViewHelp {
     protected float textSize;//字体大小
     protected boolean orientationVer = false;//是否为横屏
     protected String typefaceName;
+    protected int textColor;//颜色
     protected int allPage;
 
 
@@ -47,12 +50,13 @@ public class NovelTextViewHelp {
             orientationVer = ta.getBoolean(R.styleable.NovelTextView_orientationVer, false);
             int typeface = ta.getInt(R.styleable.NovelTextView_typefaceName, 0);
             textSize = novelTextView.getTextSize() == 0 ? SystemUtil.sp2px(context, 15f) : novelTextView.getTextSize();
+            textColor = novelTextView.getCurrentTextColor();
             if (typeface == 0) {
-                typefaceName = null;
+                typefaceName = "HYCYJ.ttf";
             } else if (typeface == 1) {
                 typefaceName = "HWCY.TTF";
             } else if (typeface == 2) {
-                typefaceName = "HYCYJ.ttf";
+                typefaceName = null;
             }
         } else {
             Log.w("TextViewHelper", "为获取到任何属性");
@@ -112,5 +116,13 @@ public class NovelTextViewHelp {
         }
         allPage = textArray.size() % lineNum == 0 ? textArray.size() / lineNum : textArray.size() / lineNum + 1;
         return textArray;
+    }
+
+    public void setTypefaceName(String typefaceName) {
+        this.typefaceName = typefaceName;
+    }
+
+    public Typeface getTypeface() {
+        return TypeFaceUtils.getTypeFaceByName(typefaceName);
     }
 }

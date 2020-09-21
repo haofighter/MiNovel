@@ -13,9 +13,11 @@ import com.hao.minovel.utils.TypeFaceUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 
-public class NovelTextView extends AppCompatTextView {
+public class NovelTextView extends AppCompatTextView implements Observer {
     List<String> textArray = new ArrayList<>();
     private NovelTextViewHelp novelTextViewHelp;
 
@@ -57,8 +59,8 @@ public class NovelTextView extends AppCompatTextView {
             Paint paint = getPaint();
             paint.setTextSize(getTextSize());
             paint.setFakeBoldText(false);
-            paint.setTypeface(TypeFaceUtils.getTypeFaceByName(novelTextViewHelp.typefaceName));
-            paint.setColor(getCurrentTextColor());
+            paint.setTypeface(novelTextViewHelp.getTypeface());
+            paint.setColor(novelTextViewHelp.textColor);
             if (!novelTextViewHelp.orientationVer) {
                 for (int i = 0; i < textArray.size(); i++) {
                     float drawTextY = novelTextViewHelp.offsetVar + (i % novelTextViewHelp.lineNum) * (getTextSize() + novelTextViewHelp.lineSpacingExtra) + getTextSize();//间距的数量比文字行数少一行
@@ -127,5 +129,12 @@ public class NovelTextView extends AppCompatTextView {
 
     public void setNovelTextViewHelp(NovelTextViewHelp novelTextViewHelp) {
         this.novelTextViewHelp = novelTextViewHelp;
+    }
+
+
+    @Override
+    public void update(Observable o, Object arg) {
+        this.novelTextViewHelp = (NovelTextViewHelp) arg;
+        invalidate();
     }
 }

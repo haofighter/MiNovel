@@ -51,7 +51,7 @@ class StackActivity : MiMuneActivity(), View.OnClickListener {
         book_icon.setOnClickListener(this)
         stack.visibility = View.GONE
 
-        mune.layoutManager = LinearLayoutManager(this) as RecyclerView.LayoutManager?
+        mune.layoutManager = LinearLayoutManager(this)
         var novelTypes: List<NovelType> = DBManage.getNovelType()
         mune.adapter = StackMuneAdapter(this, novelTypes, View.OnClickListener { v ->
             show_stack.currentItem = v.tag as Int

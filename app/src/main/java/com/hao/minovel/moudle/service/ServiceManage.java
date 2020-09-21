@@ -7,6 +7,7 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 
 import com.hao.minovel.db.DBManage;
+import com.hao.minovel.moudle.entity.AppUseInfo;
 
 import static android.content.Context.BIND_AUTO_CREATE;
 
@@ -39,12 +40,13 @@ public class ServiceManage {
         public void onServiceConnected(ComponentName name, IBinder service) {
             binder = (DownLoadNovelBinder) service;
             if (binder != null) {
-//                if (novelUsedUpdate != null && System.currentTimeMillis() - novelUsedUpdate.getLastUpdatime() > 3600000) {
-                binder.sendCmd(new NovolDownTask(DownLoadNovelService.NovelDownTag.noveltype));
-//                    novelUsedUpdate.setLastUpdatime(System.currentTimeMillis());
-                binder.sendCmd(new NovolDownTask(DownLoadNovelService.NovelDownTag.allTitle));
-//                }
-                DBManage.getNovelTypeByAllNovel();
+                AppUseInfo appUseInfo = DBManage.getAppUseInfo();
+                if (appUseInfo != null && System.currentTimeMillis() - appUseInfo.getLoadAllNovelNameTime() > 3600000) {
+                    binder.sendCmd(new NovolDownTask(DownLoadNovelService.NovelDownTag.noveltype));
+                    appUseInfo.setLoadAllNovelNameTime(System.currentTimeMillis());
+                    binder.sendCmd(new NovolDownTask(DownLoadNovelService.NovelDownTag.allTitle));
+                    DBManage.saveAppUseinfo(appUseInfo);
+                }
             }
         }
     };

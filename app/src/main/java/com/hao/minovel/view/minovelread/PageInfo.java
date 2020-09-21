@@ -10,7 +10,7 @@ public class PageInfo {
     }
 
     public int getContentIndex() {
-        return contentIndex+1;
+        return contentIndex;
     }
 
     public int getChapterIndex() {

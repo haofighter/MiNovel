@@ -4,18 +4,16 @@
     android:layout_height="match_parent"
     android:background="@mipmap/bg_readbook_yellow"
     android:orientation="vertical"
-    android:padding="10dp">
+    android:padding="5dp">
 
-    <TextView
+    <com.hao.minovel.view.minovelread.MiTextView
         android:id="@+id/novel_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:lines="1"
-        android:paddingLeft="10dp"
-        android:paddingTop="10dp"
-        android:text="章节标题"
-        android:textSize="12sp" />
+        android:paddingLeft="5dp"
+        android:paddingTop="10dp" />
 
     <com.hao.minovel.view.minovelread.NovelTextView
         android:id="@+id/novel_content"
@@ -33,9 +31,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="right"
-        android:padding="10dp"
         android:paddingLeft="10dp"
-        android:paddingTop="10dp"
+        android:paddingTop="5dp"
         android:text="1/12"
         android:textSize="12sp" />
 </LinearLayout>

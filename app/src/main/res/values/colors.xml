@@ -20,4 +20,5 @@
     <color name="transparent">#00000000</color>
     <color name="app">#C5C1AA</color>
     <color name="novel_text_defult">#AA241805</color>
+    <color name="line">#11C5C1AA</color>
 </resources>

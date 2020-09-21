@@ -29,7 +29,7 @@ public class TypeFaceUtils {
     }
 
     public static List<TypeFaceInfo> getTypeFaceInfoList() {
-        synchronized (typeFaceInfoList) {
+        synchronized (TypeFaceUtils.class) {
             if (typeFaceUtils == null) {
                 typeFaceUtils = new TypeFaceUtils();
             }

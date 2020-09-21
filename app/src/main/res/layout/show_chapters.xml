@@ -19,6 +19,11 @@
         android:textSize="18sp"
         android:textStyle="bold" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/line" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/text_typeface"
         android:layout_width="match_parent"

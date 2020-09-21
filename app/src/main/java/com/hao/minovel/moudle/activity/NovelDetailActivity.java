@@ -128,7 +128,7 @@ public class NovelDetailActivity extends MiBaseActivity implements View.OnClickL
     private void initDate() {
         NovelIntroduction novelIntroduction = DBManage.checkNovelByUrl(novelDetail.getNovelChapterListUrl());
         List<NovelChapter> novelChapters = DBManage.getChapterById(novelDetail.getNovelChapterListUrl());
-        if (novelIntroduction.isComplete() && novelIntroduction != null && novelChapters != null && novelChapters.size() > 0) {
+        if (novelIntroduction != null && novelIntroduction.isComplete() && novelChapters != null && novelChapters.size() > 0) {
             initDate(novelIntroduction);
         } else {
             ServiceManage.getInstance().getBinder().sendCmd(new NovolDownTask(DownLoadNovelService.NovelDownTag.novelDetail, novelIntroduction, new DownListener(this.getClass().getName(), true) {

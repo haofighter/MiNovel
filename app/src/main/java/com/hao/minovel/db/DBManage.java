@@ -4,6 +4,8 @@ import android.database.Cursor;
 import android.util.Log;
 
 
+import com.hao.minovel.moudle.entity.AppUseInfo;
+import com.hao.minovel.moudle.entity.AppUseInfoDao;
 import com.hao.minovel.moudle.entity.ReadInfo;
 import com.hao.minovel.moudle.entity.ReadInfoDao;
 import com.hao.minovel.spider.data.NovelChapter;
@@ -254,8 +256,36 @@ public class DBManage {
     }
 
 
+    /**
+     * 获取到小说的阅读信息
+     *
+     * @param novelDetailUrl 小说对应的链接地址
+     * @return
+     */
     public static ReadInfo checkedReadInfo(String novelDetailUrl) {
         ReadInfoDao readInfoDao = DBCore.getDaoSession().getReadInfoDao();
         return readInfoDao.queryBuilder().where(ReadInfoDao.Properties.NovelChapterListUrl.eq(novelDetailUrl)).limit(1).unique();
+    }
+
+    /**
+     * 获取当前APP的运行信息
+     *
+     * @return
+     */
+    public static AppUseInfo getAppUseInfo() {
+        AppUseInfo appUseInfo = DBCore.getDaoSession().getAppUseInfoDao().queryBuilder().orderDesc(AppUseInfoDao.Properties.LoadAllNovelNameTime).limit(1).unique();
+        if (appUseInfo == null) {
+            appUseInfo = new AppUseInfo(0);
+        }
+        return appUseInfo;
+    }
+
+    /**
+     * 添加或修改运行信息
+     *
+     * @param appUseInfo
+     */
+    public static void saveAppUseinfo(AppUseInfo appUseInfo) {
+        DBCore.getDaoSession().getAppUseInfoDao().insertOrReplace(appUseInfo);
     }
 }
