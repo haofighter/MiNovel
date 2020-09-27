@@ -1,6 +1,7 @@
 package com.hao.minovel.moudle.adapter;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -225,7 +226,11 @@ public class NovelListAdapter extends MiBaseAdapter<RecyclerView.ViewHolder> {
             }
             novel_name.setText(novelIntroductions.getNovelName());
             novel_author.setText("作者：" + novelIntroductions.getNovelAutho());
-            novel_new.setText("最新章节：" + novelIntroductions.getNovelNewChapterTitle());
+            if (TextUtils.isEmpty(novelIntroductions.getNovelNewChapterTitle())) {
+                novel_new.setText("简介：" + novelIntroductions.getNovelIntroduce());
+            } else {
+                novel_new.setText("最新章节：" + novelIntroductions.getNovelNewChapterTitle());
+            }
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

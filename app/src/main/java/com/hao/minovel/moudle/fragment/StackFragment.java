@@ -106,7 +106,6 @@ public class StackFragment extends MiBaseFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         loadDate();
-        refresh_layout.setRefreshing(true);
     }
 
     Handler handler = new Handler() {

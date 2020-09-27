@@ -169,7 +169,11 @@ public class PullViewLayout extends FrameLayout {
         }
 
         if (nextPage != null) {
-            addView(nextPage, 0);
+            if(nextPage.getParent()!=null){
+                nextPage.invalidate();
+            }else {
+                addView(nextPage, 0);
+            }
         } else {
             if (listener != null) {
                 listener.loadMore();
@@ -205,7 +209,11 @@ public class PullViewLayout extends FrameLayout {
         }
         if (fristPage != null) {
             fristPage.setTranslationX(-getWidth());
-            addView(fristPage);
+            if(fristPage.getParent()==null) {
+                addView(fristPage);
+            }else{
+                fristPage.invalidate();
+            }
         } else {
             if (listener != null) {
                 listener.loadBefor();
@@ -245,17 +253,14 @@ public class PullViewLayout extends FrameLayout {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (!listener.clickCenter(ClickState.onTouch)) {
-            return true;
+        boolean isUsedThisTouch=true;
+        if (listener!=null){
+             isUsedThisTouch = listener.clickCenter(ClickState.onTouch);
         }
+
         if (valueAnimator != null && valueAnimator.isRunning()) {
             return true;
         }
-
-//        if (pullViewLayoutListener != null && pullViewLayoutListener.onTouch()) {
-//            return super.onTouchEvent(event);
-//        }
-
         if (getChildCount() > 0) {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
@@ -269,20 +274,20 @@ public class PullViewLayout extends FrameLayout {
                         dragState = 0;
                     }
                     if (fristPage != null) {
-                        if (dragState == 1) {//右滑 上一页
+                        if (dragState == 1&&isUsedThisTouch) {//右滑 上一页
                             fristPage.setTranslationX(-getWidth() + (moveX - downX));
                             contentPage.setTranslationX(0);
                         } else {
                             if (dragState == 0) {
                                 //向左滑动 下一页
-                                if (nextPage != null) {
+                                if (nextPage != null&&isUsedThisTouch) {
                                     contentPage.setTranslationX((int) (moveX - downX));
                                     fristPage.setTranslationX(-getWidth());
                                 }
                             }
                         }
                     } else {//没有上一页
-                        if (dragState == 0 && nextPage != null) {
+                        if (dragState == 0 && nextPage != null&&isUsedThisTouch) {
                             //向左滑动 下一页
                             contentPage.setTranslationX((int) (moveX - downX));
                         } else {
@@ -297,7 +302,7 @@ public class PullViewLayout extends FrameLayout {
                         }
                         Log.i("点击事件", "点击事件" + "     " + event.getX() + "      " + getWidth());
                         if (event.getX() < getWidth() / 5) {//前一页
-                            if (listener.clickCenter(ClickState.left)) {
+                            if (listener.clickCenter(ClickState.left)&&isUsedThisTouch) {
                                 dragState = 1;
                                 downX = 0;
                                 moveX = 0;
@@ -308,7 +313,7 @@ public class PullViewLayout extends FrameLayout {
                             } else {
                                 return false;
                             }
-                        } else if (event.getX() > getWidth() * 4 / 5) {//后一页
+                        } else if (event.getX() > getWidth() * 4 / 5&&isUsedThisTouch) {//后一页
                             if (listener.clickCenter(ClickState.right)) {
                                 dragState = 0;
                                 downX = 0;
@@ -326,28 +331,38 @@ public class PullViewLayout extends FrameLayout {
                             }
                         }
                         return true;
-                    } else if (Math.abs(moveX - downX) < 10) {//滑动效果未生效
+                    } else if (Math.abs(moveX - downX) < 10&&isUsedThisTouch) {//滑动效果未生效
                         Log.i("点击事件", "滑动效果未生效" + "     " + event.getX() + "      " + getWidth());
                         initAnimal();
                         valueAnimator.removeAllUpdateListeners();
                         valueAnimator.addUpdateListener(now);
                         valueAnimator.start();
-//TODO 未滑动至1/3就松开了
+                        //TODO 未滑动至1/3就松开了
                     } else {//滑动效果生效
                         Log.i("点击事件", "滑动效果生效" + "     " + event.getX() + "      " + getWidth());
                         if (event.getX() - downX > 0) {
                             if (fristPage == null) {
                                 return true;
+                            }else {
+                                if (listener != null) {
+                                    listener.clickCenter(ClickState.left);
+                                }
                             }
                         } else {
                             if (nextPage == null) {
                                 return true;
+                            }else {
+                                if (listener != null) {
+                                    listener.clickCenter(ClickState.right);
+                                }
                             }
                         }
-                        initAnimal();
-                        valueAnimator.removeAllUpdateListeners();
-                        valueAnimator.addUpdateListener(next);
-                        valueAnimator.start();
+                        if(isUsedThisTouch) {
+                            initAnimal();
+                            valueAnimator.removeAllUpdateListeners();
+                            valueAnimator.addUpdateListener(next);
+                            valueAnimator.start();
+                        }
 //TODO 滑动超过1/3就松开了
                     }
                     break;
@@ -366,6 +381,9 @@ public class PullViewLayout extends FrameLayout {
         contentPageIndex = ((PageInfo) contentPage.getTag()).getContentIndex();
         nextPage = null;
         removeView(cachePage);
+        if(listener!=null){
+            listener.onPageChange(allDate.get(chapterIndex));
+        }
         initNextPage((LinearLayout) LayoutInflater.from(getContext()).inflate(R.layout.read_novel_page, null));
     }
 
@@ -473,6 +491,8 @@ public class PullViewLayout extends FrameLayout {
         public void loadMore();
 
         public void loadBefor();
+
+        public void onPageChange(ChapterInfo chapterInfo);
 
         /**
          * @param state 当前触摸操作的状态

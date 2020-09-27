@@ -17,7 +17,7 @@ public class NovelIntroduction implements Parcelable {
     String novelName;//小说名
     String novelAutho;//作者
     String novelCover;//封面
-    String novelIntroduce;//文字介绍
+    String novelIntroduce;//简介
     String novelType;//小说类型
     String novelListUrl;//小说列表地址
     String novelNewChapterTitle;//最新章节

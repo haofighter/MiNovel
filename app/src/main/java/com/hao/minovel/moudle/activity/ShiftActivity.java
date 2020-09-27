@@ -36,7 +36,6 @@ public class ShiftActivity extends MiMuneActivity implements View.OnClickListene
     RoundLayout shiftContent;
     FrameLayout fl_warn;
     RecyclerView shiftList;//书架
-    RecyclerView shiftMune;//菜单
 
     List<StackTypeEntity> muneList = new ArrayList<>();
     long lastBackTime = 0;

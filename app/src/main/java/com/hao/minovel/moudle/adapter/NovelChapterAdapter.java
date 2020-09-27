@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hao.minovel.R;
+import com.hao.minovel.db.DBManage;
 import com.hao.minovel.spider.data.NovelChapter;
 
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ import java.util.List;
 
 public class NovelChapterAdapter extends RecyclerView.Adapter<NovelChapterAdapter.NovelChapterHolder> {
     private Context mContext;
-    private int select;
+    private String selectUrl="";
 
     private List<NovelChapter> novelChapters = new ArrayList<>();
 
@@ -27,8 +28,8 @@ public class NovelChapterAdapter extends RecyclerView.Adapter<NovelChapterAdapte
     }
 
 
-    public void setNovelChapters(List<NovelChapter> novelChapters) {
-        this.novelChapters = novelChapters;
+    public void setNovelChapters(NovelChapter  novelChapter) {
+        this.novelChapters = DBManage.checkedNovelList(novelChapter.getNovelChapterListUrl());
         notifyDataSetChanged();
     }
 
@@ -74,7 +75,12 @@ public class NovelChapterAdapter extends RecyclerView.Adapter<NovelChapterAdapte
     }
 
     public void setSelect(int intValue) {
-        this.select = intValue;
+        this.selectUrl = novelChapters.get(intValue).getChapterUrl();
+        notifyDataSetChanged();
+    }
+
+    public void setSelect(String chapterUrl) {
+        this.selectUrl = chapterUrl;
         notifyDataSetChanged();
     }
 
@@ -93,7 +99,7 @@ public class NovelChapterAdapter extends RecyclerView.Adapter<NovelChapterAdapte
 
         public void setDate(NovelChapter novelChapter) {
             title_item.setText(novelChapter.getChapterName());
-            if (novelChapter.getId() == select) {
+            if (novelChapter.getChapterUrl().equals(selectUrl)) {
                 view.setBackgroundResource(R.color.yellow);
             } else {
                 view.setBackgroundResource(R.color.white);

@@ -236,6 +236,7 @@ public class SpiderNovelFromBiQu {
             String name = e.select("a").select("img").attr("alt");
             String cover = e.select("a").select("img").attr("src");
             String auther = e.select("dl").select("dt").select("span").text();
+            String introduce = e.select("dl").select("dd").text();
             NovelIntroduction novelIntroduction = DBManage.checkNovelByUrl(novelUrl);
             if (novelIntroduction == null) {
                 novelIntroduction = new NovelIntroduction();
@@ -244,10 +245,12 @@ public class SpiderNovelFromBiQu {
                 novelIntroduction.setNovelName(name);
                 novelIntroduction.setNovelChapterListUrl(novelUrl);
                 novelIntroduction.setCreatTime(System.currentTimeMillis());
+                novelIntroduction.setNovelIntroduce(introduce);
                 DBManage.addNovelIntrodution(novelIntroduction);
             } else if (!novelIntroduction.isComplete()) {
                 novelIntroduction.setNovelCover(cover);
                 novelIntroduction.setNovelAutho(auther);
+                novelIntroduction.setNovelIntroduce(introduce);
                 novelIntroduction.setNovelType(novelType.getType());
                 DBManage.addNovelIntrodution(novelIntroduction);
             }
