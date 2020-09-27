@@ -1,22 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/readbook_config"
     android:layout_width="match_parent"
-    android:layout_height="600dp"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/none"
+
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        app:cardCornerRadius="10dp">
 
-    </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-    <include layout="@layout/mune_setting" />
+            <include layout="@layout/mune_setting" />
 
-    <include layout="@layout/from_setting" />
+            <include layout="@layout/from_setting" />
 
-    <include layout="@layout/back_setting" />
+            <include layout="@layout/back_setting" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
 </LinearLayout>

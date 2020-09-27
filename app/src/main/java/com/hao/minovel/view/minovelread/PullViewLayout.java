@@ -38,6 +38,10 @@ public class PullViewLayout extends FrameLayout {
     ValueAnimator valueAnimator;
     ViewObserver viewObserver;
 
+    public enum ClickState {
+        center, left, right, onTouch, onClick
+    }
+
     public NovelTextViewHelp getNovelTextViewHelp() {
         return novelTextViewHelp;
     }
@@ -133,7 +137,9 @@ public class PullViewLayout extends FrameLayout {
         novel_page.setText((pageInfo.getContentIndex() + 1) + "/" + nowChapterInfo.getPage() + "");
         novel_title.setText(nowChapterInfo.getChapterName());
         contentPage = v;
-        addView(contentPage);
+        if (contentPage.getParent() == null) {
+            addView(contentPage);
+        }
     }
 
     private void initNextPage(ViewGroup v) {
@@ -239,6 +245,9 @@ public class PullViewLayout extends FrameLayout {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        if (!listener.clickCenter(ClickState.onTouch)) {
+            return true;
+        }
         if (valueAnimator != null && valueAnimator.isRunning()) {
             return true;
         }
@@ -283,26 +292,37 @@ public class PullViewLayout extends FrameLayout {
                     break;
                 case MotionEvent.ACTION_UP:
                     if (Math.abs(event.getX() - downX) < 10) {
+                        if (!listener.clickCenter(ClickState.onClick)) {
+                            return false;
+                        }
                         Log.i("点击事件", "点击事件" + "     " + event.getX() + "      " + getWidth());
                         if (event.getX() < getWidth() / 5) {//前一页
-                            dragState = 1;
-                            downX = 0;
-                            moveX = 0;
-                            initAnimal();
-                            valueAnimator.removeAllUpdateListeners();
-                            valueAnimator.addUpdateListener(next);
-                            valueAnimator.start();
+                            if (listener.clickCenter(ClickState.left)) {
+                                dragState = 1;
+                                downX = 0;
+                                moveX = 0;
+                                initAnimal();
+                                valueAnimator.removeAllUpdateListeners();
+                                valueAnimator.addUpdateListener(next);
+                                valueAnimator.start();
+                            } else {
+                                return false;
+                            }
                         } else if (event.getX() > getWidth() * 4 / 5) {//后一页
-                            dragState = 0;
-                            downX = 0;
-                            moveX = 0;
-                            initAnimal();
-                            valueAnimator.removeAllUpdateListeners();
-                            valueAnimator.addUpdateListener(next);
-                            valueAnimator.start();
+                            if (listener.clickCenter(ClickState.right)) {
+                                dragState = 0;
+                                downX = 0;
+                                moveX = 0;
+                                initAnimal();
+                                valueAnimator.removeAllUpdateListeners();
+                                valueAnimator.addUpdateListener(next);
+                                valueAnimator.start();
+                            } else {
+                                return false;
+                            }
                         } else {
                             if (listener != null) {
-                                listener.clickCenter();
+                                listener.clickCenter(ClickState.center);
                             }
                         }
                         return true;
@@ -454,7 +474,12 @@ public class PullViewLayout extends FrameLayout {
 
         public void loadBefor();
 
-        public void clickCenter();
+        /**
+         * @param state 当前触摸操作的状态
+         * @return false 标示事件不进行拦截 可有本控件处理
+         * true  拦截事件，不进行操作
+         */
+        public boolean clickCenter(ClickState state);
     }
 
     public void setListener(PullViewLayoutListener listener) {

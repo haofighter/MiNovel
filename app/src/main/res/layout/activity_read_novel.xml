@@ -5,23 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:context=".ui.activity.ReadNovelActivity">
+
+    <com.hao.minovel.view.minovelread.PullViewLayout
+        android:id="@+id/novel_show"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></com.hao.minovel.view.minovelread.PullViewLayout>
 
 
-        <com.hao.minovel.view.minovelread.PullViewLayout
-            android:id="@+id/novel_show"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+    <include layout="@layout/readbook_config" />
 
-
-        </com.hao.minovel.view.minovelread.PullViewLayout>
-
-        <include layout="@layout/readbook_config" />
-    </LinearLayout>
+    <include layout="@layout/show_chapters" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/mune"

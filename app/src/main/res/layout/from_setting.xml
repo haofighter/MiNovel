@@ -38,7 +38,6 @@
             android:padding="5dp"
             android:text="16"
             android:textColor="@color/black" />
-
         <ImageView
             android:id="@+id/add_textsize"
             android:layout_width="30dp"
@@ -46,16 +45,6 @@
             android:layout_marginLeft="10dp"
             android:src="@mipmap/add" />
 
-        <View
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
-
-        <Button
-            android:id="@+id/select_typeface"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="选择字体" />
     </LinearLayout>
 
     <LinearLayout

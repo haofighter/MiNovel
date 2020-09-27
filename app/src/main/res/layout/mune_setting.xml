@@ -10,7 +10,7 @@
     android:padding="20dp">
 
     <LinearLayout
-        android:id="@+id/from_setting_view"
+        android:id="@+id/novel_all_chapter"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -20,14 +20,15 @@
         <ImageView
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:src="@mipmap/from" />
+            android:src="@mipmap/mune" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="字体" />
+            android:text="目录" />
 
     </LinearLayout>
+
 
     <LinearLayout
         android:id="@+id/bg_check"
@@ -50,7 +51,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/novel_all_chapter"
+        android:id="@+id/from_setting_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -60,14 +61,13 @@
         <ImageView
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:src="@mipmap/mune" />
+            android:src="@mipmap/from" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="目录" />
+            android:text="字体" />
 
     </LinearLayout>
-
 
 </LinearLayout>
