@@ -45,7 +45,7 @@ public class NovelTextView extends AppCompatTextView implements Observer {
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
-        novelTextViewHelp.initViewConfig(getHeight(), getWidth());
+        novelTextViewHelp.initViewSize(getWidth(), getHeight());
     }
 
 
@@ -57,7 +57,7 @@ public class NovelTextView extends AppCompatTextView implements Observer {
                 return;
             }
             Paint paint = getPaint();
-            paint.setTextSize(getTextSize());
+            paint.setTextSize(novelTextViewHelp.getTextSize());
             paint.setFakeBoldText(false);
             paint.setTypeface(novelTextViewHelp.getTypeface());
             paint.setColor(novelTextViewHelp.textColor);

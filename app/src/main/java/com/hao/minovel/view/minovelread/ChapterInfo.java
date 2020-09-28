@@ -41,6 +41,7 @@ public class ChapterInfo {
     }
 
     public void setNovelTextViewHelp(NovelTextViewHelp novelTextViewHelp) {
+        novelTextViewHelp.initViewConfig();
         novelPageInfos = novelTextViewHelp.fromateArray(content);
         page = novelTextViewHelp.allPage;
     }

@@ -38,11 +38,11 @@ public class SystemUtil {
     }
 
     public static float px2dp(Context context, float pxValue) {
-        return pxValue / context.getResources().getDisplayMetrics().density + 0.5f;
+        return pxValue / context.getResources().getDisplayMetrics().density;
     }
 
     public static float px2sp(Context context, float pxValue) {
-        return pxValue / context.getResources().getDisplayMetrics().scaledDensity + 0.5f;
+        return pxValue / context.getResources().getDisplayMetrics().scaledDensity;
     }
 
     public static float sp2px(Context context, float pxValue) {
@@ -393,7 +393,6 @@ public class SystemUtil {
 
 
     /*******************************************************************************/
-
 
 
 }

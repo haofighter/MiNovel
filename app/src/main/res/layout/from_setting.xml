@@ -38,6 +38,7 @@
             android:padding="5dp"
             android:text="16"
             android:textColor="@color/black" />
+
         <ImageView
             android:id="@+id/add_textsize"
             android:layout_width="30dp"
@@ -86,11 +87,6 @@
             android:layout_marginLeft="10dp"
             android:src="@mipmap/add" />
 
-        <View
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
-
     </LinearLayout>
 
     <LinearLayout
@@ -107,7 +103,7 @@
             android:textSize="16sp" />
 
         <ImageView
-            android:id="@+id/line_spac_reduce"
+            android:id="@+id/reduce_line_spac"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginLeft="10dp"
@@ -126,16 +122,11 @@
             android:textColor="@color/black" />
 
         <ImageView
-            android:id="@+id/line_spac_add"
+            android:id="@+id/add_line_spac"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginLeft="10dp"
             android:src="@mipmap/add" />
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
 
     </LinearLayout>
 

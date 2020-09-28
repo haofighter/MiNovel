@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NovelTextViewHelp {
+    protected Context mContext;
     protected float wordSpacingExtra;//字间距
     protected float textPadingVar = 0;//垂直方向的间隔距离
     protected float textPadingHor = 0;//横向方向的间隔距离
@@ -31,25 +32,46 @@ public class NovelTextViewHelp {
     protected String typefaceName;
     protected int textColor;//颜色
     protected int allPage;
+    protected float height;
+    protected float width;
 
+    public int getTextSizeSp() {
+        return (int) SystemUtil.px2sp(mContext, textSize);
+    }
+
+    public float getTextSize() {
+        return textSize;
+    }
+
+    public void setTextSize(float textSize) {
+        this.textSize = SystemUtil.sp2px(mContext, textSize);
+    }
+
+    public int getLineSpacingExtraSp() {
+        return (int) SystemUtil.px2sp(mContext, lineSpacingExtra);
+    }
+
+    public void setLineSpacingExtra(float lineSpacingExtra) {
+        this.lineSpacingExtra = SystemUtil.sp2px(mContext, lineSpacingExtra);
+    }
 
     public NovelTextViewHelp initConfig(NovelTextView novelTextView, AttributeSet attrs, int defStyleAttr) {
         if (attrs != null) {
-            Context context = novelTextView.getContext();
-            TypedArray ta = context.obtainStyledAttributes(
+            mContext = novelTextView.getContext();
+            TypedArray ta = mContext.obtainStyledAttributes(
                     attrs,
                     R.styleable.NovelTextView,
                     defStyleAttr,
                     0);
-            lineSpacingExtra = ta.getDimension(R.styleable.NovelTextView_line_spacing, SystemUtil.sp2px(context, 11f));
-            wordSpacingExtra = ta.getDimension(R.styleable.NovelTextView_word_spacing, SystemUtil.sp2px(context, 2f));
-            textPadingleft = ta.getDimension(R.styleable.NovelTextView_padding_left, SystemUtil.sp2px(context, 2f));
-            textPadingright = ta.getDimension(R.styleable.NovelTextView_padding_right, SystemUtil.sp2px(context, 2f));
-            textPadingtop = ta.getDimension(R.styleable.NovelTextView_padding_top, SystemUtil.sp2px(context, 2f));
-            textPadingbottom = ta.getDimension(R.styleable.NovelTextView_padding_bottom, SystemUtil.sp2px(context, 2f));
+            lineSpacingExtra = ta.getDimension(R.styleable.NovelTextView_line_spacing, SystemUtil.sp2px(mContext, 11f));
+            wordSpacingExtra = ta.getDimension(R.styleable.NovelTextView_word_spacing, SystemUtil.sp2px(mContext, 2f));
+            textPadingleft = ta.getDimension(R.styleable.NovelTextView_padding_left, SystemUtil.sp2px(mContext, 2f));
+            textPadingright = ta.getDimension(R.styleable.NovelTextView_padding_right, SystemUtil.sp2px(mContext, 2f));
+            textPadingtop = ta.getDimension(R.styleable.NovelTextView_padding_top, SystemUtil.sp2px(mContext, 2f));
+            textPadingbottom = ta.getDimension(R.styleable.NovelTextView_padding_bottom, SystemUtil.sp2px(mContext, 2f));
             orientationVer = ta.getBoolean(R.styleable.NovelTextView_orientationVer, false);
             int typeface = ta.getInt(R.styleable.NovelTextView_typefaceName, 0);
-            textSize = novelTextView.getTextSize() == 0 ? SystemUtil.sp2px(context, 15f) : novelTextView.getTextSize();
+            textSize = novelTextView.getTextSize() == 0 ? SystemUtil.sp2px(mContext, 15f) : novelTextView.getTextSize();
             textColor = novelTextView.getCurrentTextColor();
             if (typeface == 0) {
                 typefaceName = "HYCYJ.ttf";
@@ -64,7 +86,13 @@ public class NovelTextViewHelp {
         return this;
     }
 
-    protected void initViewConfig(float height, float width) {
+    protected void initViewSize(float width, float height) {
+        this.width = width;
+        this.height = height;
+        initViewConfig();
+    }
+
+    protected void initViewConfig() {
         if (height == 0 || width == 0) {
             throw new NullPointerException("填充的界面参数中宽高为0");
         }

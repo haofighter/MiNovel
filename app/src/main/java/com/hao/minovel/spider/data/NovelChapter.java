@@ -29,6 +29,7 @@ public class NovelChapter implements Parcelable {
     private long createTime;//创建时间  以for循环的index来区分
 
 
+
     public String getChapterName() {
         return this.chapterName;
     }

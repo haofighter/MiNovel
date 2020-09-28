@@ -19,7 +19,7 @@ import java.util.List;
 
 public class NovelChapterAdapter extends RecyclerView.Adapter<NovelChapterAdapter.NovelChapterHolder> {
     private Context mContext;
-    private String selectUrl="";
+    private String selectUrl = "";
 
     private List<NovelChapter> novelChapters = new ArrayList<>();
 
@@ -28,7 +28,7 @@ public class NovelChapterAdapter extends RecyclerView.Adapter<NovelChapterAdapte
     }
 
 
-    public void setNovelChapters(NovelChapter  novelChapter) {
+    public void setNovelChapters(NovelChapter novelChapter) {
         this.novelChapters = DBManage.checkedNovelList(novelChapter.getNovelChapterListUrl());
         notifyDataSetChanged();
     }
@@ -74,10 +74,6 @@ public class NovelChapterAdapter extends RecyclerView.Adapter<NovelChapterAdapte
         }
     }
 
-    public void setSelect(int intValue) {
-        this.selectUrl = novelChapters.get(intValue).getChapterUrl();
-        notifyDataSetChanged();
-    }
 
     public void setSelect(String chapterUrl) {
         this.selectUrl = chapterUrl;
