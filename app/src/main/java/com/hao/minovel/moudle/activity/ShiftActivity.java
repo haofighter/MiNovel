@@ -50,7 +50,6 @@ public class ShiftActivity extends MiMuneActivity implements View.OnClickListene
         return R.layout.activity_shift_content;
     }
 
-
     @Override
     protected void initView(View v) {
         ServiceManage.getInstance().startBackRunService(AppContext.application);
@@ -65,12 +64,17 @@ public class ShiftActivity extends MiMuneActivity implements View.OnClickListene
         drawerLayout.setScrimColor(ContextCompat.getColor(this, R.color.transparent));
     }
 
-
     @Override
     protected void doElse() {
         super.doElse();
         initTranslation();
         initShitfList();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((ShiftAdapter) shiftList.getAdapter()).refresh();
     }
 
     //展示已收藏或阅读过的小说
@@ -91,12 +95,6 @@ public class ShiftActivity extends MiMuneActivity implements View.OnClickListene
         int padding = (int) SystemUtil.dp2px(this, 10);
         v.findViewById(R.id.title_item).setPadding(padding, SystemUtil.getStatusBarHeight(this) + padding, padding, padding);
     }
-
-
-
-
-
-
 
     @Override
     public void onBackPressed() {
@@ -149,6 +147,4 @@ public class ShiftActivity extends MiMuneActivity implements View.OnClickListene
                 break;
         }
     }
-
-
 }

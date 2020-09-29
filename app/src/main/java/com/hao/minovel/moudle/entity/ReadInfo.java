@@ -75,4 +75,14 @@ public class ReadInfo {
     }
 
 
+    @Override
+    public String toString() {
+        return "ReadInfo{" +
+                "id=" + id +
+                ", novelChapterListUrl='" + novelChapterListUrl + '\'' +
+                ", novelChapterUrl='" + novelChapterUrl + '\'' +
+                ", page=" + page +
+                ", date=" + date +
+                '}';
+    }
 }

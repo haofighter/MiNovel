@@ -288,4 +288,13 @@ public class DBManage {
     public static void saveAppUseinfo(AppUseInfo appUseInfo) {
         DBCore.getDaoSession().getAppUseInfoDao().insertOrReplace(appUseInfo);
     }
+
+    /**
+     * 保存小说阅读信息
+     *
+     * @param readInfo
+     */
+    public static void saveReadInfo(ReadInfo readInfo) {
+        DBCore.getDaoSession().getReadInfoDao().insertOrReplaceInTx(readInfo);
+    }
 }

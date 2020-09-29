@@ -1,7 +1,6 @@
 package com.hao.minovel.moudle.adapter;
 
-import android.content.Context;
-import android.content.Intent;
+import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,9 +11,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.util.Pair;
+import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.hao.annotationengine.Router;
 import com.hao.date.RouterContent;
 import com.hao.minovel.R;
 import com.hao.minovel.db.DBManage;
@@ -30,7 +33,7 @@ import java.util.List;
 
 
 public class ShiftAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private Context mContext;
+    private Activity mContext;
     private boolean showDelete = false;
 
     public void setShowDelete(boolean showDelete) {
@@ -44,12 +47,13 @@ public class ShiftAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     private List<ReadInfo> readInfos = DBManage.checkedAllReadInfo();
 
-    public ShiftAdapter(Context context) {
+    public ShiftAdapter(Activity context) {
         this.mContext = context;
     }
 
     public void refresh() {
         readInfos = DBManage.checkedAllReadInfo();
+        Log.i("阅读数据", "readInfos=" + readInfos.size());
         notifyDataSetChanged();
     }
 
@@ -168,7 +172,7 @@ public class ShiftAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     if (tv_watch.getText().equals("继续阅读")) {
                         Bundle bundle = new Bundle();
                         bundle.putParcelable("novelChapter", DBManage.checkNovelChaptterById(readInfo.getNovelChapterListUrl(), readInfo.getNovelChapterUrl()));
-//                        EventBus.getDefault().post(new JumpInfo(RouterContent.SHIFTACTIVITY, null));
+                        EventBus.getDefault().post(new JumpInfo(RouterContent.READNOVELACTIVITY, bundle));
                     } else {
                         EventBus.getDefault().post(new JumpInfo(RouterContent.STACKACTIVITY, null));
                     }
@@ -178,24 +182,25 @@ public class ShiftAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    ReadInfo readInfo = (ReadInfo) v.getTag();
-//                    Intent intent = new Intent(mContext, NovelDetailActivity.class);
-//                    intent.putExtra("novelId", readInfo.getNovelChapterListUrl());
-//                    ViewCompat.setTransitionName(iv_cover, "cover");
-//                    Pair<View, String> pair1 = new Pair<>((View) iv_cover, ViewCompat.getTransitionName(iv_cover));
-//                    /**
-//                     *4、生成带有共享元素的Bundle，这样系统才会知道这几个元素需要做动画
-//                     */
-//                    ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) mContext, pair1);
-//                    ActivityCompat.startActivity(mContext, intent, activityOptionsCompat.toBundle());
+                    ReadInfo readInfo = (ReadInfo) v.getTag();
+                    if (readInfo != null) {
+                        Pair<View, String> pair1 = new Pair<View, String>(iv_cover, ViewCompat.getTransitionName(iv_cover).toString());
+                        /**
+                         * 生成带有共享元素的Bundle，这样系统才会知道这几个元素需要做动画
+                         */
+                        ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(mContext, pair1);
+                        Bundle bundle = activityOptionsCompat.toBundle();
+                        bundle.putParcelable("novelDetail", DBManage.checkNovelByUrl(readInfo.getNovelChapterListUrl()));
+                        Router.getInstance().build(RouterContent.NOVELDETAILACTIVITY, bundle, mContext).skip();
+                    }
                 }
             });
 
             delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    DbManage.removeReadInfo(DbManage.checkedAllReadInfo().get(0));
-//                    notifiDate();
+                    DBManage.removeReadInfo(DBManage.checkedAllReadInfo().get(0));
+                    notifiDate();
                 }
             });
 
@@ -207,6 +212,7 @@ public class ShiftAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             } else {
                 delete.setVisibility(View.GONE);
             }
+            tv_watch.setText("继续阅读");
             NovelIntroduction novelIntroduction = DBManage.checkNovelByUrl(readInfo.getNovelChapterListUrl());
             NovelChapter novelChapter = DBManage.checkNovelChaptterById(readInfo.getNovelChapterListUrl(), readInfo.getNovelChapterUrl());
             if (novelIntroduction != null) {

@@ -45,4 +45,6 @@ public class ChapterInfo {
         novelPageInfos = novelTextViewHelp.fromateArray(content);
         page = novelTextViewHelp.allPage;
     }
+
+
 }

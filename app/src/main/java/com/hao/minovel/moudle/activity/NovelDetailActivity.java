@@ -74,7 +74,6 @@ public class NovelDetailActivity extends MiBaseActivity implements View.OnClickL
 
     @Override
     protected void doElse() {
-
         novelDetail = getIntent().getParcelableExtra("novelDetail");
         readInfo = DBManage.checkedReadInfo(novelDetail.getNovelChapterListUrl());
     }
@@ -147,7 +146,7 @@ public class NovelDetailActivity extends MiBaseActivity implements View.OnClickL
                     if (state == 0) {
                         EventBus.getDefault().post("loadDate");
                     } else {
-                        EventBus.getDefault().post("loadErr");
+                        EventBus.getDefault().post("loadErr："+state);
                     }
                 }
             }));

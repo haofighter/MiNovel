@@ -23,6 +23,7 @@ import com.hao.minovel.db.DBManage;
 import com.hao.minovel.moudle.adapter.NovelChapterAdapter;
 import com.hao.minovel.moudle.adapter.OnItemClickListener;
 import com.hao.minovel.moudle.adapter.TextTypefaceAdapter;
+import com.hao.minovel.moudle.entity.ReadInfo;
 import com.hao.minovel.moudle.service.DownListener;
 import com.hao.minovel.moudle.service.DownLoadNovelService;
 import com.hao.minovel.moudle.service.NovolDownTask;
@@ -30,7 +31,6 @@ import com.hao.minovel.moudle.service.ServiceManage;
 import com.hao.minovel.spider.SpiderUtils;
 import com.hao.minovel.spider.data.NovelChapter;
 import com.hao.minovel.tinker.app.AppContext;
-import com.hao.minovel.utils.SystemUtil;
 import com.hao.minovel.view.minovelread.ChapterInfo;
 import com.hao.minovel.view.minovelread.NovelTextView;
 import com.hao.minovel.view.minovelread.NovelTextViewHelp;
@@ -204,6 +204,18 @@ public class ReadNovelActivity extends MiBaseActivity implements PullViewLayout.
     @Override
     public void onPageChange(ChapterInfo chapterInfo) {
         Log.i("显示参数", "章节：" + chapterInfo.getChapterName() + "   " + chapterInfo.getNowChapterUrl());
+        try {
+            ReadInfo readInfo = new ReadInfo();
+            NovelChapter novelChapter = DBManage.checkNovelChaptterByUrl(chapterInfo.getNowChapterUrl());
+            readInfo.setNovelChapterListUrl(novelChapter.getNovelChapterListUrl());
+            readInfo.setNovelChapterUrl(novelChapter.getChapterUrl());
+            readInfo.setDate(System.currentTimeMillis());
+            readInfo.setPage(novel_show.getContentPageIndex());
+            DBManage.saveReadInfo(readInfo);
+            Log.i("阅读界面", "保存阅读信息=" + readInfo.toString());
+        } catch (Exception e) {
+            Log.e("阅读界面", "保存阅读信息失败");
+        }
         if (text_typeface.getAdapter() instanceof NovelChapterAdapter) {
             ((NovelChapterAdapter) text_typeface.getAdapter()).setSelect(chapterInfo.getNowChapterUrl());
         }
@@ -316,6 +328,10 @@ public class ReadNovelActivity extends MiBaseActivity implements PullViewLayout.
             switch (msg.what) {
                 case LOADNOW:
                     novel_show.setChapter((NovelChapter) msg.obj);
+                    ReadInfo readInfo = DBManage.checkedReadInfo(novelChapter.getNovelChapterListUrl());
+                    if (readInfo != null) {
+                        novel_show.changePage(readInfo.getPage());
+                    }
                     break;
                 case LOADMORE:
                     novel_show.addChapter((NovelChapter) msg.obj, false);
