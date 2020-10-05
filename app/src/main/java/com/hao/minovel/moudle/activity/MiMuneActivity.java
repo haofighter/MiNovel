@@ -13,7 +13,6 @@ import com.hao.minovel.R;
 import com.hao.minovel.base.MiDrawerActivity;
 import com.hao.minovel.moudle.adapter.ShiftMuneAdapter;
 import com.hao.minovel.moudle.entity.ShiftMuneEntity;
-import com.hao.minovel.moudle.entity.StackTypeEntity;
 import com.hao.minovel.utils.SystemUtil;
 import com.hao.minovel.view.recycleviewhelp.MiRecycleView;
 
@@ -33,7 +32,7 @@ public abstract class MiMuneActivity extends MiDrawerActivity {
 
     @Override
     public int layoutDrawerId() {
-        return R.layout.activity_shift_drawer;
+        return R.layout.mirecyckerview;
     }
 
     @Override
@@ -44,7 +43,7 @@ public abstract class MiMuneActivity extends MiDrawerActivity {
     @Override
     protected void doOnSetContent(@NotNull View v) {
         super.doOnSetContent(v);
-        mune = v.findViewById(R.id.mune);
+        mune = v.findViewById(R.id.mirecycleview);
         mune.setPadding(0, SystemUtil.getStatusBarHeight(this), 0, 0);
     }
 
