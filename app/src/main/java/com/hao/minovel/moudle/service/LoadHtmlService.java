@@ -1,16 +1,37 @@
-package com.hao.minovel.spider;
+package com.hao.minovel.moudle.service;
 
+import android.app.IntentService;
+import android.content.Intent;
+import android.os.Handler;
+import android.os.IBinder;
+import android.os.Message;
 import android.util.Log;
+
+import androidx.annotation.Nullable;
+
+import com.hao.minovel.spider.SpiderResponse;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
 import java.net.URL;
-import java.net.UnknownHostException;
-import java.util.concurrent.TimeoutException;
 
-public class SpiderUtils {
+public class LoadHtmlService extends IntentService {
+    /**
+     * Creates an IntentService.  Invoked by your subclass's constructor.
+     *
+     * @param name Used to name the worker thread, important only for debugging.
+     */
+    public LoadHtmlService(String name) {
+        super(name);
+    }
+
+    @Override
+    protected void onHandleIntent(@Nullable Intent intent) {
+        getHtml(intent.getStringExtra("url"));
+    }
+
     public final static int Success = 0;
     public final static int UnknownHostException = -1;
     public final static int TimeoutException = -2;
@@ -21,23 +42,13 @@ public class SpiderUtils {
      * 获取到的网页数据,使用backCall回调进行处理
      * 拉取操作是在子线程中进行处理
      *
-     * @param urlHead   请求的地址头部
-     * @param urlString
+     * @param urlStr 请求的地址
      * @return
      */
-    public static SpiderResponse getHtml(String urlHead, String urlString) {
+    public static SpiderResponse getHtml(String urlStr) {
         StringBuffer html = new StringBuffer();
         try {
-            URL url;
-            if (urlString.startsWith("http://") || urlString.startsWith("https://")) {
-                url = new URL(urlString);
-            } else {
-                if (urlString.startsWith("www")) {
-                    url = new URL("http://" + urlString);
-                } else {
-                    url = new URL(urlHead + urlString);
-                }
-            }
+            URL url = new URL(urlStr);
             Log.i("解析地址", "url=" + url);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 //            conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)");
@@ -60,7 +71,7 @@ public class SpiderUtils {
             Log.i("解析地址", "html=" + html);
             br.close();
             isr.close();
-        } catch (UnknownHostException e) {
+        } catch (java.net.UnknownHostException e) {
             return new SpiderResponse(UnknownHostException, null);
         } catch (SocketTimeoutException e) {
             return new SpiderResponse(TimeoutException, null);
@@ -70,6 +81,5 @@ public class SpiderUtils {
             return new SpiderResponse(Success, html.toString());
         }
     }
-
 
 }

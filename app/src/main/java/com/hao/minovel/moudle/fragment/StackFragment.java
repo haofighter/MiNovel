@@ -122,6 +122,7 @@ public class StackFragment extends MiBaseFragment {
                     break;
                 case LOAD_START:
                     refresh_layout.setRefreshing(true);
+                    ((NovelListAdapter) recyclerView.getAdapter()).setLoadState(true);
                     break;
                 case LOAD_ERR:
                     ((NovelListAdapter) recyclerView.getAdapter()).setLoadState(false);

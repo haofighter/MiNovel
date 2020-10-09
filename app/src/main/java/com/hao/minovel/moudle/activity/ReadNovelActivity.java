@@ -327,11 +327,14 @@ public class ReadNovelActivity extends MiBaseActivity implements PullViewLayout.
             super.dispatchMessage(msg);
             switch (msg.what) {
                 case LOADNOW:
-                    novel_show.setChapter((NovelChapter) msg.obj);
                     ReadInfo readInfo = DBManage.checkedReadInfo(novelChapter.getNovelChapterListUrl());
                     if (readInfo != null) {
-                        novel_show.changePage(readInfo.getPage());
+                        novel_show.setChapter((NovelChapter) msg.obj, readInfo.getPage());
+                        Log.i("跳转", "novel_show=" + readInfo.getPage());
+                    } else {
+                        novel_show.setChapter((NovelChapter) msg.obj);
                     }
+
                     break;
                 case LOADMORE:
                     novel_show.addChapter((NovelChapter) msg.obj, false);

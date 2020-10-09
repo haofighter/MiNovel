@@ -25,7 +25,7 @@ public class PullViewLayout extends FrameLayout {
     int dragState = -1;//0  左滑,1 右滑  -1滑动完成
     int chapterIndex = 0;//章节位于list中的位置
     int contentPageIndex = 0;//当前contentPage显示的章节处于list中的位置
-    int changePage = -1;//如果首次加载数据的时候 需要跳转页面 则填充此数据
+    //    int changePage = -1;//如果首次加载数据的时候 需要跳转页面 则填充此数据
     NovelTextViewHelp novelTextViewHelp;//小说阅读页的配置信息
     Context mcontext;
     ViewGroup fristPage;//前一页
@@ -95,7 +95,7 @@ public class PullViewLayout extends FrameLayout {
     };
 
     //针对当前数据进行初始化
-    public void fromatDate(NovelChapter novelChapter) {
+    public void fromatDate(NovelChapter novelChapter, int chagepage) {
         if (novelTextViewHelp != null) {
             return;
         }
@@ -112,18 +112,9 @@ public class PullViewLayout extends FrameLayout {
                     }
                 }
 
-                ChapterInfo chapterInfo = new ChapterInfo(novelChapter.getChapterUrl(), novelChapter.getChapterName(), novelChapter.getChapterContent());
-                chapterInfo.setNovelTextViewHelp(novelTextViewHelp);
-                allDate.add(chapterInfo);
-                if (changePage >= 0 && changePage <= allDate.get(chapterIndex).getPage() - 1) {
-                    contentPageIndex = chapterIndex;
-                } else {
-                    contentPageIndex = allDate.get(chapterIndex).getPage() - 1;
-                }
                 removeView(v);
-                initContentPage(contentPage);
-                initNextPage(nextPage);
-                initFirstPage(fristPage);
+                allDate.clear();
+                initContent(novelChapter, chagepage);
             }
         });
     }
@@ -266,7 +257,7 @@ public class PullViewLayout extends FrameLayout {
     }
 
     public void setChapter(NovelChapter novelChapter) {
-        setChapter(novelChapter, changePage);
+        setChapter(novelChapter, 0);
     }
 
     /**
@@ -276,25 +267,38 @@ public class PullViewLayout extends FrameLayout {
      * @param changePage
      */
     public void setChapter(NovelChapter novelChapter, int changePage) {
-        this.changePage = changePage;
         if (novelTextViewHelp != null) {
             chapterIndex = 0;
             contentPageIndex = 0;
-            ChapterInfo chapterInfo = new ChapterInfo(novelChapter.getChapterUrl(), novelChapter.getChapterName(), novelChapter.getChapterContent());
-            chapterInfo.setNovelTextViewHelp(novelTextViewHelp);
-            allDate.clear();
-            allDate.add(chapterInfo);
-            initContentPage(contentPage);
-            initFirstPage(fristPage);
-            initNextPage(nextPage);
+            initContent(novelChapter, changePage);
         } else {//如果数据不完整 直接调用初始化的方法进行完善
-            fromatDate(novelChapter);
+            fromatDate(novelChapter, changePage);
         }
     }
 
-
-    public void changePage(int page) {
-        this.changePage = page;
+    /**
+     * 对页面数据进行填充
+     *
+     * @param novelChapter
+     * @param changePage
+     */
+    private void initContent(NovelChapter novelChapter, int changePage) {
+        ChapterInfo chapterInfo = new ChapterInfo(novelChapter.getChapterUrl(), novelChapter.getChapterName(), novelChapter.getChapterContent());
+        chapterInfo.setNovelTextViewHelp(novelTextViewHelp);
+        allDate.add(chapterInfo);
+        if (allDate.get(chapterIndex) != null) {
+            if (changePage >= 0 && changePage <= allDate.get(chapterIndex).getPage() - 1) {
+                contentPageIndex = changePage;
+            } else {
+                contentPageIndex = 0;
+            }
+        } else {
+            chapterIndex = allDate.size() - 1;
+            contentPageIndex = 0;
+        }
+        initContentPage(contentPage);
+        initFirstPage(fristPage);
+        initNextPage(nextPage);
     }
 
 

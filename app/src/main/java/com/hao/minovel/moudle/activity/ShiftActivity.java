@@ -60,6 +60,7 @@ public class ShiftActivity extends MiMuneActivity implements View.OnClickListene
         findViewById(R.id.iv_warn_close).setOnClickListener(this);
         findViewById(R.id.stack).setOnClickListener(this);
         findViewById(R.id.book_icon).setOnClickListener(this);
+        findViewById(R.id.search).setOnClickListener(this);
         //取消空白部分灰色阴影效果
         drawerLayout.setScrimColor(ContextCompat.getColor(this, R.color.transparent));
     }
@@ -147,6 +148,9 @@ public class ShiftActivity extends MiMuneActivity implements View.OnClickListene
                 break;
             case R.id.setting:
                 Router.getInstance().build(RouterContent.SETTINGACTIVITY, null).skip();
+                break;
+            case R.id.search:
+                Router.getInstance().build(RouterContent.SEARCHNOVELACTIVITY, null).skip();
                 break;
         }
     }

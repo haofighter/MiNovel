@@ -170,6 +170,8 @@ public class NovelListAdapter extends MiBaseAdapter<RecyclerView.ViewHolder> {
                 loadState = true;
             }
             super.onBindViewHolder(holder, position);
+        } else {
+            ((ReloadViewHolder) holder).setLoadInfo(loadState);
         }
     }
 
@@ -287,11 +289,13 @@ public class NovelListAdapter extends MiBaseAdapter<RecyclerView.ViewHolder> {
     class ReloadViewHolder extends RecyclerView.ViewHolder {
         View view;
         TextView reload;
+        TextView reload_head;
 
         public ReloadViewHolder(@NonNull View itemView) {
             super(itemView);
             view = itemView;
             reload = view.findViewById(R.id.reload);
+            reload_head = view.findViewById(R.id.reload_head);
             reload.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -301,6 +305,16 @@ public class NovelListAdapter extends MiBaseAdapter<RecyclerView.ViewHolder> {
                     onItemClickListener.onItemClick(null, view, (Integer) view.getTag(), view.getId());
                 }
             });
+        }
+
+        public void setLoadInfo(boolean loadState) {
+            if (loadState) {
+                reload_head.setText("正在加载中。。。");
+                reload.setVisibility(View.GONE);
+            } else {
+                reload_head.setText("加载失败，点击");
+                reload.setVisibility(View.VISIBLE);
+            }
         }
     }
 

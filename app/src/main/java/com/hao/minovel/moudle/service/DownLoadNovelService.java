@@ -190,7 +190,9 @@ public class DownLoadNovelService extends Service {
                     break;
             }
             try {
-                novolDownTask.downListener.endDown(loadState);
+                if (novolDownTask.downListener != null) {
+                    novolDownTask.downListener.endDown(loadState);
+                }
             } catch (Exception e) {
                 Log.i("小说服务", "任务执行完成执行回调出错:" + e.getMessage());
             }

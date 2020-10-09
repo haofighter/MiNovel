@@ -19,6 +19,7 @@ public class AppContext {
     public static Application application = null;
     public static Context context = null;
     public static HashSet<Activity> activitys = new HashSet();
+    private static long lastClickTime = 0;//最后一次的点击时间
 
     public static boolean addActivity(Activity activity) {
         return activitys.add(activity);
@@ -50,5 +51,14 @@ public class AppContext {
         }
         Log.i("path", path);
         SkinManager.getInstance().loadSkin(path);
+    }
+
+    //判断是否重复点击
+    public static boolean checkedDoubleClick() {
+        if (System.currentTimeMillis() - lastClickTime < 1000) {
+            return false;
+        }
+        lastClickTime = System.currentTimeMillis();
+        return true;
     }
 }
