@@ -17,7 +17,7 @@
         <ImageView
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:src="@mipmap/shuji_white" />
+            android:src="@mipmap/icon_shuji_white" />
 
         <TextView
             android:layout_width="wrap_content"

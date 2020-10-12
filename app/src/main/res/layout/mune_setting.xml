@@ -20,7 +20,7 @@
         <ImageView
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:src="@mipmap/mune" />
+            android:src="@mipmap/icon_mune" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -61,7 +61,7 @@
         <ImageView
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:src="@mipmap/from" />
+            android:src="@mipmap/icon_form" />
 
         <TextView
             android:layout_width="wrap_content"

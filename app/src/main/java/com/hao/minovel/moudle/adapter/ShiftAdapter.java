@@ -11,6 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.util.Pair;
 import androidx.core.view.ViewCompat;
@@ -25,6 +26,7 @@ import com.hao.minovel.moudle.entity.JumpInfo;
 import com.hao.minovel.moudle.entity.ReadInfo;
 import com.hao.minovel.spider.data.NovelChapter;
 import com.hao.minovel.spider.data.NovelIntroduction;
+import com.hao.minovel.tinker.app.App;
 import com.hao.minovel.tinker.app.AppContext;
 
 import org.greenrobot.eventbus.EventBus;
@@ -98,7 +100,7 @@ public class ShiftAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 //            @Override
 //            public void onClick(View v) {
 //                if (onItemClickListener != null) {
-////                    onItemClickListener.itemClick(i, novelHolder.view, typefaces.get(i));
+//                    onItemClickListener.itemClick(i, novelHolder.view, typefaces.get(i));
 //                }
 //            }
 //        });
@@ -183,14 +185,17 @@ public class ShiftAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 @Override
                 public void onClick(View v) {
                     ReadInfo readInfo = (ReadInfo) v.getTag();
+                    ImageView iv_cover = itemView.findViewById(R.id.iv_cover);
                     if (readInfo != null) {
-                        Pair<View, String> pair1 = new Pair<View, String>(iv_cover, ViewCompat.getTransitionName(iv_cover).toString());
+                        Log.i("共享元素", "" + ViewCompat.getTransitionName(iv_cover));
+                        Pair<View, String> pair1 = new Pair<View, String>(iv_cover, ViewCompat.getTransitionName(iv_cover));
                         /**
                          * 生成带有共享元素的Bundle，这样系统才会知道这几个元素需要做动画
                          */
                         ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(mContext, pair1);
                         Bundle bundle = activityOptionsCompat.toBundle();
                         bundle.putParcelable("novelDetail", DBManage.checkNovelByUrl(readInfo.getNovelChapterListUrl()));
+                        bundle.putBoolean("animal", true);
                         Router.getInstance().build(RouterContent.NOVELDETAILACTIVITY, bundle, mContext).skip();
                     }
                 }
@@ -218,7 +223,7 @@ public class ShiftAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             if (novelIntroduction != null) {
                 novel_name.setText("《" + novelIntroduction.getNovelName() + "》");
                 Log.i("封面地址", novelIntroduction.getNovelCover() + "   " + novelIntroduction.isComplete() + "   更新时间：" + novelIntroduction.getCreatTime());
-                Glide.with(AppContext.application).load(novelIntroduction.getNovelCover()).error(R.mipmap.back_1).into(iv_cover);
+                Glide.with(AppContext.application).load(novelIntroduction.getNovelCover()).error(R.mipmap.image_background_1).into(iv_cover);
             }
             if (novelChapter != null) {
                 tv_durprogress.setText(novelChapter.getChapterName());
@@ -321,7 +326,7 @@ public class ShiftAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         title.setText(novelIntroduction.getNovelName());
                     }
                     if (cover != null) {
-                        Glide.with(AppContext.application).load(novelIntroduction.getNovelCover()).error(R.mipmap.back_1).into(cover);
+                        Glide.with(AppContext.application).load(novelIntroduction.getNovelCover()).error(R.mipmap.image_background_1).into(cover);
                     }
                     if (layout != null) {
                         layout.setVisibility(View.VISIBLE);
@@ -350,17 +355,12 @@ public class ShiftAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         @Override
         public void onClick(View v) {
             ReadInfo readInfo = (ReadInfo) v.getTag();
-            NovelChapter novelChapter = DBManage.getChapterById(readInfo.getNovelChapterListUrl(), readInfo.getNovelChapterUrl());
-//TODO 跳转小说详情界面
-            //            Intent intent = new Intent(mContext, ReadNovelActivity.class);
-//            intent.putExtra("novelChapter", novelChapter);
-//            mContext.startActivity(intent);
-//            Intent intent = new Intent(mContext, NovelDetailActivity.class);
-//            intent.putExtra("novelId", readInfo.getNovelChapterListUrl());
-//            Pair<View, String> pair1 = null;
+            NovelIntroduction novelIntroduction = DBManage.checkNovelByUrl(readInfo.getNovelChapterListUrl());
+            ViewCompat.setTransitionName(v, "cover");
+            Pair<View, String> pair1 = new Pair<>(v, ViewCompat.getTransitionName(v));
 //            switch (v.getId()) {
 //                case R.id.iv_cover_1:
-//                    ViewCompat.setTransitionName(iv_cover_1, "cover");
+//                    ViewCompat.setTransitionName(v, "cover");
 //                    pair1 = new Pair<>((View) iv_cover_1, ViewCompat.getTransitionName(iv_cover_1));
 //                    break;
 //                case R.id.iv_cover_2:
@@ -372,12 +372,15 @@ public class ShiftAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 //                    pair1 = new Pair<>((View) iv_cover_3, ViewCompat.getTransitionName(iv_cover_3));
 //                    break;
 //            }
-//            if (pair1 != null) {
-//                ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) mContext, pair1);
-//                ActivityCompat.startActivity(mContext, intent, activityOptionsCompat.toBundle());
-//            } else {
-//                App.getInstance().startActivity(intent);
-//            }
+            if (pair1 != null) {
+                ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(mContext, pair1);
+                Bundle bundle = activityOptionsCompat.toBundle();
+                bundle.putParcelable("novelDetail", novelIntroduction);
+                bundle.putBoolean("animal", true);
+                Router.getInstance().build(RouterContent.NOVELDETAILACTIVITY, bundle, mContext).skip();
+            } else {
+                Router.getInstance().build(RouterContent.NOVELDETAILACTIVITY).skip();
+            }
         }
     }
 

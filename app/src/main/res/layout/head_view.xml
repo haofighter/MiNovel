@@ -15,7 +15,7 @@
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_marginRight="10dp"
-            android:src="@mipmap/shuji_black"
+            android:src="@mipmap/icon_shuji_black"
             android:transitionName="book" />
 
         <TextView
@@ -35,7 +35,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="20dp"
             android:layout_toLeftOf="@+id/setting"
-            android:src="@mipmap/shop" />
+            android:src="@mipmap/icon_shop" />
 
         <ImageView
             android:id="@+id/setting"
@@ -44,7 +44,7 @@
             android:layout_alignParentRight="true"
             android:layout_marginLeft="10dp"
             android:onClick="onClick"
-            android:src="@mipmap/setting" />
+            android:src="@mipmap/icon_setting" />
 
     </RelativeLayout>
 

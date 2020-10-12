@@ -161,6 +161,7 @@ public class Router {
         if (bindDetailInfo.getBundle() != null) {
             intent.putExtras(bindDetailInfo.getBundle());
             if (bindDetailInfo.getBundle().getBoolean("animal") && mActivity != null) {
+                Log.i("页面", "转场动画");
                 ActivityCompat.startActivity(mActivity, intent, bindDetailInfo.getBundle());
                 mActivity = null;
             } else {

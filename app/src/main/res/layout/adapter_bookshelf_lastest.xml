@@ -40,7 +40,7 @@
                 android:layout_marginLeft="4dp"
                 android:layout_marginRight="4dp"
                 android:scaleType="centerCrop"
-                android:src="@mipmap/back_1"
+                android:src="@mipmap/image_background_1"
                 android:transitionName="cover" />
 
             <FrameLayout
@@ -118,5 +118,5 @@
         android:visibility="gone"
         android:layout_alignRight="@id/head_novel_show"
         android:layout_alignBottom="@id/head_novel_show"
-        android:src="@mipmap/delete" />
+        android:src="@mipmap/icon_delete" />
 </RelativeLayout>

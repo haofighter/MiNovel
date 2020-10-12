@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.hao.minovel.R;
+import com.hao.minovel.db.DBManage;
 import com.hao.minovel.spider.data.NovelChapter;
 
 import java.util.ArrayList;
@@ -25,8 +26,7 @@ public class PullViewLayout extends FrameLayout {
     int dragState = -1;//0  左滑,1 右滑  -1滑动完成
     int chapterIndex = 0;//章节位于list中的位置
     int contentPageIndex = 0;//当前contentPage显示的章节处于list中的位置
-    //    int changePage = -1;//如果首次加载数据的时候 需要跳转页面 则填充此数据
-    NovelTextViewHelp novelTextViewHelp;//小说阅读页的配置信息
+    NovelTextViewHelp novelTextViewHelp = DBManage.chackNovelConfig();//小说阅读页的配置信息
     Context mcontext;
     ViewGroup fristPage;//前一页
     ViewGroup contentPage;//显示页
@@ -107,6 +107,7 @@ public class PullViewLayout extends FrameLayout {
                 NovelTextView novelTextView = v.findViewById(R.id.novel_content);
                 if (novelTextViewHelp == null) {
                     novelTextViewHelp = novelTextView.getNovelTextViewHelp();
+                    DBManage.saveNovelTextViewConfig(novelTextViewHelp);
                     if (listener != null) {
                         listener.initConfig(novelTextViewHelp);
                     }
@@ -257,7 +258,7 @@ public class PullViewLayout extends FrameLayout {
     }
 
     public void setChapter(NovelChapter novelChapter) {
-        setChapter(novelChapter, 0);
+        setChapter(novelChapter, -1);
     }
 
     /**
@@ -285,6 +286,9 @@ public class PullViewLayout extends FrameLayout {
     private void initContent(NovelChapter novelChapter, int changePage) {
         ChapterInfo chapterInfo = new ChapterInfo(novelChapter.getChapterUrl(), novelChapter.getChapterName(), novelChapter.getChapterContent());
         chapterInfo.setNovelTextViewHelp(novelTextViewHelp);
+        if (changePage == -1) {
+            allDate.clear();
+        }
         allDate.add(chapterInfo);
         if (allDate.get(chapterIndex) != null) {
             if (changePage >= 0 && changePage <= allDate.get(chapterIndex).getPage() - 1) {

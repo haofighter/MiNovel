@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"></com.hao.minovel.view.minovelread.PullViewLayout>
 
+    <include layout="@layout/read_novel_title" />
 
     <include layout="@layout/readbook_config" />
 
@@ -36,7 +37,7 @@
                 android:id="@+id/back_to_main"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
-                android:src="@mipmap/shuji_black" />
+                android:src="@mipmap/icon_shuji_black" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 

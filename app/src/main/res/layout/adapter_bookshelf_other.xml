@@ -85,7 +85,7 @@
                 android:layout_height="25dp"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentRight="true"
-                android:src="@mipmap/delete_x" />
+                android:src="@mipmap/icon_delete_x" />
         </RelativeLayout>
 
         <View
@@ -148,7 +148,7 @@
                 android:layout_height="25dp"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentRight="true"
-                android:src="@mipmap/delete_x"
+                android:src="@mipmap/icon_delete_x"
                 android:visibility="gone" />
         </RelativeLayout>
 
@@ -211,7 +211,7 @@
                 android:layout_height="25dp"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentRight="true"
-                android:src="@mipmap/delete_x"
+                android:src="@mipmap/icon_delete_x"
                 android:visibility="gone" />
         </RelativeLayout>
 

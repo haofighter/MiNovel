@@ -222,9 +222,9 @@ public class NovelListAdapter extends MiBaseAdapter<RecyclerView.ViewHolder> {
             view.setBackgroundResource(R.color.transparent);
             novelIntroductions = DBManage.checkNovelByUrl(novelIntroductions.getNovelChapterListUrl());
             if (novelIntroductions.getNovelCover() != null) {
-                Glide.with(AppContext.application).load(novelIntroductions.getNovelCover()).error(R.mipmap.novel_normal_cover).into(novel_avatar);
+                Glide.with(AppContext.application).load(novelIntroductions.getNovelCover()).error(R.mipmap.image_novel_normal_cover).into(novel_avatar);
             } else {
-                Glide.with(AppContext.application).load(R.mipmap.novel_normal_cover).into(novel_avatar);
+                Glide.with(AppContext.application).load(R.mipmap.image_novel_normal_cover).into(novel_avatar);
             }
             novel_name.setText(novelIntroductions.getNovelName());
             novel_author.setText("作者：" + novelIntroductions.getNovelAutho());

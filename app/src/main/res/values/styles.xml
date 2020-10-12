@@ -9,7 +9,7 @@
         <!--        <item name="colorPrimary">@color/colorPrimary</item>-->
         <!--        <item name="colorPrimaryDark">@color/black</item>-->
         <!--<item name="colorAccent">@color/colorAccent</item>-->
-        <item name="android:windowBackground">@mipmap/read</item>
+        <item name="android:windowBackground">@mipmap/image_read</item>
         <!--        <item name="android:windowTranslucentNavigation" tools:ignore="NewApi">true</item>-->
         <item name="android:windowLayoutInDisplayCutoutMode" tools:ignore="NewApi">shortEdges</item>
         <!--        <item name="android:windowContentTransitions" tools:ignore="NewApi">true</item>-->

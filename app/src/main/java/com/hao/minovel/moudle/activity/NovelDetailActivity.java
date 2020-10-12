@@ -1,10 +1,14 @@
 package com.hao.minovel.moudle.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.ViewCompat;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.transition.ChangeBounds;
+import android.transition.ChangeTransform;
+import android.transition.Fade;
+import android.transition.TransitionSet;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -19,7 +23,6 @@ import com.hao.date.RouterContent;
 import com.hao.minovel.R;
 import com.hao.minovel.base.MiBaseActivity;
 import com.hao.minovel.db.DBManage;
-import com.hao.minovel.moudle.entity.JumpInfo;
 import com.hao.minovel.moudle.entity.ReadInfo;
 import com.hao.minovel.moudle.service.DownListener;
 import com.hao.minovel.moudle.service.DownLoadNovelService;
@@ -74,6 +77,7 @@ public class NovelDetailActivity extends MiBaseActivity implements View.OnClickL
 
     @Override
     protected void doElse() {
+        initTranslation();
         novelDetail = getIntent().getParcelableExtra("novelDetail");
         readInfo = DBManage.checkedReadInfo(novelDetail.getNovelChapterListUrl());
     }
@@ -117,7 +121,7 @@ public class NovelDetailActivity extends MiBaseActivity implements View.OnClickL
                 moreOrPart.setVisibility(View.INVISIBLE);
             }
             novelLastChaper.setText(novelIntroduction.getNovelNewChapterTitle());
-            Glide.with(AppContext.application).load(novelIntroduction.getNovelCover()).error(R.mipmap.novel_normal_cover).into(novelDetailImage);
+            Glide.with(AppContext.application).load(novelIntroduction.getNovelCover()).error(R.mipmap.image_novel_normal_cover).into(novelDetailImage);
         }
     }
 
@@ -146,7 +150,7 @@ public class NovelDetailActivity extends MiBaseActivity implements View.OnClickL
                     if (state == 0) {
                         EventBus.getDefault().post("loadDate");
                     } else {
-                        EventBus.getDefault().post("loadErr："+state);
+                        EventBus.getDefault().post("loadErr：" + state);
                     }
                 }
             }));
@@ -202,6 +206,32 @@ public class NovelDetailActivity extends MiBaseActivity implements View.OnClickL
                     novelIntroduce.setMaxLines(100);
                 }
                 break;
+        }
+    }
+
+    //转场动画
+    private void initTranslation() {
+        ImageView book_icon = findViewById(R.id.novel_detail_image);
+
+        /**
+         * 1、设置相同的TransitionName
+         */
+//        ViewCompat.setTransitionName(book_icon, "avatar");
+        /**
+         * 2、设置WindowTransition,除指定的ShareElement外，其它所有View都会执行这个Transition动画
+         */
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setEnterTransition(new Fade().setDuration(3000));
+            getWindow().setExitTransition(new Fade().setDuration(3000));
+            /**
+             * 3、设置ShareElementTransition,指定的ShareElement会执行这个Transiton动画
+             */
+            TransitionSet transitionSet = new TransitionSet();
+            transitionSet.addTransition(new ChangeBounds());
+            transitionSet.addTransition(new ChangeTransform());
+            transitionSet.addTarget(book_icon);
+            getWindow().setSharedElementEnterTransition(transitionSet);
+            getWindow().setSharedElementExitTransition(transitionSet);
         }
     }
 }

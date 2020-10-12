@@ -26,7 +26,7 @@
             android:layout_height="30dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:src="@mipmap/refuse" />
+            android:src="@mipmap/icon_refuse" />
 
         <TextView
             android:id="@+id/textsize"
@@ -44,7 +44,7 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginLeft="10dp"
-            android:src="@mipmap/add" />
+            android:src="@mipmap/icon_add" />
 
     </LinearLayout>
 
@@ -67,7 +67,7 @@
             android:layout_height="30dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:src="@mipmap/refuse" />
+            android:src="@mipmap/icon_refuse" />
 
         <TextView
             android:id="@+id/word_spac_size"
@@ -85,7 +85,7 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginLeft="10dp"
-            android:src="@mipmap/add" />
+            android:src="@mipmap/icon_add" />
 
     </LinearLayout>
 
@@ -108,7 +108,7 @@
             android:layout_height="30dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:src="@mipmap/refuse" />
+            android:src="@mipmap/icon_refuse" />
 
         <TextView
             android:id="@+id/line_spac_size"
@@ -126,7 +126,7 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginLeft="10dp"
-            android:src="@mipmap/add" />
+            android:src="@mipmap/icon_add" />
 
     </LinearLayout>
 

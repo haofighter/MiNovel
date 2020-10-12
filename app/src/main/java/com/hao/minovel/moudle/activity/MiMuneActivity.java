@@ -55,8 +55,8 @@ public abstract class MiMuneActivity extends MiDrawerActivity {
     }
 
     private void initMune() {
-        muneList.add(new ShiftMuneEntity(R.mipmap.bookshelf, "书架", RouterContent.SHIFTACTIVITY));
-        muneList.add(new ShiftMuneEntity(R.mipmap.booklist, "书库", RouterContent.STACKACTIVITY));
+        muneList.add(new ShiftMuneEntity(R.mipmap.icon_shuji_black, "书架", RouterContent.SHIFTACTIVITY));
+        muneList.add(new ShiftMuneEntity(R.mipmap.icon_booklist, "书库", RouterContent.STACKACTIVITY));
         mune.setLayoutManager(new LinearLayoutManager(this));
         ShiftMuneAdapter contentMuneAdapter = new ShiftMuneAdapter(this, muneList, new View.OnClickListener() {
             @Override

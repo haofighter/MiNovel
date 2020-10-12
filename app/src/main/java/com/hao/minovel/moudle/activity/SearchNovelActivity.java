@@ -23,6 +23,7 @@ import com.hao.minovel.moudle.adapter.TextNovelAdapter;
 import com.hao.minovel.spider.SpiderNovelFromBaidu;
 import com.hao.minovel.spider.data.NovelIntroduction;
 import com.hao.minovel.tinker.app.AppContext;
+import com.hao.minovel.utils.SystemUtil;
 import com.hao.sharelib.MMKVManager;
 
 import java.util.ArrayList;
@@ -117,10 +118,8 @@ public class SearchNovelActivity extends MiBaseActivity {
         novel_list.setLayoutManager(new LinearLayoutManager(AppContext.application));
         novel_list.addItemDecoration(new DividerItemDecoration(AppContext.application, DividerItemDecoration.VERTICAL));
         novel_list.setAdapter(textNovelAdapter);
-    }
 
-    @Override
-    protected void doElse() {
+        findViewById(R.id.search_layout).setPadding(0, SystemUtil.getStatusBarHeight(this), 0, 0);
         findViewById(R.id.search_novel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -130,7 +129,11 @@ public class SearchNovelActivity extends MiBaseActivity {
     }
 
     @Override
-    protected void doOnSetContent(View v) {
+    protected void doElse() {
+        textNovelAdapter.setShowHistory(getSearchHistrory());
+    }
 
+    @Override
+    protected void doOnSetContent(View v) {
     }
 }

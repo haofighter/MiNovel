@@ -35,7 +35,7 @@
 
             android:layout_height="35dp"
             android:padding="5dp"
-            android:src="@mipmap/search" />
+            android:src="@mipmap/icon_search" />
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView

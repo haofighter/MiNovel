@@ -30,7 +30,9 @@ import com.hao.minovel.moudle.service.NovolDownTask;
 import com.hao.minovel.moudle.service.ServiceManage;
 import com.hao.minovel.spider.SpiderUtils;
 import com.hao.minovel.spider.data.NovelChapter;
+import com.hao.minovel.spider.data.NovelIntroduction;
 import com.hao.minovel.tinker.app.AppContext;
+import com.hao.minovel.utils.SystemUtil;
 import com.hao.minovel.view.minovelread.ChapterInfo;
 import com.hao.minovel.view.minovelread.NovelTextView;
 import com.hao.minovel.view.minovelread.NovelTextViewHelp;
@@ -47,6 +49,7 @@ public class ReadNovelActivity extends MiBaseActivity implements PullViewLayout.
     PullViewLayout novel_show;
     TextView mune_title;
     View readbook_config;//设置界面
+    View read_novel_title;//标题
     View left_drawer;//测滑菜单界面
     View mune;//标题栏
 
@@ -73,7 +76,7 @@ public class ReadNovelActivity extends MiBaseActivity implements PullViewLayout.
                         stateQueue.add(ShowState.SHOWNONE);
                     }
                     stateQueue.add(ShowState.SHOWTYPEFACE);
-                    initDrawer(ShowState.SHOWCHAPTERS);
+                    initDrawer(ShowState.SHOWTYPEFACE);
                     muneSetting();
                 }
                 break;
@@ -113,6 +116,9 @@ public class ReadNovelActivity extends MiBaseActivity implements PullViewLayout.
                     novel_show.setNovelTextViewConfit(novelTextViewHelp);
                 }
                 break;
+            case R.id.back:
+                finish();
+                break;
         }
     }
 
@@ -141,6 +147,25 @@ public class ReadNovelActivity extends MiBaseActivity implements PullViewLayout.
         novel_show = v.findViewById(R.id.novel_show);
         mune = v.findViewById(R.id.mune);
         mune_title = v.findViewById(R.id.mune_title);
+        mune_title.setPadding(mune_title.getPaddingLeft(), mune_title.getPaddingTop() + SystemUtil.getStatusBarHeight(this), mune_title.getPaddingRight(), mune_title.getPaddingBottom());
+
+        read_novel_title = v.findViewById(R.id.read_novel_title);
+        View read_novel_title_content = v.findViewById(R.id.read_novel_title_content);
+        TextView title_name = v.findViewById(R.id.title_name);
+        NovelIntroduction novelIntroduction = DBManage.checkNovelByUrl(novelChapter.getNovelChapterListUrl());
+        if (novelIntroduction != null) {
+            title_name.setText(novelIntroduction.getNovelName());
+        } else {
+            title_name.setText("获取小说名失败");
+        }
+
+        read_novel_title_content.setPadding(read_novel_title_content.getPaddingLeft(), read_novel_title_content.getPaddingTop() + SystemUtil.getStatusBarHeight(this), read_novel_title_content.getPaddingRight(), read_novel_title_content.getPaddingBottom());
+        read_novel_title.post(new Runnable() {
+            @Override
+            public void run() {
+                read_novel_title.setTranslationY(-read_novel_title.getHeight());
+            }
+        });
 
         readbook_config = v.findViewById(R.id.readbook_config);
         readbook_config.post(new Runnable() {
@@ -164,6 +189,7 @@ public class ReadNovelActivity extends MiBaseActivity implements PullViewLayout.
         v.findViewById(R.id.add_textsize).setOnClickListener(this);
         v.findViewById(R.id.reduce_line_spac).setOnClickListener(this);
         v.findViewById(R.id.reduce_textsize).setOnClickListener(this);
+        v.findViewById(R.id.back).setOnClickListener(this);
         readbook_config.setOnClickListener(this);
         novel_show.setListener(this);
     }
@@ -277,6 +303,8 @@ public class ReadNovelActivity extends MiBaseActivity implements PullViewLayout.
                     if (nowState == ShowState.SHOWSETTING) {
                         float translateY = (float) animation.getAnimatedValue() * readbook_config.getHeight();
                         readbook_config.setTranslationY(translateY);
+                        float topTranslateY = (float) animation.getAnimatedValue() * -read_novel_title.getHeight();
+                        read_novel_title.setTranslationY(topTranslateY);
                     } else if (nowState == ShowState.SHOWTYPEFACE || nowState == ShowState.SHOWCHAPTERS) {
                         float translateX = -(float) animation.getAnimatedValue() * left_drawer.getWidth();
                         left_drawer.setTranslationX(translateX);
@@ -294,8 +322,10 @@ public class ReadNovelActivity extends MiBaseActivity implements PullViewLayout.
             valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
                 public void onAnimationUpdate(ValueAnimator animation) {
-                    float translateY = (1 - (float) animation.getAnimatedValue()) * readbook_config.getHeight();
-                    readbook_config.setTranslationY(translateY);
+                    float bottomTranslateY = (1 - (float) animation.getAnimatedValue()) * readbook_config.getHeight();
+                    readbook_config.setTranslationY(bottomTranslateY);
+                    float topTranslateY = (1 - (float) animation.getAnimatedValue()) * -read_novel_title.getHeight();
+                    read_novel_title.setTranslationY(topTranslateY);
                     if ((float) animation.getAnimatedValue() == 1) {
                         nowState = state;
                         stateQueue.remove(state);
@@ -309,7 +339,6 @@ public class ReadNovelActivity extends MiBaseActivity implements PullViewLayout.
 
     @Override
     protected void doElse() {
-        novelChapter = getIntent().getParcelableExtra("novelChapter");
         loadDate(LOADNOW);
         initAnimal();
         initChapterAdapter();
@@ -318,7 +347,11 @@ public class ReadNovelActivity extends MiBaseActivity implements PullViewLayout.
 
     @Override
     protected void doOnSetContent(View v) {
-
+        novelChapter = getIntent().getParcelableExtra("novelChapter");
+        if (novelChapter == null) {
+            Toast.makeText(this, "获取小说章节失败", Toast.LENGTH_SHORT).show();
+            finish();
+        }
     }
 
     Handler handler = new Handler() {
@@ -328,7 +361,7 @@ public class ReadNovelActivity extends MiBaseActivity implements PullViewLayout.
             switch (msg.what) {
                 case LOADNOW:
                     ReadInfo readInfo = DBManage.checkedReadInfo(novelChapter.getNovelChapterListUrl());
-                    if (readInfo != null) {
+                    if (readInfo != null && readInfo.getNovelChapterUrl().equals(((NovelChapter) msg.obj).getChapterUrl())) {
                         novel_show.setChapter((NovelChapter) msg.obj, readInfo.getPage());
                         Log.i("跳转", "novel_show=" + readInfo.getPage());
                     } else {

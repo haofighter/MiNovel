@@ -17,7 +17,7 @@
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_gravity="center"
-            android:src="@mipmap/shuji_black"
+            android:src="@mipmap/icon_shuji_black"
             android:transitionName="book"
             android:visibility="invisible"/>
 
