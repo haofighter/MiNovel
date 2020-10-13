@@ -3,6 +3,10 @@ package com.hao.minovel.moudle.activity
 import android.Manifest
 import android.animation.ValueAnimator
 import android.app.Dialog
+import android.content.Intent
+import android.content.pm.ShortcutInfo
+import android.content.pm.ShortcutManager
+import android.graphics.drawable.Icon
 import android.os.Build
 import android.util.Log
 import android.view.View
@@ -20,8 +24,14 @@ import kotlinx.android.synthetic.main.activity_main.*
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.view.ViewCompat
 import androidx.core.util.Pair
+import com.hao.minovel.R
+import com.hao.minovel.db.DBCore
+import com.hao.minovel.db.DBManage
 import com.hao.minovel.moudle.service.ServiceManage
 import com.hao.minovel.tinker.app.AppContext
+import com.hao.minovel.utils.SystemConfigUtil
+import com.hao.skin.SkinManager
+import java.util.ArrayList
 
 
 @Bind
@@ -84,6 +94,7 @@ class WelcomeActivity : MiBaseActivity() {
         initAnimal()
         initDialog()
         initPromision()
+
     }
 
     override fun onResume() {
@@ -114,6 +125,7 @@ class WelcomeActivity : MiBaseActivity() {
         if (!dialog?.isShowing!!) {
             promisstion = initPromission(promissions)
             if (promisstion) {
+                SystemConfigUtil.getInstance().initDynamicShortcuts()
                 //开启小说服务 进行该网站小说遍历
                 ServiceManage.getInstance().startBackRunService(AppContext.application)
                 if (!valueAnimator.isRunning && !isJumpMian) {
@@ -189,4 +201,6 @@ class WelcomeActivity : MiBaseActivity() {
             //          ActivityCompat.startActivity(App.getInstance(), intent, bundle);
         }
     }
+
+
 }

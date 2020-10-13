@@ -74,18 +74,8 @@ public class StackFragment extends MiBaseFragment {
                     loadDate();
                 } else {
                     NovelIntroduction novelIntroduction = ((NovelListAdapter) recyclerView.getAdapter()).getItem(position);
-//                    Bundle bundle = new Bundle();
-//                    bundle.putParcelable("novelDetail", novelIntroduction);
-
-                    ImageView iv_cover = view.findViewById(R.id.novel_avatar);
-                    Pair<View, String> pair1 = new Pair<View, String>(iv_cover, ViewCompat.getTransitionName(iv_cover));
-                    /**
-                     * 生成带有共享元素的Bundle，这样系统才会知道这几个元素需要做动画
-                     */
-                    ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), pair1);
-                    Bundle bundle = activityOptionsCompat.toBundle();
+                    Bundle bundle = new Bundle();
                     bundle.putParcelable("novelDetail", novelIntroduction);
-                    bundle.putBoolean("animal", true);
                     Router.getInstance().build(RouterContent.NOVELDETAILACTIVITY, bundle).skip();
                 }
             }

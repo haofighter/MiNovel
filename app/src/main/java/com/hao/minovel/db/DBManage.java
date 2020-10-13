@@ -17,6 +17,7 @@ import com.hao.minovel.spider.data.NovelType;
 import com.hao.minovel.spider.data.NovelTypeDao;
 import com.hao.minovel.spider.data.NovelTypeHot;
 import com.hao.minovel.spider.data.NovelTypeHotDao;
+import com.hao.minovel.utils.SystemConfigUtil;
 import com.hao.minovel.view.minovelread.NovelTextViewHelp;
 
 import java.util.ArrayList;
@@ -254,6 +255,7 @@ public class DBManage {
     public static void removeReadInfo(ReadInfo readInfo) {
         ReadInfoDao readInfoDao = DBCore.getDaoSession().getReadInfoDao();
         readInfoDao.delete(readInfo);
+        SystemConfigUtil.getInstance().initDynamicShortcuts();
     }
 
 
@@ -297,6 +299,7 @@ public class DBManage {
      */
     public static void saveReadInfo(ReadInfo readInfo) {
         DBCore.getDaoSession().getReadInfoDao().insertOrReplaceInTx(readInfo);
+        SystemConfigUtil.getInstance().initDynamicShortcuts();
     }
 
     public static NovelTextViewHelp chackNovelConfig() {

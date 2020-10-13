@@ -2,12 +2,15 @@ package com.hao.minovel.db;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 
 import com.hao.minovel.moudle.entity.DaoMaster;
 import com.hao.minovel.moudle.entity.DaoSession;
+import com.hao.minovel.tinker.app.AppContext;
 
 import org.greenrobot.greendao.async.AsyncSession;
+import org.greenrobot.greendao.database.Database;
 
 
 /**
@@ -33,14 +36,21 @@ public class DBCore {
         if (context == null) {
             throw new IllegalArgumentException("context can't be null");
         }
-        mContext = context.getApplicationContext();
+        mContext = context;
         DB_NAME = dbName;
     }
 
 
     private static DaoMaster getDaoMaster() {
+        if (mContext == null) {
+            init(AppContext.application);
+        }
         if (daoMaster == null) {
             DBHelper helper = new DBHelper(mContext, DB_NAME);
+            if (helper == null) {
+                Log.i("数据库", "helper创建失败");
+                return null;
+            }
             SQLiteDatabase db = helper.getWritableDatabase();
             daoMaster = new DaoMaster(db);
 

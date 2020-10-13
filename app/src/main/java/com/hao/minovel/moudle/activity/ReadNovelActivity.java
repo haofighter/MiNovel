@@ -349,8 +349,12 @@ public class ReadNovelActivity extends MiBaseActivity implements PullViewLayout.
     protected void doOnSetContent(View v) {
         novelChapter = getIntent().getParcelableExtra("novelChapter");
         if (novelChapter == null) {
-            Toast.makeText(this, "获取小说章节失败", Toast.LENGTH_SHORT).show();
-            finish();
+            String chapterUrl = getIntent().getStringExtra("readInfo");
+            novelChapter = chapterUrl == null ? null : DBManage.checkNovelChaptterByUrl(chapterUrl);
+            if (novelChapter == null) {
+                Toast.makeText(this, "获取小说章节失败", Toast.LENGTH_SHORT).show();
+                finish();
+            }
         }
     }
 

@@ -17,7 +17,6 @@ import static android.os.Environment.DIRECTORY_PODCASTS;
 
 public class AppContext {
     public static Application application = null;
-    public static Context context = null;
     public static HashSet<Activity> activitys = new HashSet();
     private static long lastClickTime = 0;//最后一次的点击时间
 
