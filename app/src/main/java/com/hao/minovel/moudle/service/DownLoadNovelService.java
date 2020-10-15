@@ -159,43 +159,7 @@ public class DownLoadNovelService extends Service {
                 novolDownTask.downListener.startDown();
             }
             Log.i("小说服务", "当前执行任务：" + novolDownTask.getNovelDownTag());
-            switch (novolDownTask.getNovelDownTag()) {
-                case none://不做任何操作
-                    break;
-                case allTitle://下载所有的小说标题
-                    loadState = SpiderNovelFromBiQu.getAllNovel();
-                    tag.add(new NovolDownTask(NovelDownTag.allDetail));
-                    break;
-                case allDetail://完善所有的小说的介绍信息
-                    NovelIntroduction novelIntroduction = DBManage.getNoCompleteDetailNovelInfo();
-                    if (novelIntroduction != null) {
-                        loadState = SpiderNovelFromBiQu.getAllNovelDetailInfo(novelIntroduction);
-                    }
-                    break;
-                case novelDetail://下载单本小说的信息 包含章节信息
-                    loadState = SpiderNovelFromBiQu.getAllNovelDetailInfo((NovelIntroduction) novolDownTask.getObject());
-                    break;
-                case singlechaptercontent://下载单章内容
-                    loadState = SpiderNovelFromBiQu.getNovelContent((NovelChapter) novolDownTask.getObject());
-                    break;
-                case novelallchaptercontent://下载小说的所有内容
-                    loadState = SpiderNovelFromBiQu.getAllNovelContent((NovelIntroduction) novolDownTask.getObject());
-                    break;
-                case noveltype://获取小说分类
-                    loadState = SpiderNovelFromBiQu.getNovelType();
-                    break;
-                case noveltypelist://通过类别来获取小说列表
-                    NovelType novelType = (NovelType) novolDownTask.getObject();
-                    loadState = SpiderNovelFromBiQu.getTypeNovelList(novelType);
-                    break;
-            }
-            try {
-                if (novolDownTask.downListener != null) {
-                    novolDownTask.downListener.endDown(loadState);
-                }
-            } catch (Exception e) {
-                Log.i("小说服务", "任务执行完成执行回调出错:" + e.getMessage());
-            }
+
             Log.i("小说服务", "任务执行完成" + novolDownTask.getNovelDownTag());
         }
     }

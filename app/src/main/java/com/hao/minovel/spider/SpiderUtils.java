@@ -15,6 +15,7 @@ public class SpiderUtils {
     public final static int UnknownHostException = -1;
     public final static int TimeoutException = -2;
     public final static int UNKNOWNERR = -3;
+    public final static int NoLoad = -4;
 
     /**
      * 通过网址获取到当前网页的html
@@ -40,12 +41,6 @@ public class SpiderUtils {
             }
             Log.i("解析地址", "url=" + url);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-//            conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)");
-//            conn.setRequestProperty("Accept",
-//                    "image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, application/x-shockwave-flash, application/vnd.ms-powerpoint, application/vnd.ms-excel, application/msword, */*");
-//            conn.setRequestProperty("Accept-Language", "zh-cn");
-//            conn.setRequestProperty("UA-CPU", "x86");
-//            conn.setRequestProperty("Accept-Encoding", "gzip");//为什么没有deflate呢
             conn.setRequestProperty("Content-type", "text/html");
             conn.setRequestProperty("Connection", "close"); //keep-Alive，有什么用呢，你不是在访问网站，你是在采集。嘿嘿。减轻别人的压力，也是减轻自己。
             conn.setUseCaches(false);//不要用cache，用了也没有什么用，因为我们不会经常对一个链接频繁访问。（针对程序）

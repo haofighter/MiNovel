@@ -9,7 +9,16 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
+import com.hao.minovel.db.DBManage;
+import com.hao.minovel.moudle.entity.LoadWebInfo;
+import com.hao.minovel.spider.SpiderNovelFromBiQu;
 import com.hao.minovel.spider.SpiderResponse;
+import com.hao.minovel.spider.SpiderUtils;
+import com.hao.minovel.spider.data.NovelChapter;
+import com.hao.minovel.spider.data.NovelIntroduction;
+import com.hao.minovel.spider.data.NovelType;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -18,6 +27,16 @@ import java.net.SocketTimeoutException;
 import java.net.URL;
 
 public class LoadHtmlService extends IntentService {
+    private final int none = 100;
+    private final int allTitle = 101;
+    private final int allDetail = 102;
+    private final int novelDetail = 103;
+    private final int singlechaptercontent = 104;
+    private final int novelallchaptercontent = 105;
+    private final int noveltype = 106;
+    private final int noveltypelist = 107;
+
+
     /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
      *
@@ -29,57 +48,44 @@ public class LoadHtmlService extends IntentService {
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
-        getHtml(intent.getStringExtra("url"));
-    }
-
-    public final static int Success = 0;
-    public final static int UnknownHostException = -1;
-    public final static int TimeoutException = -2;
-    public final static int UNKNOWNERR = -3;
-
-    /**
-     * 通过网址获取到当前网页的html
-     * 获取到的网页数据,使用backCall回调进行处理
-     * 拉取操作是在子线程中进行处理
-     *
-     * @param urlStr 请求的地址
-     * @return
-     */
-    public static SpiderResponse getHtml(String urlStr) {
-        StringBuffer html = new StringBuffer();
+        int task = intent.getIntExtra("task", none);
+        int loadState = SpiderUtils.NoLoad;
+        switch (task) {
+            case none://不做任何操作
+                break;
+            case allTitle://下载所有的小说标题
+                loadState = SpiderNovelFromBiQu.getAllNovel();
+                break;
+            case allDetail://完善所有的小说的介绍信息
+                NovelIntroduction novelIntroduction = DBManage.getNoCompleteDetailNovelInfo();
+                if (novelIntroduction != null) {
+                    loadState = SpiderNovelFromBiQu.getAllNovelDetailInfo(novelIntroduction);
+                }
+                break;
+            case novelDetail://下载单本小说的信息 包含章节信息
+                NovelIntroduction singleNovel = intent.getParcelableExtra("novelIntroduction");
+                loadState = SpiderNovelFromBiQu.getAllNovelDetailInfo(singleNovel);
+                break;
+            case singlechaptercontent://下载单章内容
+                NovelChapter singleChapter = intent.getParcelableExtra("novelChapter");
+                loadState = SpiderNovelFromBiQu.getNovelContent(singleChapter);
+                break;
+            case novelallchaptercontent://下载小说的所有内容
+                NovelIntroduction allChapter = intent.getParcelableExtra("novelIntroduction");
+                loadState = SpiderNovelFromBiQu.getAllNovelContent(allChapter);
+                break;
+            case noveltype://获取小说分类
+                loadState = SpiderNovelFromBiQu.getNovelType();
+                break;
+            case noveltypelist://通过类别来获取小说列表
+                NovelType novelType = intent.getParcelableExtra("novelType");
+                loadState = SpiderNovelFromBiQu.getTypeNovelList(novelType);
+                break;
+        }
         try {
-            URL url = new URL(urlStr);
-            Log.i("解析地址", "url=" + url);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-//            conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)");
-//            conn.setRequestProperty("Accept",
-//                    "image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, application/x-shockwave-flash, application/vnd.ms-powerpoint, application/vnd.ms-excel, application/msword, */*");
-//            conn.setRequestProperty("Accept-Language", "zh-cn");
-//            conn.setRequestProperty("UA-CPU", "x86");
-//            conn.setRequestProperty("Accept-Encoding", "gzip");//为什么没有deflate呢
-            conn.setRequestProperty("Content-type", "text/html");
-            conn.setRequestProperty("Connection", "close"); //keep-Alive，有什么用呢，你不是在访问网站，你是在采集。嘿嘿。减轻别人的压力，也是减轻自己。
-            conn.setUseCaches(false);//不要用cache，用了也没有什么用，因为我们不会经常对一个链接频繁访问。（针对程序）
-            conn.setConnectTimeout(2000);
-            conn.setReadTimeout(2000);
-            InputStreamReader isr = new InputStreamReader(conn.getInputStream());
-            BufferedReader br = new BufferedReader(isr);
-            String temp;
-            while ((temp = br.readLine()) != null) {
-                html.append(temp).append("\n");
-            }
-            Log.i("解析地址", "html=" + html);
-            br.close();
-            isr.close();
-        } catch (java.net.UnknownHostException e) {
-            return new SpiderResponse(UnknownHostException, null);
-        } catch (SocketTimeoutException e) {
-            return new SpiderResponse(TimeoutException, null);
+            EventBus.getDefault().post(new LoadWebInfo(task, loadState));
         } catch (Exception e) {
-            return new SpiderResponse(UNKNOWNERR, e.getMessage());
-        } finally {
-            return new SpiderResponse(Success, html.toString());
+            Log.i("小说服务", "任务执行完成执行回调出错:" + e.getMessage());
         }
     }
-
 }

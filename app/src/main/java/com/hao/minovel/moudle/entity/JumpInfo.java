@@ -3,7 +3,7 @@ package com.hao.minovel.moudle.entity;
 import android.os.Bundle;
 
 /**
- * 用于记录跳转页面及通讯信息
+ * 用于EventBus触发时发送的记录跳转页面及通讯信息
  */
 public class JumpInfo {
     String acticityTag;

@@ -1,12 +1,15 @@
 package com.hao.minovel.spider.data;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Unique;
 
 @Entity
-public class NovelType {
+public class NovelType implements Parcelable {
     @Id(autoincrement = true)
     Long id;
     String type;//小说类型
@@ -32,6 +35,32 @@ public class NovelType {
     @Generated(hash = 1553007784)
     public NovelType() {
     }
+
+    protected NovelType(Parcel in) {
+        if (in.readByte() == 0) {
+            id = null;
+        } else {
+            id = in.readLong();
+        }
+        type = in.readString();
+        from = in.readString();
+        listUrl = in.readString();
+        lastListUrl = in.readString();
+        nextListUrl = in.readString();
+        creatTime = in.readLong();
+    }
+
+    public static final Creator<NovelType> CREATOR = new Creator<NovelType>() {
+        @Override
+        public NovelType createFromParcel(Parcel in) {
+            return new NovelType(in);
+        }
+
+        @Override
+        public NovelType[] newArray(int size) {
+            return new NovelType[size];
+        }
+    };
 
     public String getType() {
         return type;
@@ -96,5 +125,26 @@ public class NovelType {
                 ", lastListUrl='" + lastListUrl + '\'' +
                 ", nextListUrl='" + nextListUrl + '\'' +
                 '}';
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        if (id == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeLong(id);
+        }
+        dest.writeString(type);
+        dest.writeString(from);
+        dest.writeString(listUrl);
+        dest.writeString(lastListUrl);
+        dest.writeString(nextListUrl);
+        dest.writeLong(creatTime);
     }
 }
