@@ -3,31 +3,13 @@ package com.hao.minovel.tinker.app;
 import android.annotation.TargetApi;
 import android.app.Application;
 import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ShortcutInfo;
-import android.content.pm.ShortcutManager;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.Icon;
 import android.os.Build;
-import android.os.Bundle;
 
 import androidx.multidex.MultiDex;
 
 import com.hao.annotationengine.Router;
-import com.hao.minovel.R;
-import com.hao.minovel.db.DBCore;
-import com.hao.minovel.db.DBManage;
-import com.hao.minovel.moudle.activity.NovelDetailActivity;
-import com.hao.minovel.moudle.activity.ReadNovelActivity;
-import com.hao.minovel.moudle.activity.ShiftActivity;
-import com.hao.minovel.moudle.activity.WelcomeActivity;
-import com.hao.minovel.moudle.entity.ReadInfo;
-import com.hao.minovel.spider.data.NovelChapter;
-import com.hao.minovel.spider.data.NovelIntroduction;
 import com.hao.minovel.tinker.TinkerManager;
 import com.hao.minovel.tinker.Log.MyLogImp;
 import com.hao.minovel.utils.SystemConfigUtil;
@@ -38,9 +20,6 @@ import com.tencent.tinker.lib.tinker.Tinker;
 import com.tencent.tinker.lib.tinker.TinkerInstaller;
 import com.tencent.tinker.loader.shareutil.ShareConstants;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 
 @SuppressWarnings("unused")

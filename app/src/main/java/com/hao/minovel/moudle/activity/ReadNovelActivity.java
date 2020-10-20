@@ -509,7 +509,6 @@ public class ReadNovelActivity extends MiBaseActivity implements PullViewLayout.
         }
     }
 
-
     public void initAnimal() {
         if (valueAnimator == null) {
             valueAnimator = ValueAnimator.ofFloat(0, 1f);
