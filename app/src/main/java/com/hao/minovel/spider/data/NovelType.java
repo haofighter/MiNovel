@@ -22,7 +22,7 @@ public class NovelType implements Parcelable {
 
     @Generated(hash = 12608598)
     public NovelType(Long id, String type, String from, String listUrl,
-            String lastListUrl, String nextListUrl, long creatTime) {
+                     String lastListUrl, String nextListUrl, long creatTime) {
         this.id = id;
         this.type = type;
         this.from = from;
@@ -120,7 +120,7 @@ public class NovelType implements Parcelable {
 
     @Override
     public String toString() {
-        return "NovelType{" +
+        return "NovelType{" + type +
                 ", listUrl='" + listUrl + '\'' +
                 ", lastListUrl='" + lastListUrl + '\'' +
                 ", nextListUrl='" + nextListUrl + '\'' +

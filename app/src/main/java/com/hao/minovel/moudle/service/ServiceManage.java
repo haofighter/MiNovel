@@ -9,8 +9,6 @@ import android.os.IBinder;
 import com.hao.minovel.db.DBManage;
 import com.hao.minovel.moudle.entity.AppUseInfo;
 
-import static android.content.Context.BIND_AUTO_CREATE;
-
 public class ServiceManage {
     private ServiceManage() {
     }
@@ -28,40 +26,18 @@ public class ServiceManage {
         return serviceManage;
     }
 
-    DownLoadNovelBinder binder;
 
-    ServiceConnection connection = new ServiceConnection() {
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
+    public void startSearchAllnovleTitle(Application application) {
+        AppUseInfo appUseInfo = DBManage.getAppUseInfo();
+        if (appUseInfo != null && System.currentTimeMillis() - appUseInfo.getLoadAllNovelNameTime() > 3600000) {
+            LoadWebInfo loadWebInfo = new LoadWebInfo();
+            loadWebInfo.setTask(LoadHtmlService.allTitle);
+            Intent bindIntent = new Intent(application, LoadHtmlService.class);
+            bindIntent.putExtra(LoadHtmlService.TASK, LoadHtmlService.allTitle);
+            application.startService(bindIntent);
+            appUseInfo.setLoadAllNovelNameTime(System.currentTimeMillis());
+            DBManage.saveAppUseinfo(appUseInfo);
         }
-
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            binder = (DownLoadNovelBinder) service;
-            if (binder != null) {
-                AppUseInfo appUseInfo = DBManage.getAppUseInfo();
-                if (appUseInfo != null && System.currentTimeMillis() - appUseInfo.getLoadAllNovelNameTime() > 3600000) {
-                    binder.sendCmd(new NovolDownTask(DownLoadNovelService.NovelDownTag.noveltype));
-                    appUseInfo.setLoadAllNovelNameTime(System.currentTimeMillis());
-                    binder.sendCmd(new NovolDownTask(DownLoadNovelService.NovelDownTag.allTitle));
-                    DBManage.saveAppUseinfo(appUseInfo);
-                }
-            }
-        }
-    };
-
-    //开启小说下载解析服务
-    public void startBackRunService(Application application) {
-        Intent bindIntent = new Intent(application, DownLoadNovelService.class);
-        application.bindService(bindIntent, connection, BIND_AUTO_CREATE);
     }
 
-    public void unBindBackRunService(Application application) {
-        application.unbindService(connection);
-    }
-
-    public DownLoadNovelBinder<Object> getBinder() {
-        return binder;
-    }
 }

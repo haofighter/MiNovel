@@ -16,8 +16,14 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.hao.minovel.R;
+import com.hao.minovel.moudle.entity.JumpInfo;
 import com.hao.minovel.moudle.miinterface.FragmentListener;
+import com.hao.minovel.moudle.service.LoadWebInfo;
 import com.hao.minovel.view.RoundLayout;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 public abstract class MiBaseFragment extends Fragment {
     String TAG = this.getClass().getName();
@@ -72,6 +78,7 @@ public abstract class MiBaseFragment extends Fragment {
         if (viewParent instanceof View || viewParent instanceof ViewGroup) {
             ((View) viewParent).setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.transparent));
         }
+        EventBus.getDefault().register(this);
     }
 
     public MiBaseFragment setFragmentListener(FragmentListener fragmentListener) {
@@ -120,6 +127,7 @@ public abstract class MiBaseFragment extends Fragment {
     public void onPause() {
         Log.i(TAG, "onPause");
         super.onPause();
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -138,5 +146,28 @@ public abstract class MiBaseFragment extends Fragment {
     public void onDetach() {
         Log.i(TAG, "onDetach");
         super.onDetach();
+    }
+
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void eventBusOnEvent(Object o) {
+        if (o instanceof String) {
+            eventBusOnEvent((String) o);
+        } else if (o instanceof JumpInfo) {
+            eventBusOnEvent((JumpInfo) o);
+        } else if (o instanceof LoadWebInfo) {
+            eventBusOnEvent((LoadWebInfo) o);
+        }
+    }
+
+    public void eventBusOnEvent(String str) {
+
+    }
+
+    public void eventBusOnEvent(LoadWebInfo str) {
+
+    }
+
+    public void eventBusOnEvent(JumpInfo str) {
+
     }
 }

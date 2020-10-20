@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.hao.minovel">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -43,6 +44,8 @@
             android:exported="false"
             android:permission="android.permission.BIND_JOB_SERVICE" />
         <service android:name=".moudle.service.DownLoadNovelService" />
+        <service android:name=".moudle.service.LoadHtmlService"
+            tools:ignore="Instantiatable" />
     </application>
 
 </manifest>

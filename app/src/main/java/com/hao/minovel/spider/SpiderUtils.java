@@ -12,6 +12,7 @@ import java.util.concurrent.TimeoutException;
 
 public class SpiderUtils {
     public final static int Success = 0;
+    public final static int LOADING = 1;
     public final static int UnknownHostException = -1;
     public final static int TimeoutException = -2;
     public final static int UNKNOWNERR = -3;
@@ -39,7 +40,6 @@ public class SpiderUtils {
                     url = new URL(urlHead + urlString);
                 }
             }
-            Log.i("解析地址", "url=" + url);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestProperty("Content-type", "text/html");
             conn.setRequestProperty("Connection", "close"); //keep-Alive，有什么用呢，你不是在访问网站，你是在采集。嘿嘿。减轻别人的压力，也是减轻自己。
@@ -52,7 +52,6 @@ public class SpiderUtils {
             while ((temp = br.readLine()) != null) {
                 html.append(temp).append("\n");
             }
-            Log.i("解析地址", "html=" + html);
             br.close();
             isr.close();
         } catch (UnknownHostException e) {

@@ -17,6 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.hao.minovel.moudle.entity.JumpInfo;
+import com.hao.minovel.moudle.service.LoadWebInfo;
 import com.hao.minovel.tinker.app.AppContext;
 import com.hao.minovel.utils.StatusBarUtil;
 import com.hao.minovel.utils.SystemUtil;
@@ -91,10 +92,16 @@ public abstract class MiBaseActivity extends AppCompatActivity {
             eventBusOnEvent((String) o);
         } else if (o instanceof JumpInfo) {
             eventBusOnEvent((JumpInfo) o);
+        } else if (o instanceof LoadWebInfo) {
+            eventBusOnEvent((LoadWebInfo) o);
         }
     }
 
     public void eventBusOnEvent(String str) {
+
+    }
+
+    public void eventBusOnEvent(LoadWebInfo str) {
 
     }
 

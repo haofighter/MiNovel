@@ -52,7 +52,6 @@ public class ShiftActivity extends MiMuneActivity implements View.OnClickListene
 
     @Override
     protected void initView(View v) {
-        ServiceManage.getInstance().startBackRunService(AppContext.application);
         shiftContent = findViewById(R.id.shift_content);
         ((TextView) findViewById(R.id.title_name)).setText("书架");
         shiftList = findViewById(R.id.shift_list);
@@ -104,7 +103,6 @@ public class ShiftActivity extends MiMuneActivity implements View.OnClickListene
             lastBackTime = System.currentTimeMillis();
         } else {
             AppContext.finishAll();
-            ServiceManage.getInstance().unBindBackRunService(AppContext.application);
         }
     }
 

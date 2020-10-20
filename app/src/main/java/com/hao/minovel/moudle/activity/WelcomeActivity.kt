@@ -3,10 +3,6 @@ package com.hao.minovel.moudle.activity
 import android.Manifest
 import android.animation.ValueAnimator
 import android.app.Dialog
-import android.content.Intent
-import android.content.pm.ShortcutInfo
-import android.content.pm.ShortcutManager
-import android.graphics.drawable.Icon
 import android.os.Build
 import android.util.Log
 import android.view.View
@@ -24,14 +20,10 @@ import kotlinx.android.synthetic.main.activity_main.*
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.view.ViewCompat
 import androidx.core.util.Pair
-import com.hao.minovel.R
-import com.hao.minovel.db.DBCore
-import com.hao.minovel.db.DBManage
+import com.hao.minovel.moudle.service.LoadWebInfo
 import com.hao.minovel.moudle.service.ServiceManage
 import com.hao.minovel.tinker.app.AppContext
 import com.hao.minovel.utils.SystemConfigUtil
-import com.hao.skin.SkinManager
-import java.util.ArrayList
 
 
 @Bind
@@ -48,10 +40,12 @@ class WelcomeActivity : MiBaseActivity() {
      * 判断动画是否在运行中
      */
     private var animalIsStart = false
+
     /**
      * 是否以跳转 防止重复跳转
      */
     private var isJumpMian = false
+
     /**
      * 当前页面执行的动画
      */
@@ -127,7 +121,7 @@ class WelcomeActivity : MiBaseActivity() {
             if (promisstion) {
                 SystemConfigUtil.getInstance().initDynamicShortcuts()
                 //开启小说服务 进行该网站小说遍历
-                ServiceManage.getInstance().startBackRunService(AppContext.application)
+                ServiceManage.getInstance().startSearchAllnovleTitle(AppContext.application)
                 if (!valueAnimator.isRunning && !isJumpMian) {
                     gotoMain()
                 }
@@ -135,6 +129,10 @@ class WelcomeActivity : MiBaseActivity() {
         }
     }
 
+    override fun eventBusOnEvent(str: LoadWebInfo?) {
+        Log.i("服务", "小说服务：" + str!!.task + "    加载状态 " + str!!.loadStatus)
+        super.eventBusOnEvent(str)
+    }
 
     /**
      * 第一次进入时 申请权限 如果权限申请成功并且
@@ -189,6 +187,7 @@ class WelcomeActivity : MiBaseActivity() {
         }
         synchronized(this) {
             val pair1 = Pair<View, String>(novel_icon, ViewCompat.getTransitionName(novel_icon).toString())
+
             /**
              * 生成带有共享元素的Bundle，这样系统才会知道这几个元素需要做动画
              */

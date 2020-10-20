@@ -208,6 +208,7 @@ public class DBManage {
             novelType.setLastListUrl(c.getString(4));
             novelType.setNextListUrl(c.getString(5));
             novelType.setCreatTime(c.getLong(6));
+            Log.i("小说数据", novelType.toString());
             novelTypes.add(novelType);
         }
         return novelTypes;

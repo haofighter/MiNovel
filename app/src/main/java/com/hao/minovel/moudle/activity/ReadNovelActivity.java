@@ -3,6 +3,7 @@ package com.hao.minovel.moudle.activity;
 
 import android.animation.Animator;
 import android.animation.ValueAnimator;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
@@ -24,10 +25,8 @@ import com.hao.minovel.moudle.adapter.NovelChapterAdapter;
 import com.hao.minovel.moudle.adapter.OnItemClickListener;
 import com.hao.minovel.moudle.adapter.TextTypefaceAdapter;
 import com.hao.minovel.moudle.entity.ReadInfo;
-import com.hao.minovel.moudle.service.DownListener;
-import com.hao.minovel.moudle.service.DownLoadNovelService;
-import com.hao.minovel.moudle.service.NovolDownTask;
-import com.hao.minovel.moudle.service.ServiceManage;
+import com.hao.minovel.moudle.service.LoadHtmlService;
+import com.hao.minovel.moudle.service.LoadWebInfo;
 import com.hao.minovel.spider.SpiderUtils;
 import com.hao.minovel.spider.data.NovelChapter;
 import com.hao.minovel.spider.data.NovelIntroduction;
@@ -64,6 +63,8 @@ public class ReadNovelActivity extends MiBaseActivity implements PullViewLayout.
     ShowState nowState = ShowState.SHOWNONE;
     LinkedBlockingQueue<ShowState> stateQueue = new LinkedBlockingQueue();
     NovelTextViewHelp novelTextViewHelp;
+
+    LoadWebInfo loadWebInfo = new LoadWebInfo();
 
     @Override
     public void onClick(View v) {
@@ -371,7 +372,6 @@ public class ReadNovelActivity extends MiBaseActivity implements PullViewLayout.
                     } else {
                         novel_show.setChapter((NovelChapter) msg.obj);
                     }
-
                     break;
                 case LOADMORE:
                     novel_show.addChapter((NovelChapter) msg.obj, false);
@@ -409,54 +409,92 @@ public class ReadNovelActivity extends MiBaseActivity implements PullViewLayout.
                 }
                 break;
             default:
-
                 break;
         }
         if (TextUtils.isEmpty(novelChapter.getChapterContent())) {
-            ServiceManage.getInstance().getBinder().sendCmd(new NovolDownTask<NovelChapter>(DownLoadNovelService.NovelDownTag.singlechaptercontent, novelChapter, new DownListener(this.getClass().getName(), true) {
-                @Override
-                public void downInfo(long all, long now) {
-
-                }
-
-                @Override
-                public void startDown() {
-                    switch (loadState) {
-                        case LOADBEFORE:
-                            Toast.makeText(ReadNovelActivity.this, "正在加载上一章节", Toast.LENGTH_LONG).show();
-                            break;
-                        case LOADMORE:
-                            Toast.makeText(ReadNovelActivity.this, "正在加载下一章节", Toast.LENGTH_LONG).show();
-                            break;
-                        case LOADNOW:
-                            Toast.makeText(ReadNovelActivity.this, "正在加载当前章节", Toast.LENGTH_LONG).show();
-                            break;
-
-                    }
-                }
-
-                @Override
-                public void endDown(int state) {
-                    if (state == SpiderUtils.Success) {
-                        switch (loadState) {
-                            case LOADBEFORE:
-                                handler.sendMessage(handler.obtainMessage(LOADBEFORE, novelChapter));
-                                break;
-                            case LOADMORE:
-                                handler.sendMessage(handler.obtainMessage(LOADMORE, novelChapter));
-                                break;
-                            case LOADNOW:
-                                handler.sendMessage(handler.obtainMessage(LOADNOW, novelChapter));
-                                break;
-                        }
-                    }
-                }
-            }));
+            Intent intent = new Intent(this, LoadHtmlService.class);
+            loadWebInfo.setTask(LoadHtmlService.singlechaptercontent);
+            loadWebInfo.setTag(loadState);
+            intent.putExtra(LoadHtmlService.TASK, loadWebInfo);
+            intent.putExtra(LoadHtmlService.DATE, novelChapter);
+            startService(intent);
+//            ServiceManage.getInstance().getBinder().sendCmd(new NovolDownTask<NovelChapter>(DownLoadNovelService.NovelDownTag.singlechaptercontent, novelChapter, new DownListener(this.getClass().getName(), true) {
+//                @Override
+//                public void downInfo(long all, long now) {
+//
+//                }
+//
+//                @Override
+//                public void startDown() {
+//                    switch (loadState) {
+//                        case LOADBEFORE:
+//                            Toast.makeText(ReadNovelActivity.this, "正在加载上一章节", Toast.LENGTH_LONG).show();
+//                            break;
+//                        case LOADMORE:
+//                            Toast.makeText(ReadNovelActivity.this, "正在加载下一章节", Toast.LENGTH_LONG).show();
+//                            break;
+//                        case LOADNOW:
+//                            Toast.makeText(ReadNovelActivity.this, "正在加载当前章节", Toast.LENGTH_LONG).show();
+//                            break;
+//
+//                    }
+//                }
+//
+//                @Override
+//                public void endDown(int state) {
+//                    if (state == SpiderUtils.Success) {
+//                        switch (loadState) {
+//                            case LOADBEFORE:
+//                                handler.sendMessage(handler.obtainMessage(LOADBEFORE, novelChapter));
+//                                break;
+//                            case LOADMORE:
+//                                handler.sendMessage(handler.obtainMessage(LOADMORE, novelChapter));
+//                                break;
+//                            case LOADNOW:
+//                                handler.sendMessage(handler.obtainMessage(LOADNOW, novelChapter));
+//                                break;
+//                        }
+//                    }
+//                }
+//            }));
         } else {
             handler.sendMessage(handler.obtainMessage(loadState, novelChapter));
         }
     }
 
+
+    @Override
+    public void eventBusOnEvent(LoadWebInfo str) {
+        if (str.getLoadStatus() == SpiderUtils.LOADING) {
+            switch (str.getTag()) {
+                case LOADBEFORE:
+                    Toast.makeText(ReadNovelActivity.this, "正在加载上一章节", Toast.LENGTH_SHORT).show();
+                    break;
+                case LOADMORE:
+                    Toast.makeText(ReadNovelActivity.this, "正在加载下一章节", Toast.LENGTH_SHORT).show();
+                    break;
+                case LOADNOW:
+                    Toast.makeText(ReadNovelActivity.this, "正在加载当前章节", Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        } else if (str.getLoadStatus() == SpiderUtils.Success) {
+            novelChapter = DBManage.checkNovelChaptterByUrl(novelChapter.getChapterUrl());
+            switch (str.getTag()) {
+                case LOADBEFORE:
+                    handler.sendMessage(handler.obtainMessage(LOADBEFORE, novelChapter));
+                    break;
+                case LOADMORE:
+                    handler.sendMessage(handler.obtainMessage(LOADMORE, novelChapter));
+                    break;
+                case LOADNOW:
+                    handler.sendMessage(handler.obtainMessage(LOADNOW, novelChapter));
+                    break;
+            }
+        } else {
+            Toast.makeText(ReadNovelActivity.this, "加载失败，请稍后重试", Toast.LENGTH_LONG).show();
+        }
+        super.eventBusOnEvent(str);
+    }
 
     private void initDrawer(ShowState nowState) {
         if (nowState == ShowState.SHOWCHAPTERS) {

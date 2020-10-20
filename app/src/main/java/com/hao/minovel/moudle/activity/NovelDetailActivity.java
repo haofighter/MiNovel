@@ -1,15 +1,14 @@
 package com.hao.minovel.moudle.activity;
 
-import androidx.core.view.ViewCompat;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.transition.ChangeBounds;
 import android.transition.ChangeTransform;
 import android.transition.Fade;
 import android.transition.TransitionSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -24,15 +23,12 @@ import com.hao.minovel.R;
 import com.hao.minovel.base.MiBaseActivity;
 import com.hao.minovel.db.DBManage;
 import com.hao.minovel.moudle.entity.ReadInfo;
-import com.hao.minovel.moudle.service.DownListener;
-import com.hao.minovel.moudle.service.DownLoadNovelService;
-import com.hao.minovel.moudle.service.NovolDownTask;
-import com.hao.minovel.moudle.service.ServiceManage;
+import com.hao.minovel.moudle.service.LoadHtmlService;
+import com.hao.minovel.moudle.service.LoadWebInfo;
+import com.hao.minovel.spider.SpiderUtils;
 import com.hao.minovel.spider.data.NovelChapter;
 import com.hao.minovel.spider.data.NovelIntroduction;
 import com.hao.minovel.tinker.app.AppContext;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
@@ -51,6 +47,8 @@ public class NovelDetailActivity extends MiBaseActivity implements View.OnClickL
     TextView moreOrPart;
     SwipeRefreshLayout refreshLayout;
     ReadInfo readInfo;
+
+    LoadWebInfo loadWebInfo = new LoadWebInfo();
 
 
     @Override
@@ -134,26 +132,11 @@ public class NovelDetailActivity extends MiBaseActivity implements View.OnClickL
         if (novelIntroduction != null && novelIntroduction.isComplete() && novelChapters != null && novelChapters.size() > 0) {
             initDate(novelIntroduction);
         } else {
-            ServiceManage.getInstance().getBinder().sendCmd(new NovolDownTask(DownLoadNovelService.NovelDownTag.novelDetail, novelIntroduction, new DownListener(this.getClass().getName(), true) {
-                @Override
-                public void downInfo(long all, long now) {
-
-                }
-
-                @Override
-                public void startDown() {
-
-                }
-
-                @Override
-                public void endDown(int state) {
-                    if (state == 0) {
-                        EventBus.getDefault().post("loadDate");
-                    } else {
-                        EventBus.getDefault().post("loadErr：" + state);
-                    }
-                }
-            }));
+            Intent intent = new Intent(this, LoadHtmlService.class);
+            loadWebInfo.setTask(LoadHtmlService.novelDetail);
+            intent.putExtra(LoadHtmlService.TASK, loadWebInfo);
+            intent.putExtra(LoadHtmlService.DATE, novelIntroduction);
+            startService(intent);
         }
     }
 
@@ -163,13 +146,17 @@ public class NovelDetailActivity extends MiBaseActivity implements View.OnClickL
     }
 
     @Override
-    public void eventBusOnEvent(String str) {
-        super.eventBusOnEvent(str);
-        switch (str) {
-            case "loadDate":
+    public void eventBusOnEvent(LoadWebInfo str) {
+        switch (str.getLoadStatus()) {
+            case SpiderUtils.Success:
+                refreshLayout.setRefreshing(false);
                 initDate();
                 break;
-            case "loadErr":
+            case SpiderUtils.LOADING:
+                refreshLayout.setRefreshing(true);
+                break;
+            default:
+                refreshLayout.setRefreshing(false);
                 Toast.makeText(this, "加载失败", Toast.LENGTH_LONG).show();
                 break;
         }
