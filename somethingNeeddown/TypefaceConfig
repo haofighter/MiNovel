@@ -1,0 +1,16 @@
+[{
+    "ip": "139.199.158.253",
+    "port": 21,
+    "user": "ftpuser",
+    "psw": "QW!@123qwe",
+    "mch_id": "10000010",
+    "city_code": "2550",
+    "url_ip": "111.230.85.238",
+    "is_supp_scan_pay": true,
+    "is_supp_ic_pay": true,
+    "is_supp_union_pay": true,
+    "is_supp_key_board": true,
+    "is_supp_ali_pay": true,
+    "city": "淄博[0]"
+  }
+ ]
