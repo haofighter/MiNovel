@@ -62,16 +62,16 @@ public class SystemConfigUtil {
                 Intent intent = new Intent(AppContext.application, ReadNovelActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK).setAction(Intent.ACTION_VIEW);//加该FLAG的目的是让MainActivity作为根activity，清空已有的任务
                 NovelChapter novelChapter = DBManage.checkNovelChaptterByUrl(read.get(i).getNovelChapterUrl());
                 NovelIntroduction novelIntroduction = DBManage.checkNovelByUrl(read.get(i).getNovelChapterListUrl());
-                if (novelChapter != null && novelIntroduction != null) {
-                    intent.putExtra("readInfo", read.get(i).getNovelChapterUrl());
-                    ShortcutInfo scInfo = new ShortcutInfo.Builder(AppContext.application, novelIntroduction.getNovelName())
-                            .setShortLabel(novelIntroduction.getNovelName())
-                            .setLongLabel(novelChapter.getChapterName())
-                            .setIcon(Icon.createWithResource(AppContext.application, R.mipmap.icon_shuji_black))
-                            .setIntents(new Intent[]{intent})
-                            .build();
-                    shortcutInfos.add(scInfo);
-                }
+//                if (novelChapter != null && novelIntroduction != null) {
+//                    intent.putExtra("readInfo", read.get(i).getNovelChapterUrl());
+//                    ShortcutInfo scInfo = new ShortcutInfo.Builder(AppContext.application, novelIntroduction.getNovelName())
+//                            .setShortLabel(novelIntroduction.getNovelName())
+//                            .setLongLabel(novelChapter.getChapterName())
+//                            .setIcon(Icon.createWithResource(AppContext.application, R.mipmap.icon_shuji_black))
+//                            .setIntents(new Intent[]{intent})
+//                            .build();
+//                    shortcutInfos.add(scInfo);
+//                }
             }
             //②、构建动态快捷方式的详细信息
 

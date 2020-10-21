@@ -145,7 +145,8 @@ public class ShiftActivity extends MiMuneActivity implements View.OnClickListene
                 fl_warn.setVisibility(View.GONE);
                 break;
             case R.id.setting:
-                Router.getInstance().build(RouterContent.SETTINGACTIVITY, null).skip();
+//                Router.getInstance().build(RouterContent.SETTINGACTIVITY, null).skip();
+                Router.getInstance().build(RouterContent.LOADTYPEFACEACTIVITY, null).skip();
                 break;
             case R.id.search:
                 Router.getInstance().build(RouterContent.SEARCHNOVELACTIVITY, null).skip();

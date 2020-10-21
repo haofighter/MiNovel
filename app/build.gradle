@@ -206,6 +206,8 @@ dependencies {
 
     /**********************************自定义注解***********************************/
     implementation project(path: ':Annotetion')
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'com.squareup.okhttp3:okhttp:4.10.0-RC1'
     kapt project(path: ':Annotetion')
     implementation project(path: ':Annotetion')
     implementation project(path: ':annotationengine')

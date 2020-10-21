@@ -1,5 +1,7 @@
 package com.hao.minovel.view.minovelread;
 
+import android.widget.TextView;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,8 +9,8 @@ public class ChapterInfo {
     private String nowChapterUrl;//当前显示章节的地址 用于去重
     private String chapterName;//当前显示章节名
     private String content;//当前显示内容
-    private List<String> novelPageInfos = new ArrayList<>();//当前章节分页数据
-    private int page;//当前章节分页数
+    private int page = 5;//当前章节分页数
+    private List<String> textArray;//当前章节分行数据
 
     public ChapterInfo(String nowChapterUrl, String chapterName, String content) {
         this.nowChapterUrl = nowChapterUrl;
@@ -32,19 +34,31 @@ public class ChapterInfo {
         return chapterName;
     }
 
-    public List<String> getNovelPageInfos() {
-        return novelPageInfos;
-    }
-
-    public void setNovelPageInfos(List<String> novelPageInfos) {
-        this.novelPageInfos = novelPageInfos;
-    }
-
-    public void setNovelTextViewHelp(NovelTextViewHelp novelTextViewHelp) {
+    public void setNovelTextViewHelp(NovelTextViewHelp novelTextViewHelp, TextView textView) {
         novelTextViewHelp.initViewConfig();
-        novelPageInfos = novelTextViewHelp.fromateArray(content);
         page = novelTextViewHelp.allPage;
     }
 
+    public void setContent(String content) {
+        this.content = content;
+    }
 
+    public String getContent() {
+        return content;
+    }
+
+    public List<String> getTextArray() {
+        if (textArray == null) {
+            textArray = new ArrayList<>();
+        }
+        return textArray;
+    }
+
+    public void setTextArray(List<String> textArray) {
+        this.textArray = textArray;
+    }
+
+    public void setPage(int page) {
+        this.page = page;
+    }
 }

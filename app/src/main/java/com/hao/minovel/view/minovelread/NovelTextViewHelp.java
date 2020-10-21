@@ -5,8 +5,12 @@ import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.Layout;
+import android.text.StaticLayout;
+import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.widget.TextView;
 
 import com.hao.minovel.R;
 import com.hao.minovel.db.DBManage;
@@ -20,6 +24,7 @@ import org.greenrobot.greendao.annotation.Unique;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.greenrobot.greendao.annotation.Generated;
 
 @Entity
@@ -79,8 +84,8 @@ public class NovelTextViewHelp implements Parcelable {
 
     @Generated(hash = 1799491719)
     public NovelTextViewHelp(Long id, float wordSpacingExtra, float textPadingVar, float textPadingHor, float textPadingleft, float textPadingright, float textPadingtop,
-            float textPadingbottom, float offsetHor, float offsetVar, float lineSpacingExtra, int lineTextNum, int lineNum, float textSize, boolean orientationVer,
-            String typefaceName, int textColor, int allPage, float height, float width) {
+                             float textPadingbottom, float offsetHor, float offsetVar, float lineSpacingExtra, int lineTextNum, int lineNum, float textSize, boolean orientationVer,
+                             String typefaceName, int textColor, int allPage, float height, float width) {
         this.id = id;
         this.wordSpacingExtra = wordSpacingExtra;
         this.textPadingVar = textPadingVar;
@@ -204,9 +209,9 @@ public class NovelTextViewHelp implements Parcelable {
         return this;
     }
 
-    protected void initViewSize(float width, float height) {
-        this.width = width;
-        this.height = height;
+    protected void initViewSize(NovelTextView novelTextView) {
+        this.width = novelTextView.getWidth();
+        this.height = novelTextView.getHeight();
         initViewConfig();
     }
 
@@ -235,34 +240,7 @@ public class NovelTextViewHelp implements Parcelable {
     }
 
 
-    public List<String> fromateArray(String content) {
-        List<String> textArray = new ArrayList<>();
-        String[] strs = content.split("\n");
-        for (int i = 0; i < strs.length; i++) {
-            if (strs[i].length() <= lineTextNum) {
-                textArray.add(strs[i]);
-                continue;
-            }
-            if (strs[i].length() % lineTextNum == 0) {//刚好整除  此段文字刚好后被整数行容纳
-                for (int j = 0; j < strs[i].length() / lineTextNum; j++) {
-                    textArray.add(strs[i].substring(j * lineTextNum, (j + 1) * lineTextNum));
-                }
-            } else {
-                int needLineNum = strs[i].length() / lineTextNum + 1;
-                for (int k = 0; k < needLineNum; k++) {//获取到每段的字符串 判断能够容纳几行
-                    String nowLineText = "";
-                    if (k < needLineNum - 1) {
-                        nowLineText = strs[i].substring(k * lineTextNum, (k + 1) * lineTextNum);
-                    } else {
-                        nowLineText = strs[i].substring(k * lineTextNum, strs[i].length());
-                    }
-                    textArray.add(nowLineText);
-                }
-            }
-        }
-        allPage = textArray.size() % lineNum == 0 ? textArray.size() / lineNum : textArray.size() / lineNum + 1;
-        return textArray;
-    }
+
 
     public void setTypefaceName(String typefaceName) {
         this.typefaceName = typefaceName;

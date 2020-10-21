@@ -19,7 +19,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         android:usesCleartextTraffic="true">
-        <activity android:name=".moudle.activity.SettingActivity"></activity>
+        <activity android:name=".moudle.activity.LoadTypeFaceActivity"></activity>
+        <activity android:name=".moudle.activity.SettingActivity" />
         <activity
             android:name=".moudle.activity.ReadNovelActivity"
             android:launchMode="singleTop" />
@@ -27,9 +28,7 @@
         <activity
             android:name=".moudle.activity.StackActivity"
             android:launchMode="singleTop" />
-        <activity android:name=".moudle.activity.ShiftActivity">
-
-        </activity>
+        <activity android:name=".moudle.activity.ShiftActivity"></activity>
         <activity android:name=".moudle.activity.WelcomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -44,7 +43,8 @@
             android:exported="false"
             android:permission="android.permission.BIND_JOB_SERVICE" />
         <service android:name=".moudle.service.DownLoadNovelService" />
-        <service android:name=".moudle.service.LoadHtmlService"
+        <service
+            android:name=".moudle.service.LoadHtmlService"
             tools:ignore="Instantiatable" />
     </application>
 

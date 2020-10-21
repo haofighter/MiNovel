@@ -96,25 +96,25 @@ public class ReadNovelActivity extends MiBaseActivity implements PullViewLayout.
             case R.id.add_textsize:
                 if (novelTextViewHelp != null) {
                     novelTextViewHelp.setTextSize(novelTextViewHelp.getTextSizeSp() + 1);
-                    novel_show.setNovelTextViewConfit(novelTextViewHelp);
+//                    novel_show.setNovelTextViewConfit(novelTextViewHelp);
                 }
                 break;
             case R.id.reduce_textsize:
                 if (novelTextViewHelp != null) {
                     novelTextViewHelp.setTextSize(novelTextViewHelp.getTextSizeSp() - 1);
-                    novel_show.setNovelTextViewConfit(novelTextViewHelp);
+//                    novel_show.setNovelTextViewConfit(novelTextViewHelp);
                 }
                 break;
             case R.id.add_line_spac:
                 if (novelTextViewHelp != null) {
                     novelTextViewHelp.setLineSpacingExtra(novelTextViewHelp.getLineSpacingExtraSp() + 1);
-                    novel_show.setNovelTextViewConfit(novelTextViewHelp);
+//                    novel_show.setNovelTextViewConfit(novelTextViewHelp);
                 }
                 break;
             case R.id.reduce_line_spac:
                 if (novelTextViewHelp != null) {
                     novelTextViewHelp.setLineSpacingExtra(novelTextViewHelp.getLineSpacingExtraSp() - 1);
-                    novel_show.setNovelTextViewConfit(novelTextViewHelp);
+//                    novel_show.setNovelTextViewConfit(novelTextViewHelp);
                 }
                 break;
             case R.id.back:
@@ -367,17 +367,17 @@ public class ReadNovelActivity extends MiBaseActivity implements PullViewLayout.
                 case LOADNOW:
                     ReadInfo readInfo = DBManage.checkedReadInfo(novelChapter.getNovelChapterListUrl());
                     if (readInfo != null && readInfo.getNovelChapterUrl().equals(((NovelChapter) msg.obj).getChapterUrl())) {
-                        novel_show.setChapter((NovelChapter) msg.obj, readInfo.getPage());
+                        novel_show.setDate((NovelChapter) msg.obj, readInfo.getPage());
                         Log.i("跳转", "novel_show=" + readInfo.getPage());
                     } else {
-                        novel_show.setChapter((NovelChapter) msg.obj);
+                        novel_show.setDate((NovelChapter) msg.obj);
                     }
                     break;
                 case LOADMORE:
-                    novel_show.addChapter((NovelChapter) msg.obj, false);
+                    novel_show.addDate((NovelChapter) msg.obj, false);
                     break;
                 case LOADBEFORE:
-                    novel_show.addChapter((NovelChapter) msg.obj, true);
+                    novel_show.addDate((NovelChapter) msg.obj, true);
                     break;
             }
         }
@@ -558,7 +558,7 @@ public class ReadNovelActivity extends MiBaseActivity implements PullViewLayout.
                 @Override
                 public void itemClick(int position, View view, Object object) {
                     novel_show.getNovelTextViewHelp().setTypefaceName(((TextTypefaceAdapter) text_typeface.getAdapter()).getItem(position).getTypeFacename());
-                    novel_show.refreshView();
+//                    novel_show.refreshView();
                 }
             });
         }
