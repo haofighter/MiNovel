@@ -33,10 +33,15 @@ public class MiTextView extends TextView implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-        if (arg instanceof NovelTextViewHelp) {
-            setTypeface(((NovelTextViewHelp) arg).getTypeface());
-            setTextSize(SystemUtil.px2sp(getContext(), ((NovelTextViewHelp) arg).textSize));
-            setTextColor(((NovelTextViewHelp) arg).textColor);
-        }
+
     }
+//
+//    @Override
+//    public void update(Observable o, Object arg) {
+//        if (arg instanceof NovelTextViewHelp) {
+//            setTypeface(((NovelTextViewHelp) arg).getTypeface());
+//            setTextSize(SystemUtil.px2sp(getContext(), ((NovelTextViewHelp) arg).textSize));
+//            setTextColor(((NovelTextViewHelp) arg).textColor);
+//        }
+//    }
 }

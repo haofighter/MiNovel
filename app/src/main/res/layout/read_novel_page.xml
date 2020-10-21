@@ -10,10 +10,9 @@
         android:id="@+id/novel_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
         android:lines="1"
         android:paddingLeft="5dp"
-        android:paddingTop="10dp" />
+        android:paddingTop="30dp" />
 
     <com.hao.minovel.view.minovelread.NovelTextView
         android:id="@+id/novel_content"

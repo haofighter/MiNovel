@@ -154,7 +154,6 @@ public class PullViewLayout extends FrameLayout {
             mPaint.setSubpixelText(true);
             Layout tempLayout = new StaticLayout(novelChapter.getChapterContent(), mPaint, contentPage.getNovelContent().getWidth(), Layout.Alignment.ALIGN_NORMAL, 0, 0, false);
             for (int i = 0; i < tempLayout.getLineCount(); i++) {
-                Log.i("分行", tempLayout.getLineStart(i) + "    " + tempLayout.getLineEnd(i));
                 chapterInfo.getTextArray().add(novelChapter.getChapterContent().substring(tempLayout.getLineStart(i), tempLayout.getLineEnd(i)));
             }
             if (chapterInfo.getTextArray().size() % contentPage.getNovelContent().getMaxLines() == 0) {
@@ -238,8 +237,6 @@ public class PullViewLayout extends FrameLayout {
         }
         contentPage.setDiraction(chapterIndex, contentPageIndex);
         contentPage.setContent(allDate.get(chapterIndex));
-        contentPage.getNovelPage().setText((contentPageIndex + 1) + "/" + nowChapterInfo.getPage() + "");
-        contentPage.getNovelTitle().setText(nowChapterInfo.getChapterName());
         if (contentPage.getParent() == null) {
             addView(contentPage);
         }

@@ -22,7 +22,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 
-public class NovelTextView extends AppCompatTextView implements Observer {
+public class NovelTextView extends AppCompatTextView {
     List<String> textArray = new ArrayList<>();
     private NovelTextViewHelp novelTextViewHelp;
 
@@ -42,15 +42,11 @@ public class NovelTextView extends AppCompatTextView implements Observer {
 
     public NovelTextView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        if (novelTextViewHelp == null) {
-            novelTextViewHelp = new NovelTextViewHelp().initConfig(this, attrs, defStyleAttr);
-        }
     }
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
-        novelTextViewHelp.initViewSize(this);
     }
 
 
@@ -65,21 +61,5 @@ public class NovelTextView extends AppCompatTextView implements Observer {
         } catch (Exception e) {
             Log.e("NovelTextView", "ondraw报错:" + e.getMessage());
         }
-    }
-
-
-    public NovelTextViewHelp getNovelTextViewHelp() {
-        return novelTextViewHelp;
-    }
-
-    public void setNovelTextViewHelp(NovelTextViewHelp novelTextViewHelp) {
-        this.novelTextViewHelp = novelTextViewHelp;
-    }
-
-
-    @Override
-    public void update(Observable o, Object arg) {
-        this.novelTextViewHelp = (NovelTextViewHelp) arg;
-        invalidate();
     }
 }

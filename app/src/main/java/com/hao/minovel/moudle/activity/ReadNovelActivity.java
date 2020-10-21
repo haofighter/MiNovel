@@ -193,6 +193,15 @@ public class ReadNovelActivity extends MiBaseActivity implements PullViewLayout.
         v.findViewById(R.id.back).setOnClickListener(this);
         readbook_config.setOnClickListener(this);
         novel_show.setListener(this);
+
+        Log.i("小说","屏幕高度:"+ SystemUtil.getScreenSize(     this).heightPixels);
+        novel_show.post(new Runnable() {
+            @Override
+            public void run() {
+                Log.i("小说","总高度:"+ novel_show.getHeight());
+
+            }
+        });
     }
 
     @Override

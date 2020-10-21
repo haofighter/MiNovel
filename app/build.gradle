@@ -14,7 +14,6 @@ android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
 
-
     signingConfigs {
         release {
             try {
@@ -44,6 +43,11 @@ android {
                                 '--minimal-main-dex'//使上一句生效
         ]
 
+    }
+
+
+    dataBinding {
+        enabled = true
     }
 
     greendao {
