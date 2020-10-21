@@ -7,6 +7,7 @@ import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
@@ -14,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.hao.minovel.R;
+import com.hao.minovel.db.DBManage;
 import com.hao.minovel.utils.SystemUtil;
 
 import java.util.ArrayList;
@@ -28,6 +30,7 @@ class NovelContentView extends FrameLayout  implements Observer {
     private  int maxLine; //当前页容纳的最大行数
     private  int nowPage;//当前页位置
     private  int chapterIndex;//章节位于列表的位置
+    NovelTextViewHelp novelTextViewHelp;
 
     public NovelContentView(@NonNull Context context) {
         this(context, null);
@@ -48,21 +51,27 @@ class NovelContentView extends FrameLayout  implements Observer {
     }
 
     private void init() {
-        addView(LayoutInflater.from(getContext()).inflate(R.layout.read_novel_page, null));
-        novelTitle = findViewById(R.id.novel_title);
-        novelContent = findViewById(R.id.novel_content);
-        novelPage = findViewById(R.id.novel_page);
+        novelTextViewHelp=  DBManage.chackNovelConfig();
+        View v=  LayoutInflater.from(getContext()).inflate(R.layout.read_novel_page, null);
+        novelTitle = v.findViewById(R.id.novel_title);
+        novelContent =v. findViewById(R.id.novel_content);
+        novelPage =v. findViewById(R.id.novel_page);
+        if(novelTextViewHelp!=null) {
+            novelContent.setPadding(novelContent.getPaddingLeft(), (int) (novelContent.getPaddingTop() + novelTextViewHelp.getTextPadingtop()), novelContent.getPaddingRight(), novelContent.getPaddingBottom());
+        }else{
+            maxLine=novelTextViewHelp.getLineNum();
+        }
+        addView(v);
         post(new Runnable() {
             @Override
                 public void run() {
-                float scaledDensity =getContext().getResources().getDisplayMetrics().scaledDensity;
-                Log.i("小说","总高度:"+getHeight()+"高度："+novelContent.getHeight()+"            行高： "+novelContent.getLineHeight()+"     字体大小：" +novelContent.getTextSize()+"        "+scaledDensity*novelContent.getTextSize()+"    行间距："+novelContent.getLineSpacingExtra());
-                Log.i("小说","总高度:"+getHeight()+"novelTitle高度："+novelTitle.getHeight()+"     novelPage：" +novelPage.getHeight());
+                if(novelTextViewHelp==null){
+                    novelTextViewHelp=new NovelTextViewHelp();
+                }
                 maxLine = novelContent.getHeight() / novelContent.getLineHeight();
+                novelTextViewHelp.setLineNum(maxLine);
                 int useless=novelContent.getHeight() % novelContent.getLineHeight();
-                Log.i("小说","多余的:"+useless);
-                novelContent.setPadding(novelContent.getPaddingLeft(),novelContent.getPaddingTop()+useless/2,novelContent.getPaddingRight(),novelContent.getPaddingBottom());
-                novelContent.invalidate();
+                novelTextViewHelp.setTextPadingtop(useless/2);
             }
         });
     }
@@ -73,7 +82,12 @@ class NovelContentView extends FrameLayout  implements Observer {
 
     public void setContent(ChapterInfo chapterInfo) {
         int start = nowPage * maxLine;
+        if(start>chapterInfo.getTextArray().size()){
+            nowPage=0;
+            start=0;
+        }
         int end = (nowPage + 1) * maxLine;
+
         if (end > chapterInfo.getTextArray().size()) {
             end = chapterInfo.getTextArray().size();
         }
@@ -93,5 +107,18 @@ class NovelContentView extends FrameLayout  implements Observer {
     @Override
     public void update(Observable o, Object arg) {
 
+    }
+
+    public int getNowPage() {
+        return nowPage;
+    }
+
+
+    public int getChapterIndex() {
+        return chapterIndex;
+    }
+
+    public NovelTextViewHelp getNovelTextViewHelp() {
+        return novelTextViewHelp;
     }
 }

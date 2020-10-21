@@ -34,11 +34,6 @@ public class ChapterInfo {
         return chapterName;
     }
 
-    public void setNovelTextViewHelp(NovelTextViewHelp novelTextViewHelp, TextView textView) {
-        novelTextViewHelp.initViewConfig();
-        page = novelTextViewHelp.allPage;
-    }
-
     public void setContent(String content) {
         this.content = content;
     }
@@ -52,10 +47,6 @@ public class ChapterInfo {
             textArray = new ArrayList<>();
         }
         return textArray;
-    }
-
-    public void setTextArray(List<String> textArray) {
-        this.textArray = textArray;
     }
 
     public void setPage(int page) {

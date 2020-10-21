@@ -42,18 +42,16 @@ public class NovelTextViewHelp implements Parcelable {
     protected float offsetHor = 0;//画布横向方向偏移量
     protected float offsetVar = 0;//画布垂直方向偏移量
     protected float lineSpacingExtra;//行间距
-    protected int lineTextNum;//每行字数
     protected int lineNum;//容纳的行数
     protected float textSize;//字体大小
     protected boolean orientationVer = false;//是否为横屏
     protected String typefaceName;
     protected int textColor;//颜色
     protected int allPage;
-    protected float height;
-    protected float width;
 
     protected NovelTextViewHelp() {
     }
+
 
     protected NovelTextViewHelp(Parcel in) {
         if (in.readByte() == 0) {
@@ -71,21 +69,20 @@ public class NovelTextViewHelp implements Parcelable {
         offsetHor = in.readFloat();
         offsetVar = in.readFloat();
         lineSpacingExtra = in.readFloat();
-        lineTextNum = in.readInt();
         lineNum = in.readInt();
         textSize = in.readFloat();
         orientationVer = in.readByte() != 0;
         typefaceName = in.readString();
         textColor = in.readInt();
         allPage = in.readInt();
-        height = in.readFloat();
-        width = in.readFloat();
     }
 
-    @Generated(hash = 1799491719)
-    public NovelTextViewHelp(Long id, float wordSpacingExtra, float textPadingVar, float textPadingHor, float textPadingleft, float textPadingright, float textPadingtop,
-                             float textPadingbottom, float offsetHor, float offsetVar, float lineSpacingExtra, int lineTextNum, int lineNum, float textSize, boolean orientationVer,
-                             String typefaceName, int textColor, int allPage, float height, float width) {
+
+    @Generated(hash = 321017424)
+    public NovelTextViewHelp(Long id, float wordSpacingExtra, float textPadingVar, float textPadingHor,
+            float textPadingleft, float textPadingright, float textPadingtop, float textPadingbottom, float offsetHor,
+            float offsetVar, float lineSpacingExtra, int lineNum, float textSize, boolean orientationVer,
+            String typefaceName, int textColor, int allPage) {
         this.id = id;
         this.wordSpacingExtra = wordSpacingExtra;
         this.textPadingVar = textPadingVar;
@@ -97,15 +94,12 @@ public class NovelTextViewHelp implements Parcelable {
         this.offsetHor = offsetHor;
         this.offsetVar = offsetVar;
         this.lineSpacingExtra = lineSpacingExtra;
-        this.lineTextNum = lineTextNum;
         this.lineNum = lineNum;
         this.textSize = textSize;
         this.orientationVer = orientationVer;
         this.typefaceName = typefaceName;
         this.textColor = textColor;
         this.allPage = allPage;
-        this.height = height;
-        this.width = width;
     }
 
     @Override
@@ -126,15 +120,12 @@ public class NovelTextViewHelp implements Parcelable {
         dest.writeFloat(offsetHor);
         dest.writeFloat(offsetVar);
         dest.writeFloat(lineSpacingExtra);
-        dest.writeInt(lineTextNum);
         dest.writeInt(lineNum);
         dest.writeFloat(textSize);
         dest.writeByte((byte) (orientationVer ? 1 : 0));
         dest.writeString(typefaceName);
         dest.writeInt(textColor);
         dest.writeInt(allPage);
-        dest.writeFloat(height);
-        dest.writeFloat(width);
     }
 
     public static final Creator<NovelTextViewHelp> CREATOR = new Creator<NovelTextViewHelp>() {
@@ -209,35 +200,7 @@ public class NovelTextViewHelp implements Parcelable {
         return this;
     }
 
-    protected void initViewSize(NovelTextView novelTextView) {
-        this.width = novelTextView.getWidth();
-        this.height = novelTextView.getHeight();
-        initViewConfig();
-    }
 
-    protected void initViewConfig() {
-        if (height == 0 || width == 0) {
-            throw new NullPointerException("填充的界面参数中宽高为0");
-        }
-        //绘制文字空间的垂直方向的大小
-        float textContentVar = height - textPadingtop - textPadingbottom;
-        //绘制文字空间的横向方向的大小
-        float textContentHor = width - textPadingleft - textPadingright;
-        //计算的每行容纳的文字大小
-        lineTextNum = (int) (textContentHor / (textSize + wordSpacingExtra));
-        //计算没页容纳文字行数
-        lineNum = (int) (textContentVar / (textSize + lineSpacingExtra));
-
-        //计算出去边缘距离和文字占用的位置剩余的位置 并计算出每页文字的位置
-        //文本垂直方向距离边缘的位置  通过计算一行被填满时所占用的位置，算出空出的位置长度,主要用于文本居中处理
-        textPadingVar = (textContentVar - lineNum * (textSize + lineSpacingExtra)) / 2;
-        offsetVar = textPadingVar;
-        //文本水平方向距离边缘的位置  通过计算一行被填满时所占用的位置，算出空出的位置长度,主要用于文本居中处理
-        textPadingHor = (textContentHor - lineTextNum * (textSize + wordSpacingExtra) + wordSpacingExtra) / 2;//由于最后一个字的位置中包含了一个间距 在调整文字位置时需要进行位置处理 所以需要+上wordSpacingExtra
-        offsetHor = textPadingHor + textPadingleft;
-
-        Log.i("text", "边缘间距：" + textPadingVar + "             " + textPadingtop + "    文字：" + lineNum * (textSize + lineSpacingExtra) + "     总高度：" + textContentVar);
-    }
 
 
 
@@ -344,14 +307,6 @@ public class NovelTextViewHelp implements Parcelable {
         return this.lineSpacingExtra;
     }
 
-    public int getLineTextNum() {
-        return this.lineTextNum;
-    }
-
-    public void setLineTextNum(int lineTextNum) {
-        this.lineTextNum = lineTextNum;
-        DBManage.saveNovelTextViewConfig(this);
-    }
 
     public int getLineNum() {
         return this.lineNum;
@@ -393,21 +348,5 @@ public class NovelTextViewHelp implements Parcelable {
         DBManage.saveNovelTextViewConfig(this);
     }
 
-    public float getHeight() {
-        return this.height;
-    }
 
-    public void setHeight(float height) {
-        this.height = height;
-        DBManage.saveNovelTextViewConfig(this);
-    }
-
-    public float getWidth() {
-        return this.width;
-    }
-
-    public void setWidth(float width) {
-        this.width = width;
-        DBManage.saveNovelTextViewConfig(this);
-    }
 }

@@ -58,7 +58,6 @@ public class PullViewLayout extends FrameLayout {
             return super.add(chapterInfo);
         }
 
-        @Override
         public void add(int index, ChapterInfo chapterInfo) {
             boolean isContent = false;
             for (int i = 0; i < size(); i++) {
@@ -151,6 +150,9 @@ public class PullViewLayout extends FrameLayout {
         ChapterInfo chapterInfo = new ChapterInfo(novelChapter.getChapterUrl(), novelChapter.getChapterName(), novelChapter.getChapterContent());
         if (contentPage != null && contentPage.getNovelContent().getWidth() != 0) {
             TextPaint mPaint = contentPage.getNovelContent().getPaint();
+            if(contentPage.getNovelTextViewHelp()!=null){
+                mPaint.setTextSize(contentPage.getNovelTextViewHelp().getTextSize());
+            }
             mPaint.setSubpixelText(true);
             Layout tempLayout = new StaticLayout(novelChapter.getChapterContent(), mPaint, contentPage.getNovelContent().getWidth(), Layout.Alignment.ALIGN_NORMAL, 0, 0, false);
             for (int i = 0; i < tempLayout.getLineCount(); i++) {
@@ -163,7 +165,11 @@ public class PullViewLayout extends FrameLayout {
             }
 
             if (ishead) {
+                int allDateSize=allDate.size();
                 allDate.add(0, chapterInfo);
+                if(allDate.size()>allDateSize&&allDateSize!=0){
+                    chapterIndex++;
+                }
             } else {
                 allDate.add(chapterInfo);
             }
@@ -180,10 +186,8 @@ public class PullViewLayout extends FrameLayout {
             }
 
             initContentPage();
-
-
-//        initFirstPage();
-//        initNextPage(nextPage);
+            initFirstPage();
+//            initNextPage();
         } else {
             contentPage = new NovelContentView(getContext());
             addView(contentPage);
@@ -246,48 +250,34 @@ public class PullViewLayout extends FrameLayout {
     }
 
     //
-//    private void initNextPage(ViewGroup v) {
-//        if (v == null) {
-//            v = (LinearLayout) LayoutInflater.from(getContext()).inflate(R.layout.read_novel_page, null);
-//        }
-//        TextView novel_page = v.findViewById(R.id.novel_page);
-//        MiTextView novel_title = v.findViewById(R.id.novel_title);
-//        novel_title.setConfig(novelTextViewHelp);
-//        NovelTextView novelTextView = v.findViewById(R.id.novel_content);
-//        novelTextView.setNovelTextViewHelp(novelTextViewHelp);
-//        ChapterInfo nowChapterInfo = allDate.get(chapterIndex);
-//        if (contentPageIndex + 1 >= allDate.get(chapterIndex).getPage()) {//如果下一页数据超出本章页数，需要取下一章数据
-//            if (chapterIndex + 1 < allDate.size()) {//如果有下一章
-//                PageInfo pageInfo = new PageInfo(chapterIndex + 1, 0);
-//                nowChapterInfo = allDate.get(chapterIndex + 1);
-//                novel_title.setText(nowChapterInfo.getChapterName());
-//                novelTextView.setTextArray(nowChapterInfo.getNovelPageInfos(), 0);
-//                novel_page.setText((pageInfo.getContentIndex() + 1) + "/" + nowChapterInfo.getPage() + "");
-//                v.setTag(pageInfo);
-//                nextPage = v;
-//            } else {
-//                nextPage = null;
-//            }
-//        } else {
-//            PageInfo pageInfo = new PageInfo(chapterIndex, contentPageIndex + 1);
-//            novelTextView.setTextArray(nowChapterInfo.getNovelPageInfos(), contentPageIndex + 1);
-//            novel_page.setText((pageInfo.getContentIndex() + 1) + "/" + nowChapterInfo.getPage() + "");
-//            novel_title.setText(nowChapterInfo.getChapterName());
-//            v.setTag(pageInfo);
-//            nextPage = v;
-//        }
-//
-//        if (nextPage != null) {
-//            if (nextPage.getParent() != null) {
-//                removeView(nextPage);
-//            }
-//            addView(nextPage, 0);
-//        } else {
-//            if (listener != null) {
-//                listener.loadMore(nowChapterInfo.getNowChapterUrl());
-//            }
-//        }
-//    }
+    private void initNextPage() {
+        if (nextPage == null) {
+            nextPage = new NovelContentView(getContext());
+        }
+        ChapterInfo nowChapterInfo = allDate.get(chapterIndex);
+        if (contentPageIndex + 1 >= allDate.get(chapterIndex).getPage()) {//如果下一页数据超出本章页数，需要取下一章数据
+            if (chapterIndex + 1 < allDate.size()) {//如果有下一章
+                nextPage.setDiraction(chapterIndex + 1,chapterIndex + 1);
+                nextPage.setContent(nowChapterInfo);
+            } else {
+                nextPage = null;
+            }
+        } else {
+            nextPage.setDiraction(chapterIndex ,contentPageIndex + 1);
+            nextPage.setContent(nowChapterInfo);
+        }
+
+        if (nextPage != null) {
+            if (nextPage.getParent() != null) {
+                removeView(nextPage);
+            }
+            addView(nextPage, 0);
+        } else {
+            if (listener != null) {
+                listener.loadMore(nowChapterInfo.getNowChapterUrl());
+            }
+        }
+    }
 //
     //是否切换了章节
     private void initFirstPage() {
@@ -320,316 +310,217 @@ public class PullViewLayout extends FrameLayout {
         }
     }
 
-//
-//    public void addChapter(NovelChapter novelChapter, boolean ishead) {
-//        ChapterInfo chapterInfo = new ChapterInfo(novelChapter.getChapterUrl(), novelChapter.getChapterName(), novelChapter.getChapterContent());
-//        chapterInfo.setNovelTextViewHelp(novelTextViewHelp, contentPage.findViewById(R.id.novel_content));
-//        if (ishead) {
-//            int size = allDate.size();
-//            allDate.add(0, chapterInfo);
-//            if (allDate.size() - size > 0) {
-//                chapterIndex++;
-//                contentPage.setTag(new PageInfo(chapterIndex, contentPageIndex));
-//            }
-//        } else {
-//            allDate.add(chapterInfo);
-//        }
-//
-//        initFirstPage(fristPage);
-//
-//        if (nextPage == null) {
-//            nextPage = (LinearLayout) LayoutInflater.from(getContext()).inflate(R.layout.read_novel_page, null);
-//        }
-//        initNextPage(nextPage);
-//    }
-//
-//    public void setChapter(NovelChapter novelChapter) {
-//        setChapter(novelChapter, -1);
-//    }
-//
-//    /**
-//     * 填充章节数据
-//     *
-//     * @param novelChapter
-//     * @param changePage
-//     */
-//    public void setChapter(NovelChapter novelChapter, int changePage) {
-//        if (novelTextViewHelp != null) {
-//            chapterIndex = 0;
-//            contentPageIndex = 0;
-////            initContent(novelChapter, changePage);
-//        }
-////        else {//如果数据不完整 直接调用初始化的方法进行完善
-//        fromatDate(novelChapter, changePage);
-////        }
-//    }
-//
+    private void initAnimal() {
+        if (valueAnimator == null) {
+            valueAnimator = ValueAnimator.ofFloat(0, 1);
+            valueAnimator.setDuration(100);
+        }
+    }
 
-//
-//
-//    private void initAnimal() {
-//        if (valueAnimator == null) {
-//            valueAnimator = ValueAnimator.ofFloat(0, 1);
-//            valueAnimator.setDuration(100);
-//        }
-//    }
-//
-//    @Override
-//    public boolean onTouchEvent(MotionEvent event) {
-//        boolean isUsedThisTouch = true;
-//        if (listener != null) {
-//            isUsedThisTouch = listener.clickCenter(ClickState.onTouch);
-//        }
-//
-//        if (valueAnimator != null && valueAnimator.isRunning()) {
-//            return true;
-//        }
-//        if (getChildCount() > 0) {
-//            switch (event.getAction()) {
-//                case MotionEvent.ACTION_DOWN:
-//                    downX = event.getX();
-//                    break;
-//                case MotionEvent.ACTION_MOVE:
-//                    moveX = event.getX();
-//                    if (moveX - downX > 0) {
-//                        dragState = 1;
-//                    } else if (moveX - downX < 0) {
-//                        dragState = 0;
-//                    }
-//                    if (fristPage != null) {
-//                        if (dragState == 1 && isUsedThisTouch) {//右滑 上一页
-//                            fristPage.setTranslationX(-getWidth() + (moveX - downX));
-//                            contentPage.setTranslationX(0);
-//                        } else {
-//                            if (dragState == 0) {
-//                                //向左滑动 下一页
-//                                if (nextPage != null && isUsedThisTouch) {
-//                                    contentPage.setTranslationX((int) (moveX - downX));
-//                                    fristPage.setTranslationX(-getWidth());
-//                                }
-//                            }
-//                        }
-//                    } else {//没有上一页
-//                        if (dragState == 0 && nextPage != null && isUsedThisTouch) {
-//                            //向左滑动 下一页
-//                            contentPage.setTranslationX((int) (moveX - downX));
-//                        } else {
-//                            return true;
-//                        }
-//                    }
-//                    break;
-//                case MotionEvent.ACTION_UP:
-//                    if (Math.abs(event.getX() - downX) < 10) {
-//                        if (!listener.clickCenter(ClickState.onClick)) {
-//                            return false;
-//                        }
-//
-//                        if (event.getX() < getWidth() / 5) {//前一页
-//                            if (listener.clickCenter(ClickState.left) && isUsedThisTouch) {
-//                                dragState = 1;
-//                                downX = 0;
-//                                moveX = 0;
-//                                initAnimal();
-//                                valueAnimator.removeAllUpdateListeners();
-//                                valueAnimator.addUpdateListener(next);
-//                                valueAnimator.start();
-//                            } else {
-//                                return false;
-//                            }
-//                        } else if (event.getX() > getWidth() * 4 / 5 && isUsedThisTouch) {//后一页
-//                            if (listener.clickCenter(ClickState.right)) {
-//                                dragState = 0;
-//                                downX = 0;
-//                                moveX = 0;
-//                                initAnimal();
-//                                valueAnimator.removeAllUpdateListeners();
-//                                valueAnimator.addUpdateListener(next);
-//                                valueAnimator.start();
-//                            } else {
-//                                return false;
-//                            }
-//                        } else {
-//                            if (listener != null) {
-//                                listener.clickCenter(ClickState.center);
-//                            }
-//                        }
-//                        return true;
-//                    } else {//滑动效果生效
-//                        if (event.getX() - downX > 0) {
-//                            if (fristPage == null) {
-//                                return true;
-//                            } else {
-//                                if (listener != null) {
-//                                    listener.clickCenter(ClickState.left);
-//                                }
-//                            }
-//                        } else {
-//                            if (nextPage == null) {
-//                                return true;
-//                            } else {
-//                                if (listener != null) {
-//                                    listener.clickCenter(ClickState.right);
-//                                }
-//                            }
-//                        }
-//                        if (isUsedThisTouch) {
-//                            initAnimal();
-//                            valueAnimator.removeAllUpdateListeners();
-//                            valueAnimator.addUpdateListener(next);
-//                            valueAnimator.start();
-//                        }
-//                    }
-//                    break;
-//            }
-//            return true;
-//        } else {
-//            return super.onTouchEvent(event);
-//        }
-//    }
-//
-//    public synchronized void changeNextPage() {//下一页
-//        cachePage = fristPage;
-//        fristPage = contentPage;
-//        contentPage = nextPage;
-//        chapterIndex = ((PageInfo) contentPage.getTag()).getChapterIndex();
-//        contentPageIndex = ((PageInfo) contentPage.getTag()).getContentIndex();
-//        nextPage = null;
-//        Log.i("显示参数", "下一页 chapterIndex=" + chapterIndex + "   contentPageIndex=" + contentPageIndex + "   当前章节=" + allDate.get(chapterIndex).getChapterName());
-//        removeView(cachePage);
-//        if (listener != null) {
-//            listener.onPageChange(allDate.get(chapterIndex));
-//        }
-//        initNextPage(nextPage);
-//    }
-//
-//    public synchronized void changeLastPage() {//上一页
-//        cachePage = nextPage;
-//        nextPage = contentPage;
-//        contentPage = fristPage;
-//        chapterIndex = ((PageInfo) contentPage.getTag()).getChapterIndex();
-//        contentPageIndex = ((PageInfo) contentPage.getTag()).getContentIndex();
-//        fristPage = null;
-//        Log.i("显示参数", "上一页 chapterIndex=" + chapterIndex + "   contentPageIndex=" + contentPageIndex + "   当前章节=" + allDate.get(chapterIndex).getChapterName());
-//        removeView(cachePage);
-//        if (listener != null) {
-//            listener.onPageChange(allDate.get(chapterIndex));
-//        }
-//        initFirstPage(fristPage);
-//    }
-//
-//    @Nullable
-//    ValueAnimator.AnimatorUpdateListener next = new ValueAnimator.AnimatorUpdateListener() {
-//        @Override
-//        public void onAnimationUpdate(ValueAnimator animation) {
-//            if (dragState == 1) {//右滑动 上一页
-//
-//                if (fristPage == null) {
-//                    dragState = -1;
-//                } else {
-//                    float needMove = -getWidth() + (moveX - downX) - (-getWidth() + (moveX - downX)) * (float) animation.getAnimatedValue();
-//                    fristPage.setTranslationX((int) needMove);
-//                    if ((float) animation.getAnimatedValue() == 1) {
-//                        Log.i("触摸 结束动画", "右滑动 上一页");
-//                        changeLastPage();
-//                        dragState = -1;
-//                    }
-//                }
-//            } else if (dragState == 0) {//向左滑动 下一页
-//
-//                if (nextPage == null) {
-//                    dragState = -1;
-//                } else {
-//                    float needMove = (moveX - downX) + (-getWidth() - (moveX - downX)) * ((float) animation.getAnimatedValue());
-//                    contentPage.setTranslationX((int) needMove);
-//                    if ((float) animation.getAnimatedValue() == 1) {
-//                        Log.i("触摸 结束动画", "左滑动 下一页");
-//                        contentPage.setTranslationX(-getWidth() - contentPage.getLeft());//对误差进行纠正
-//                        changeNextPage();
-//                        dragState = -1;
-//                    }
-//                }
-//            }
-//        }
-//    };
-//
-//    ValueAnimator.AnimatorUpdateListener now = new ValueAnimator.AnimatorUpdateListener() {
-//        @Override
-//        public void onAnimationUpdate(ValueAnimator animation) {
-//            //移动的偏移量 由于精度问题 会出现偏差  需要进行偏差纠正
-//            if (dragState == 1 && fristPage != null) {//右滑动 上一页
-//
-//                float moveShift = -getWidth() + (moveX - downX) * (1 - (float) animation.getAnimatedValue());
-//                fristPage.setTranslationX(moveShift);
-//                if ((float) animation.getAnimatedValue() == 1) {
-//                    Log.i("触摸 结束动画", "向右滑动 下一页");
-//                    dragState = -1;
-//                    return;
-//                }
-//            } else if (dragState == 0 && contentPage != null) {//左滑动  下一页
-//                float moveShift = -(moveX - downX) * (1 - (float) animation.getAnimatedValue());
-//                contentPage.setTranslationX(-moveShift);
-//                if ((float) animation.getAnimatedValue() == 1) {
-//                    Log.i("触摸 结束动画", "向左滑动 下一页");
-//                    dragState = -1;
-//                    return;
-//                }
-//            }
-//        }
-//    };
-//
-//    public void refreshView() {
-//        if (viewObserver == null) {
-//            viewObserver = new ViewObserver();
-//        }
-//        viewObserver.deleteObservers();
-//
-//        if (fristPage != null) {
-//            for (int i = 0; i < fristPage.getChildCount(); i++) {
-//                if (fristPage.getChildAt(i) instanceof Observer) {
-//                    viewObserver.addObserver((Observer) fristPage.getChildAt(i));
-//                }
-//            }
-//
-//        }
-//
-//        if (contentPage != null) {
-//            for (int i = 0; i < contentPage.getChildCount(); i++) {
-//                if (contentPage.getChildAt(i) instanceof Observer) {
-//                    viewObserver.addObserver((Observer) contentPage.getChildAt(i));
-//                }
-//            }
-//        }
-//
-//        if (nextPage != null) {
-//            for (int i = 0; i < nextPage.getChildCount(); i++) {
-//                if (nextPage.getChildAt(i) instanceof Observer) {
-//                    viewObserver.addObserver((Observer) nextPage.getChildAt(i));
-//                }
-//            }
-//        }
-//
-//        viewObserver.update(novelTextViewHelp);
-//    }
-//
-//
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        boolean isUsedThisTouch = true;
+        if (listener != null) {
+            isUsedThisTouch = listener.clickCenter(ClickState.onTouch);
+        }
+
+        if (valueAnimator != null && valueAnimator.isRunning()) {
+            return true;
+        }
+        if (getChildCount() > 0) {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    downX = event.getX();
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    moveX = event.getX();
+                    if (moveX - downX > 0) {
+                        dragState = 1;
+                    } else if (moveX - downX < 0) {
+                        dragState = 0;
+                    }
+                    if (fristPage != null) {
+                        if (dragState == 1 && isUsedThisTouch) {//右滑 上一页
+                            fristPage.setTranslationX(-getWidth() + (moveX - downX));
+                            contentPage.setTranslationX(0);
+                        } else {
+                            if (dragState == 0) {
+                                //向左滑动 下一页
+                                if (nextPage != null && isUsedThisTouch) {
+                                    contentPage.setTranslationX((int) (moveX - downX));
+                                    fristPage.setTranslationX(-getWidth());
+                                }
+                            }
+                        }
+                    } else {//没有上一页
+                        if (dragState == 0 && nextPage != null && isUsedThisTouch) {
+                            //向左滑动 下一页
+                            contentPage.setTranslationX((int) (moveX - downX));
+                        } else {
+                            return true;
+                        }
+                    }
+                    break;
+                case MotionEvent.ACTION_UP:
+                    if (Math.abs(event.getX() - downX) < 10) {
+                        if (!listener.clickCenter(ClickState.onClick)) {
+                            return false;
+                        }
+
+                        if (event.getX() < getWidth() / 5) {//前一页
+                            if (listener.clickCenter(ClickState.left) && isUsedThisTouch) {
+                                dragState = 1;
+                                downX = 0;
+                                moveX = 0;
+                                initAnimal();
+                                valueAnimator.removeAllUpdateListeners();
+                                valueAnimator.addUpdateListener(next);
+                                valueAnimator.start();
+                            } else {
+                                return false;
+                            }
+                        } else if (event.getX() > getWidth() * 4 / 5 && isUsedThisTouch) {//后一页
+                            if (listener.clickCenter(ClickState.right)) {
+                                dragState = 0;
+                                downX = 0;
+                                moveX = 0;
+                                initAnimal();
+                                valueAnimator.removeAllUpdateListeners();
+                                valueAnimator.addUpdateListener(next);
+                                valueAnimator.start();
+                            } else {
+                                return false;
+                            }
+                        } else {
+                            if (listener != null) {
+                                listener.clickCenter(ClickState.center);
+                            }
+                        }
+                        return true;
+                    } else {//滑动效果生效
+                        if (event.getX() - downX > 0) {
+                            if (fristPage == null) {
+                                return true;
+                            } else {
+                                if (listener != null) {
+                                    listener.clickCenter(ClickState.left);
+                                }
+                            }
+                        } else {
+                            if (nextPage == null) {
+                                return true;
+                            } else {
+                                if (listener != null) {
+                                    listener.clickCenter(ClickState.right);
+                                }
+                            }
+                        }
+                        if (isUsedThisTouch) {
+                            initAnimal();
+                            valueAnimator.removeAllUpdateListeners();
+                            valueAnimator.addUpdateListener(next);
+                            valueAnimator.start();
+                        }
+                    }
+                    break;
+            }
+            return true;
+        } else {
+            return super.onTouchEvent(event);
+        }
+    }
+
+    public synchronized void changeNextPage() {//下一页
+        cachePage = fristPage;
+        fristPage = contentPage;
+        contentPage = nextPage;
+        chapterIndex =contentPage.getChapterIndex();
+        contentPageIndex =contentPage.getNowPage();
+        nextPage = null;
+        Log.i("显示参数", "下一页 chapterIndex=" + chapterIndex + "   contentPageIndex=" + contentPageIndex + "   当前章节=" + allDate.get(chapterIndex).getChapterName());
+        removeView(cachePage);
+        if (listener != null) {
+            listener.onPageChange(allDate.get(chapterIndex));
+        }
+        initNextPage();
+    }
+
+    public synchronized void changeLastPage() {//上一页
+        cachePage = nextPage;
+        nextPage = contentPage;
+        contentPage = fristPage;
+        chapterIndex = contentPage.getChapterIndex();
+        contentPageIndex = contentPage.getNowPage();
+        fristPage = null;
+        Log.i("显示参数", "上一页 chapterIndex=" + chapterIndex + "   contentPageIndex=" + contentPageIndex + "   当前章节=" + allDate.get(chapterIndex).getChapterName());
+        removeView(cachePage);
+        if (listener != null) {
+            listener.onPageChange(allDate.get(chapterIndex));
+        }
+        initFirstPage();
+    }
+
+    @Nullable
+    ValueAnimator.AnimatorUpdateListener next = new ValueAnimator.AnimatorUpdateListener() {
+        @Override
+        public void onAnimationUpdate(ValueAnimator animation) {
+            if (dragState == 1) {//右滑动 上一页
+
+                if (fristPage == null) {
+                    dragState = -1;
+                } else {
+                    float needMove = -getWidth() + (moveX - downX) - (-getWidth() + (moveX - downX)) * (float) animation.getAnimatedValue();
+                    fristPage.setTranslationX((int) needMove);
+                    if ((float) animation.getAnimatedValue() == 1) {
+                        Log.i("触摸 结束动画", "右滑动 上一页");
+                        changeLastPage();
+                        dragState = -1;
+                    }
+                }
+            } else if (dragState == 0) {//向左滑动 下一页
+
+                if (nextPage == null) {
+                    dragState = -1;
+                } else {
+                    float needMove = (moveX - downX) + (-getWidth() - (moveX - downX)) * ((float) animation.getAnimatedValue());
+                    contentPage.setTranslationX((int) needMove);
+                    if ((float) animation.getAnimatedValue() == 1) {
+                        Log.i("触摸 结束动画", "左滑动 下一页");
+                        contentPage.setTranslationX(-getWidth() - contentPage.getLeft());//对误差进行纠正
+                        changeNextPage();
+                        dragState = -1;
+                    }
+                }
+            }
+        }
+    };
+
+    ValueAnimator.AnimatorUpdateListener now = new ValueAnimator.AnimatorUpdateListener() {
+        @Override
+        public void onAnimationUpdate(ValueAnimator animation) {
+            //移动的偏移量 由于精度问题 会出现偏差  需要进行偏差纠正
+            if (dragState == 1 && fristPage != null) {//右滑动 上一页
+
+                float moveShift = -getWidth() + (moveX - downX) * (1 - (float) animation.getAnimatedValue());
+                fristPage.setTranslationX(moveShift);
+                if ((float) animation.getAnimatedValue() == 1) {
+                    Log.i("触摸 结束动画", "向右滑动 下一页");
+                    dragState = -1;
+                    return;
+                }
+            } else if (dragState == 0 && contentPage != null) {//左滑动  下一页
+                float moveShift = -(moveX - downX) * (1 - (float) animation.getAnimatedValue());
+                contentPage.setTranslationX(-moveShift);
+                if ((float) animation.getAnimatedValue() == 1) {
+                    Log.i("触摸 结束动画", "向左滑动 下一页");
+                    dragState = -1;
+                    return;
+                }
+            }
+        }
+    };
 
 
-    //
-//    public void setNovelTextViewConfit(NovelTextViewHelp novelTextViewHelp) {
-//        this.novelTextViewHelp = novelTextViewHelp;
-//        for (int i = 0; i < allDate.size(); i++) {
-//            allDate.get(i).setNovelTextViewHelp(novelTextViewHelp, contentPage.findViewById(R.id.novel_content));
-//        }
-//        initContentPage(contentPage);
-//        initNextPage(nextPage);
-//        initFirstPage(fristPage);
-//
-//        if (listener != null) {
-//            listener.initConfig(novelTextViewHelp);
-//        }
-//    }
-//
-//
     private class ViewObserver extends Observable {
         @Override
         public synchronized void addObserver(Observer o) {
