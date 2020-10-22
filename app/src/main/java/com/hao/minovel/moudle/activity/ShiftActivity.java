@@ -146,10 +146,10 @@ public class ShiftActivity extends MiMuneActivity implements View.OnClickListene
                 break;
             case R.id.setting:
 //                Router.getInstance().build(RouterContent.SETTINGACTIVITY, null).skip();
-                Router.getInstance().build(RouterContent.LOADTYPEFACEACTIVITY, null).skip();
+                Router.getInstance().build(RouterContent.LOADTYPEFACEACTIVITY).skip();
                 break;
             case R.id.search:
-                Router.getInstance().build(RouterContent.SEARCHNOVELACTIVITY, null).skip();
+                Router.getInstance().build(RouterContent.SEARCHNOVELACTIVITY).skip();
                 break;
         }
     }

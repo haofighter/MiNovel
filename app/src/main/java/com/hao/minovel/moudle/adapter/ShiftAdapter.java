@@ -204,8 +204,11 @@ public class ShiftAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    DBManage.removeReadInfo(DBManage.checkedAllReadInfo().get(0));
-                    notifiDate();
+                    List<ReadInfo> readInfos = DBManage.checkedAllReadInfo();
+                    if (readInfos.size() > 0) {
+                        DBManage.removeReadInfo(readInfos.get(0));
+                        notifiDate();
+                    }
                 }
             });
 

@@ -1,6 +1,7 @@
 package com.hao.minovel.moudle.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -8,13 +9,21 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.view.View;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.hao.annotetion.annotation.Bind;
 import com.hao.minovel.R;
 import com.hao.minovel.base.MiBaseActivity;
+import com.hao.minovel.db.DBManage;
 import com.hao.minovel.moudle.adapter.LoadTypefaceAdapter;
+import com.hao.minovel.moudle.adapter.OnItemClickListener;
+import com.hao.minovel.moudle.adapter.TextTypefaceAdapter;
+import com.hao.minovel.tinker.app.AppContext;
 import com.hao.minovel.utils.SystemUtil;
+import com.hao.minovel.utils.TypeFaceUtils;
+import com.hao.minovel.view.minovelread.NovelTextDrawInfo;
+import com.hao.minovel.view.recycleviewhelp.RecycleViewDivider;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -32,6 +41,10 @@ import okhttp3.Response;
 
 @Bind
 public class LoadTypeFaceActivity extends MiBaseActivity implements View.OnClickListener {
+    NovelTextDrawInfo novelTextDrawInfo = DBManage.chackNovelConfig();
+    RecyclerView typefaceList;
+    TextView tvShow;
+    SeekBar seekBar;
 
     @Override
     protected int layoutId() {
@@ -42,20 +55,40 @@ public class LoadTypeFaceActivity extends MiBaseActivity implements View.OnClick
     protected void initView(View v) {
         ((TextView) v.findViewById(R.id.title)).setText("字体");
         v.findViewById(R.id.back).setOnClickListener(this);
-        RecyclerView layoutContent = v.findViewById(R.id.layout_content);
-        layoutContent.setLayoutManager(new LinearLayoutManager(this));
-        layoutContent.setAdapter(new LoadTypefaceAdapter(this));
+        typefaceList = findViewById(R.id.typeface_show);
+        tvShow = findViewById(R.id.tv_show);
+        seekBar = findViewById(R.id.seekBar);
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                Log.i("小说", "进度：" + progress);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+        seekBar.setProgress(60
+        );
+        initTypeFace();
     }
+
 
     @Override
     protected void doElse() {
-        downloadTypefaceConfigFile();
+        refreshView();
     }
 
     @Override
     protected void doOnSetContent(View v) {
         int padding = (int) SystemUtil.dp2px(this, 10f);
-        v.findViewById(R.id.layout_top).setPadding(padding, padding+SystemUtil.getStatusBarHeight(this), padding, padding);
+        v.findViewById(R.id.layout_top).setPadding(padding, padding + SystemUtil.getStatusBarHeight(this), padding, padding);
     }
 
 
@@ -68,26 +101,24 @@ public class LoadTypeFaceActivity extends MiBaseActivity implements View.OnClick
         }
     }
 
-    private void downloadTypefaceConfigFile() {
-        new OkHttpClient().newCall(new Request.Builder().get().url("https://raw.githubusercontent.com/haofighter/MiNovel/master/somethingNeeddown/FS.jpg").build()).enqueue(new Callback() {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Log.i("下载请求", e.getMessage());
-            }
 
+    private void initTypeFace() {
+        TextTypefaceAdapter textTypefaceAdapter = new TextTypefaceAdapter(this).setItemClickLisener(new OnItemClickListener() {
             @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                //拿到字节流
-                InputStream is = response.body().byteStream();
-                int len = 0;
-                byte[] buf = new byte[128];
-                String str = "";
-                while ((len = is.read(buf)) != -1) {
-                    str += new String(buf);
-                }
-                is.close();
-                Log.i("下载请求", str);
+            public void itemClick(int position, View view, Object object) {
+                novelTextDrawInfo.setTypeFaceName(((TypeFaceUtils.TypeFaceInfo) object).getTypeFacename());
+                refreshView();
             }
         });
+
+        typefaceList.setLayoutManager(new LinearLayoutManager(AppContext.application));
+        RecycleViewDivider recycleViewDivider = new RecycleViewDivider(this, LinearLayoutManager.HORIZONTAL, 1, ContextCompat.getColor(this, R.color.line));
+        typefaceList.addItemDecoration(recycleViewDivider);
+        typefaceList.setAdapter(textTypefaceAdapter);
+    }
+
+    private void refreshView() {
+        ((TextTypefaceAdapter) typefaceList.getAdapter()).setSelect(novelTextDrawInfo.getTypeFaceName());
+        tvShow.setTypeface(TypeFaceUtils.getTypeFaceByName(novelTextDrawInfo.getTypeFaceName()));
     }
 }

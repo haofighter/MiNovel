@@ -17,7 +17,9 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.hao.annotationengine.Router;
 import com.hao.annotetion.annotation.Bind;
+import com.hao.date.RouterContent;
 import com.hao.minovel.R;
 import com.hao.minovel.base.MiBaseActivity;
 import com.hao.minovel.db.DBManage;
@@ -34,7 +36,6 @@ import com.hao.minovel.tinker.app.AppContext;
 import com.hao.minovel.utils.SystemUtil;
 import com.hao.minovel.view.minovelread.ChapterInfo;
 import com.hao.minovel.view.minovelread.NovelTextView;
-import com.hao.minovel.view.minovelread.NovelTextViewHelp;
 import com.hao.minovel.view.minovelread.PullViewLayout;
 import com.hao.minovel.view.recycleviewhelp.RecycleViewDivider;
 
@@ -51,9 +52,7 @@ public class ReadNovelActivity extends MiBaseActivity implements PullViewLayout.
     View read_novel_title;//标题
     View left_drawer;//测滑菜单界面
     View mune;//标题栏
-
-
-    RecyclerView text_typeface;
+    RecyclerView novel_chapters;
     NovelChapterAdapter chapterAdapter;
     TextTypefaceAdapter textTypefaceAdapter;
     private final int LOADNOW = 0;
@@ -62,24 +61,13 @@ public class ReadNovelActivity extends MiBaseActivity implements PullViewLayout.
     ValueAnimator valueAnimator;
     ShowState nowState = ShowState.SHOWNONE;
     LinkedBlockingQueue<ShowState> stateQueue = new LinkedBlockingQueue();
-    NovelTextViewHelp novelTextViewHelp;
-
     LoadWebInfo loadWebInfo = new LoadWebInfo();
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.from_setting_view:
-                if (stateQueue.size() > 0) {
-                    Log.i("当前操作", "操作对列不为空,表示当前有操作未执行完成");
-                } else {
-                    if (nowState != ShowState.SHOWNONE) {
-                        stateQueue.add(ShowState.SHOWNONE);
-                    }
-                    stateQueue.add(ShowState.SHOWTYPEFACE);
-                    initDrawer(ShowState.SHOWTYPEFACE);
-                    muneSetting();
-                }
+                Router.getInstance().build(RouterContent.LOADTYPEFACEACTIVITY).skip();
                 break;
             case R.id.novel_all_chapter:
                 if (stateQueue.size() > 0) {
@@ -89,32 +77,7 @@ public class ReadNovelActivity extends MiBaseActivity implements PullViewLayout.
                         stateQueue.add(ShowState.SHOWNONE);
                     }
                     stateQueue.add(ShowState.SHOWCHAPTERS);
-                    initDrawer(ShowState.SHOWCHAPTERS);
                     muneSetting();
-                }
-                break;
-            case R.id.add_textsize:
-                if (novelTextViewHelp != null) {
-                    novelTextViewHelp.setTextSize(novelTextViewHelp.getTextSizeSp() + 1);
-//                    novel_show.setNovelTextViewConfit(novelTextViewHelp);
-                }
-                break;
-            case R.id.reduce_textsize:
-                if (novelTextViewHelp != null) {
-                    novelTextViewHelp.setTextSize(novelTextViewHelp.getTextSizeSp() - 1);
-//                    novel_show.setNovelTextViewConfit(novelTextViewHelp);
-                }
-                break;
-            case R.id.add_line_spac:
-                if (novelTextViewHelp != null) {
-                    novelTextViewHelp.setLineSpacingExtra(novelTextViewHelp.getLineSpacingExtraSp() + 1);
-//                    novel_show.setNovelTextViewConfit(novelTextViewHelp);
-                }
-                break;
-            case R.id.reduce_line_spac:
-                if (novelTextViewHelp != null) {
-                    novelTextViewHelp.setLineSpacingExtra(novelTextViewHelp.getLineSpacingExtraSp() - 1);
-//                    novel_show.setNovelTextViewConfit(novelTextViewHelp);
                 }
                 break;
             case R.id.back:
@@ -139,10 +102,10 @@ public class ReadNovelActivity extends MiBaseActivity implements PullViewLayout.
 
     @Override
     protected void initView(View v) {
-        text_typeface = v.findViewById(R.id.text_typeface);
-        text_typeface.setLayoutManager(new LinearLayoutManager(AppContext.application));
+        novel_chapters = v.findViewById(R.id.novel_chapters);
+        novel_chapters.setLayoutManager(new LinearLayoutManager(AppContext.application));
         RecycleViewDivider recycleViewDivider = new RecycleViewDivider(this, LinearLayoutManager.HORIZONTAL, 1, ContextCompat.getColor(this, R.color.line));
-        text_typeface.addItemDecoration(recycleViewDivider);
+        novel_chapters.addItemDecoration(recycleViewDivider);
 
         novelTextView = v.findViewById(R.id.novel_content);
         novel_show = v.findViewById(R.id.novel_show);
@@ -186,22 +149,9 @@ public class ReadNovelActivity extends MiBaseActivity implements PullViewLayout.
 
         v.findViewById(R.id.from_setting_view).setOnClickListener(this);
         v.findViewById(R.id.novel_all_chapter).setOnClickListener(this);
-        v.findViewById(R.id.add_line_spac).setOnClickListener(this);
-        v.findViewById(R.id.add_textsize).setOnClickListener(this);
-        v.findViewById(R.id.reduce_line_spac).setOnClickListener(this);
-        v.findViewById(R.id.reduce_textsize).setOnClickListener(this);
         v.findViewById(R.id.back).setOnClickListener(this);
         readbook_config.setOnClickListener(this);
         novel_show.setListener(this);
-
-        Log.i("小说","屏幕高度:"+ SystemUtil.getScreenSize(     this).heightPixels);
-        novel_show.post(new Runnable() {
-            @Override
-            public void run() {
-                Log.i("小说","总高度:"+ novel_show.getHeight());
-
-            }
-        });
     }
 
     @Override
@@ -226,16 +176,6 @@ public class ReadNovelActivity extends MiBaseActivity implements PullViewLayout.
         }
     }
 
-    @Override
-    public void initConfig(NovelTextViewHelp novelTextViewHelp) {
-        initSettingViewDate(novelTextViewHelp);
-    }
-
-    private void initSettingViewDate(NovelTextViewHelp novelTextViewHelp) {
-        this.novelTextViewHelp = novelTextViewHelp;
-        ((TextView) findViewById(R.id.textsize)).setText(novelTextViewHelp.getTextSizeSp() + "");
-        ((TextView) findViewById(R.id.line_spac_size)).setText(novelTextViewHelp.getLineSpacingExtraSp() + "");
-    }
 
     @Override
     public void onPageChange(ChapterInfo chapterInfo) {
@@ -252,14 +192,11 @@ public class ReadNovelActivity extends MiBaseActivity implements PullViewLayout.
         } catch (Exception e) {
             Log.e("阅读界面", "保存阅读信息失败");
         }
-        if (text_typeface.getAdapter() instanceof NovelChapterAdapter) {
-            ((NovelChapterAdapter) text_typeface.getAdapter()).setSelect(chapterInfo.getNowChapterUrl());
-        }
+        ((NovelChapterAdapter) novel_chapters.getAdapter()).setSelect(novel_show.getNowshow().getNowChapterUrl());
     }
 
     @Override
     public boolean clickCenter(PullViewLayout.ClickState clickState) {
-        Log.i("当前操作", "点击事件：" + clickState);
         switch (clickState) {
             case onTouch:
                 if (nowState != ShowState.SHOWNONE) {
@@ -350,9 +287,8 @@ public class ReadNovelActivity extends MiBaseActivity implements PullViewLayout.
     @Override
     protected void doElse() {
         loadDate(LOADNOW);
+        initDrawer();
         initAnimal();
-        initChapterAdapter();
-        initTypeFaceAdapter();
     }
 
     @Override
@@ -377,9 +313,8 @@ public class ReadNovelActivity extends MiBaseActivity implements PullViewLayout.
                     ReadInfo readInfo = DBManage.checkedReadInfo(novelChapter.getNovelChapterListUrl());
                     if (readInfo != null && readInfo.getNovelChapterUrl().equals(((NovelChapter) msg.obj).getChapterUrl())) {
                         novel_show.setDate((NovelChapter) msg.obj, readInfo.getPage());
-                        Log.i("跳转", "novel_show=" + readInfo.getPage());
                     } else {
-                        novel_show.setDate((NovelChapter) msg.obj);
+                        novel_show.setDate((NovelChapter) msg.obj, 0);
                     }
                     break;
                 case LOADMORE:
@@ -427,45 +362,6 @@ public class ReadNovelActivity extends MiBaseActivity implements PullViewLayout.
             intent.putExtra(LoadHtmlService.TASK, loadWebInfo);
             intent.putExtra(LoadHtmlService.DATE, novelChapter);
             startService(intent);
-//            ServiceManage.getInstance().getBinder().sendCmd(new NovolDownTask<NovelChapter>(DownLoadNovelService.NovelDownTag.singlechaptercontent, novelChapter, new DownListener(this.getClass().getName(), true) {
-//                @Override
-//                public void downInfo(long all, long now) {
-//
-//                }
-//
-//                @Override
-//                public void startDown() {
-//                    switch (loadState) {
-//                        case LOADBEFORE:
-//                            Toast.makeText(ReadNovelActivity.this, "正在加载上一章节", Toast.LENGTH_LONG).show();
-//                            break;
-//                        case LOADMORE:
-//                            Toast.makeText(ReadNovelActivity.this, "正在加载下一章节", Toast.LENGTH_LONG).show();
-//                            break;
-//                        case LOADNOW:
-//                            Toast.makeText(ReadNovelActivity.this, "正在加载当前章节", Toast.LENGTH_LONG).show();
-//                            break;
-//
-//                    }
-//                }
-//
-//                @Override
-//                public void endDown(int state) {
-//                    if (state == SpiderUtils.Success) {
-//                        switch (loadState) {
-//                            case LOADBEFORE:
-//                                handler.sendMessage(handler.obtainMessage(LOADBEFORE, novelChapter));
-//                                break;
-//                            case LOADMORE:
-//                                handler.sendMessage(handler.obtainMessage(LOADMORE, novelChapter));
-//                                break;
-//                            case LOADNOW:
-//                                handler.sendMessage(handler.obtainMessage(LOADNOW, novelChapter));
-//                                break;
-//                        }
-//                    }
-//                }
-//            }));
         } else {
             handler.sendMessage(handler.obtainMessage(loadState, novelChapter));
         }
@@ -505,17 +401,18 @@ public class ReadNovelActivity extends MiBaseActivity implements PullViewLayout.
         super.eventBusOnEvent(str);
     }
 
-    private void initDrawer(ShowState nowState) {
-        if (nowState == ShowState.SHOWCHAPTERS) {
-            initChapterAdapter();
-            mune_title.setText("小说章节");
-            text_typeface.setAdapter(chapterAdapter);
-            text_typeface.scrollToPosition(novelChapter.getId().intValue());
-        } else if (nowState == ShowState.SHOWTYPEFACE) {
-            initTypeFaceAdapter();
-            mune_title.setText("字体");
-            text_typeface.setAdapter(textTypefaceAdapter);
-        }
+    private void initDrawer() {
+        mune_title.setText("小说章节");
+        chapterAdapter = new NovelChapterAdapter(this).setItemClickLisener(new OnItemClickListener() {
+            @Override
+            public void itemClick(int position, View view, Object object) {
+                novelChapter = ((NovelChapterAdapter) novel_chapters.getAdapter()).getItem(position);
+                loadDate(LOADNOW);
+            }
+        });
+        chapterAdapter.setNovelChapters(novelChapter);
+        novel_chapters.setAdapter(chapterAdapter);
+        novel_chapters.scrollToPosition(novelChapter.getId().intValue());
     }
 
     public void initAnimal() {
@@ -547,30 +444,8 @@ public class ReadNovelActivity extends MiBaseActivity implements PullViewLayout.
     }
 
 
-    private void initChapterAdapter() {
-        if (chapterAdapter == null) {
-            chapterAdapter = new NovelChapterAdapter(this).setItemClickLisener(new OnItemClickListener() {
-                @Override
-                public void itemClick(int position, View view, Object object) {
-                    novelChapter = ((NovelChapterAdapter) text_typeface.getAdapter()).getItem(position);
-                    loadDate(LOADNOW);
-                }
-            });
-            chapterAdapter.setNovelChapters(novelChapter);
-        }
+    @Override
+    public void onResume() {
+        super.onResume();
     }
-
-
-    private void initTypeFaceAdapter() {
-        if (textTypefaceAdapter == null) {
-            textTypefaceAdapter = new TextTypefaceAdapter(this).setItemClickLisener(new OnItemClickListener() {
-                @Override
-                public void itemClick(int position, View view, Object object) {
-                    novel_show.getNovelTextViewHelp().setTypefaceName(((TextTypefaceAdapter) text_typeface.getAdapter()).getItem(position).getTypeFacename());
-//                    novel_show.refreshView();
-                }
-            });
-        }
-    }
-
 }

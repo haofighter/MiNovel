@@ -15,6 +15,7 @@
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_marginRight="10dp"
+            android:onClick="onClick"
             android:src="@mipmap/icon_shuji_black"
             android:transitionName="book" />
 
@@ -25,17 +26,10 @@
             android:layout_centerHorizontal="true"
             android:gravity="center"
             android:text="标题"
+            android:onClick="onClick"
             android:textColor="@color/black"
             android:textSize="20sp" />
 
-        <ImageView
-            android:id="@+id/stack"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="20dp"
-            android:layout_toLeftOf="@+id/setting"
-            android:src="@mipmap/icon_shop" />
 
         <ImageView
             android:id="@+id/setting"
@@ -46,6 +40,15 @@
             android:onClick="onClick"
             android:src="@mipmap/icon_setting" />
 
+        <ImageView
+            android:id="@+id/stack"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="20dp"
+            android:onClick="onClick"
+            android:layout_toLeftOf="@+id/setting"
+            android:src="@mipmap/icon_shop" />
     </RelativeLayout>
 
     <View

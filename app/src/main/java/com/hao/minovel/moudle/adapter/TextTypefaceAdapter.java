@@ -24,6 +24,7 @@ public class TextTypefaceAdapter extends RecyclerView.Adapter<TextTypefaceAdapte
         this.mContext = context;
     }
 
+    private String nowSelect = "";
 
     @NonNull
     @Override
@@ -36,6 +37,11 @@ public class TextTypefaceAdapter extends RecyclerView.Adapter<TextTypefaceAdapte
     @Override
     public void onBindViewHolder(@NonNull final NovelTextHolder novelHolder, final int i) {
         novelHolder.setDate(typefaces.get(i));
+        if (nowSelect.equals(typefaces.get(i).getTypeFacename())) {
+            novelHolder.view.setBackgroundResource(R.color.yellow);
+        } else {
+            novelHolder.view.setBackgroundResource(R.color.white);
+        }
         novelHolder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -65,6 +71,12 @@ public class TextTypefaceAdapter extends RecyclerView.Adapter<TextTypefaceAdapte
             return null;
         }
     }
+
+    public void setSelect(String typeFaceName) {
+        this.nowSelect=typeFaceName;
+        notifyDataSetChanged();
+    }
+
 
 
     class NovelTextHolder extends RecyclerView.ViewHolder {

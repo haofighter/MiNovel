@@ -18,7 +18,7 @@ import com.hao.minovel.spider.data.NovelTypeDao;
 import com.hao.minovel.spider.data.NovelTypeHot;
 import com.hao.minovel.spider.data.NovelTypeHotDao;
 import com.hao.minovel.utils.SystemConfigUtil;
-import com.hao.minovel.view.minovelread.NovelTextViewHelp;
+import com.hao.minovel.view.minovelread.NovelTextDrawInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -303,11 +303,11 @@ public class DBManage {
         SystemConfigUtil.getInstance().initDynamicShortcuts();
     }
 
-    public static NovelTextViewHelp chackNovelConfig() {
-        return DBCore.getDaoSession().getNovelTextViewHelpDao().queryBuilder().limit(1).unique();
+    public static NovelTextDrawInfo chackNovelConfig() {
+        return DBCore.getDaoSession().getNovelTextDrawInfoDao().queryBuilder().limit(1).unique();
     }
 
-    public static void saveNovelTextViewConfig(NovelTextViewHelp novelTextViewHelp) {
-        DBCore.getDaoSession().getNovelTextViewHelpDao().insertOrReplace(novelTextViewHelp);
+    public static void saveNovelTextViewConfig(NovelTextDrawInfo novelTextDrawInfo) {
+        DBCore.getDaoSession().getNovelTextDrawInfoDao().insertOrReplace(novelTextDrawInfo);
     }
 }

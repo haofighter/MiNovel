@@ -73,23 +73,20 @@ public class TypeFaceUtils {
 
     private void getTypeFaces() {
         typeFaceInfoList.add(new TypeFaceInfo(Typeface.DEFAULT, "默认字体"));
-//        typeFaceInfoList.add(new TypeFaceInfo("FZBWKSJW.TTF", "方正北魏楷书简体"));
-//        typeFaceInfoList.add(new TypeFaceInfo("FZJZJW.TTF", "方正剪纸简体"));
-//        typeFaceInfoList.add(new TypeFaceInfo("FZPTYJW.TTF", "方正胖头鱼"));
-//        typeFaceInfoList.add(new TypeFaceInfo("FZTJLSJW.TTF", "方正铁筋隶书简体"));
-//        typeFaceInfoList.add(new TypeFaceInfo("FZY4JW.TTF", "方正粗圆简体"));
-//        typeFaceInfoList.add(new TypeFaceInfo("HWCY.TTF", "华文彩云"));
-//        typeFaceInfoList.add(new TypeFaceInfo("simfang.ttf", "仿宋"));
-//        typeFaceInfoList.add(new TypeFaceInfo("WRJZY.ttf", "微软简中圆"));
-//        typeFaceInfoList.add(new TypeFaceInfo("HYZKJ.ttf", "汉仪中楷简"));
-//        typeFaceInfoList.add(new TypeFaceInfo("HYCYJ.ttf", "汉仪粗圆简"));
-//        typeFaceInfoList.add(new TypeFaceInfo("HYDYTJ.ttf", "汉仪蝶语体简"));
-//        typeFaceInfoList.add(new TypeFaceInfo("JQT.TTF", "简启体"));
-//        typeFaceInfoList.add(new TypeFaceInfo("FZQKBYSJT.TTF", "方正清刻本悦宋简体"));
-//        typeFaceInfoList.add(new TypeFaceInfo("FZPWJT.ttf", "方正胖娃简体"));
-//        typeFaceInfoList.add(new TypeFaceInfo("FZSEYVBT.ttf", "方正莎儿硬笔体"));
-//        typeFaceInfoList.add(new TypeFaceInfo("HYJBRYJT.ttf", "汉仪井柏然简体"));
-//        typeFaceInfoList.add(new TypeFaceInfo("HYWWZJ.ttf", "汉仪娃娃篆简"));
+        typeFaceInfoList.add(new TypeFaceInfo("FZBWKSJW.TTF", "方正北魏楷书简体"));
+        typeFaceInfoList.add(new TypeFaceInfo("FZJZJW.TTF", "方正剪纸简体"));
+        typeFaceInfoList.add(new TypeFaceInfo("FZPTYJW.TTF", "方正胖头鱼"));
+        typeFaceInfoList.add(new TypeFaceInfo("FZTJLSJW.TTF", "方正铁筋隶书简体"));
+        typeFaceInfoList.add(new TypeFaceInfo("HWCY.TTF", "华文彩云"));
+        typeFaceInfoList.add(new TypeFaceInfo("WRJZY.ttf", "微软简中圆"));
+        typeFaceInfoList.add(new TypeFaceInfo("HYZKJ.ttf", "汉仪中楷简"));
+        typeFaceInfoList.add(new TypeFaceInfo("HYCYJ.ttf", "汉仪粗圆简"));
+        typeFaceInfoList.add(new TypeFaceInfo("HYDYTJ.ttf", "汉仪蝶语体简"));
+        typeFaceInfoList.add(new TypeFaceInfo("JQT.TTF", "简启体"));
+        typeFaceInfoList.add(new TypeFaceInfo("FZQKBYSJT.TTF", "方正清刻本悦宋简体"));
+        typeFaceInfoList.add(new TypeFaceInfo("FZPWJT.ttf", "方正胖娃简体"));
+        typeFaceInfoList.add(new TypeFaceInfo("FZSEYVBT.ttf", "方正莎儿硬笔体"));
+        typeFaceInfoList.add(new TypeFaceInfo("HYWWZJ.ttf", "汉仪娃娃篆简"));
     }
 
 

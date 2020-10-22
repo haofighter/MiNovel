@@ -7,7 +7,9 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager.widget.ViewPager
+import com.hao.annotationengine.Router
 import com.hao.annotetion.annotation.Bind
+import com.hao.date.RouterContent
 import com.hao.minovel.R
 import com.hao.minovel.db.DBManage
 import com.hao.minovel.log.MiLog
@@ -36,6 +38,8 @@ class StackActivity : MiMuneActivity(), View.OnClickListener {
     override fun onClick(v: View) {
         when (v.id) {
             R.id.book_icon -> drawerLayout.openDrawer(Gravity.LEFT)
+            R.id.setting -> Router.getInstance().build(RouterContent.SETTINGACTIVITY).skip()
+            R.id.stack -> Router.getInstance().build(RouterContent.SEARCHNOVELACTIVITY).skip()
         }
     }
 
@@ -65,7 +69,7 @@ class StackActivity : MiMuneActivity(), View.OnClickListener {
             //取消空白部分灰色阴影效果
             drawerLayout.setScrimColor(ContextCompat.getColor(this, R.color.transparent))
             book_icon.setOnClickListener(this)
-            stack.visibility = View.GONE
+            stack.setImageResource(R.mipmap.icon_search)
             mune.layoutManager = LinearLayoutManager(this)
             mune.adapter = StackMuneAdapter(this, novelTypes, View.OnClickListener { v ->
                 show_stack.currentItem = v.tag as Int

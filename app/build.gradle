@@ -7,7 +7,7 @@ apply plugin: 'kotlin-kapt'
 
 
 static def version() {
-    return 3
+    return 6
 }
 
 android {

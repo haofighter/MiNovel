@@ -38,9 +38,10 @@
         android:gravity="center"
         android:orientation="vertical">
 
-        <ImageView
+        <com.hao.minovel.view.NiceImageView
             android:id="@+id/now_background"
             android:layout_width="30dp"
+            app:iscircle="true"
             android:layout_height="30dp" />
 
         <TextView

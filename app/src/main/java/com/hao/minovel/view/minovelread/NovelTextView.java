@@ -23,18 +23,9 @@ import java.util.Observer;
 
 
 public class NovelTextView extends AppCompatTextView {
-    List<String> textArray = new ArrayList<>();
-    private NovelTextViewHelp novelTextViewHelp;
-
     public NovelTextView(Context context) {
         this(context, null);
     }
-
-    public NovelTextView(NovelTextViewHelp novelTextViewHelp, Context context) {
-        this(context);
-        this.novelTextViewHelp = novelTextViewHelp;
-    }
-
 
     public NovelTextView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
@@ -53,13 +44,12 @@ public class NovelTextView extends AppCompatTextView {
     @Override
     protected void onDraw(Canvas canvas) {
         try {
-            Log.i("显示", this.toString() + "onDraw");
             TextPaint paint = getPaint();
             paint.setColor(getTextColors().getDefaultColor());
             Layout layout = new StaticLayout(getText(), paint, canvas.getWidth(), Layout.Alignment.ALIGN_NORMAL, getLineSpacingMultiplier(), getLineSpacingExtra(), false);
             layout.draw(canvas);
         } catch (Exception e) {
-            Log.e("NovelTextView", "ondraw报错:" + e.getMessage());
+            Log.e("小说", "ondraw报错:" + e.getMessage());
         }
     }
 }
