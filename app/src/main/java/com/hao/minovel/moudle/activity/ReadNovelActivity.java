@@ -447,5 +447,6 @@ public class ReadNovelActivity extends MiBaseActivity implements PullViewLayout.
     @Override
     public void onResume() {
         super.onResume();
+        novel_show.notifyDateOfChange();
     }
 }

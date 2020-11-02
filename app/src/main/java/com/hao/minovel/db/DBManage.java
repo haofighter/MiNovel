@@ -4,6 +4,7 @@ import android.database.Cursor;
 import android.util.Log;
 
 
+import com.hao.minovel.log.MiLog;
 import com.hao.minovel.moudle.entity.AppUseInfo;
 import com.hao.minovel.moudle.entity.AppUseInfoDao;
 import com.hao.minovel.moudle.entity.ReadInfo;
@@ -30,7 +31,7 @@ public class DBManage {
      * @param novelIntroductionList
      */
     public static void addNovelIntrodution(final List<NovelIntroduction> novelIntroductionList) {
-        Log.i("小说", "添加修改所有数据：" + novelIntroductionList.size());
+        MiLog.i("添加修改所有数据：" + novelIntroductionList.size());
         final NovelIntroductionDao novelIntroductionDao = DBCore.getDaoSession().getNovelIntroductionDao();
         long count = novelIntroductionDao.queryBuilder().count();
         if (count > 0) {
@@ -44,7 +45,7 @@ public class DBManage {
                             novelIntroductionDao.insertOrReplace(novelIntroductionList.get(i));
                         }
                     }
-                    Log.i("小说", "添加修改所有数据完成");
+                    MiLog.i("添加修改所有数据完成");
                 }
             }).start();
         } else {
@@ -208,7 +209,7 @@ public class DBManage {
             novelType.setLastListUrl(c.getString(4));
             novelType.setNextListUrl(c.getString(5));
             novelType.setCreatTime(c.getLong(6));
-            Log.i("小说数据", novelType.toString());
+            MiLog.i("数据" + novelType.toString());
             novelTypes.add(novelType);
         }
         return novelTypes;

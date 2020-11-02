@@ -1,10 +1,12 @@
 package com.hao.minovel.moudle.activity;
 
+import android.animation.Animator;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.widget.EditText;
 
 import androidx.annotation.RequiresApi;
@@ -126,6 +128,8 @@ public class SearchNovelActivity extends MiBaseActivity {
                 SpiderNovelFromBaidu.getSearchNovelList("");
             }
         });
+
+
     }
 
     @Override
@@ -135,5 +139,6 @@ public class SearchNovelActivity extends MiBaseActivity {
 
     @Override
     protected void doOnSetContent(View v) {
+
     }
 }

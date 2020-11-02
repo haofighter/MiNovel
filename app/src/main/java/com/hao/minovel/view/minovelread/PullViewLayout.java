@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.hao.minovel.db.DBManage;
+import com.hao.minovel.log.MiLog;
 import com.hao.minovel.spider.data.NovelChapter;
 
 import java.util.ArrayList;
@@ -60,6 +61,18 @@ public class PullViewLayout extends FrameLayout {
         }
     };
 
+    /**
+     * 用于界面的更新
+     */
+    public void notifyDateOfChange() {
+        novelTextDrawInfo = DBManage.chackNovelConfig();
+        try {
+            refresh();
+        } catch (Exception e) {
+            MiLog.i( "错误  界面更新:" + e.getMessage());
+        }
+    }
+
     public enum ClickState {
         center, left, right, onTouch, onClick
     }
@@ -73,7 +86,7 @@ public class PullViewLayout extends FrameLayout {
     }
 
 
-    public void refresh() {
+    public void refresh() throws Exception {
         NovelChapter novelChapter = DBManage.checkNovelChaptterByUrl(allDate.get(contentPage.getChapterIndex()).getNowChapterUrl());
         int page = contentPage.getNowPage();
         removeAllViews();
@@ -149,8 +162,7 @@ public class PullViewLayout extends FrameLayout {
     public void addDate(NovelChapter novelChapter, int page, boolean ishead) {
         ChapterInfo chapterInfo = new ChapterInfo(novelChapter.getChapterUrl(), novelChapter.getChapterName(), novelChapter.getChapterContent());
         if (contentPage != null && contentPage.getNovelContent().getWidth() != 0) {
-            Log.i("小说", "设置数据前    chapterIndex=" + contentPage.getChapterIndex() + "    contentPageIndex=" + contentPage.getNowPage());
-
+            MiLog.i( "设置数据前    chapterIndex=" + contentPage.getChapterIndex() + "    contentPageIndex=" + contentPage.getNowPage());
             TextPaint mPaint = contentPage.getNovelContent().getPaint();
             mPaint.setSubpixelText(true);
             Layout tempLayout = new StaticLayout(novelChapter.getChapterContent(), mPaint, contentPage.getNovelContent().getWidth(), Layout.Alignment.ALIGN_NORMAL, 0, 0, false);
@@ -217,7 +229,7 @@ public class PullViewLayout extends FrameLayout {
             nextPage = new NovelContentView(novelTextDrawInfo, getContext());
         }
         ChapterInfo nowChapterInfo = allDate.get(contentPage.getChapterIndex());
-        Log.i("小说", "加载下一页数据  当前页位置：chapterIndex=" + contentPage.getChapterIndex() + "    contentPageIndex=" + contentPage.getNowPage());
+        MiLog.i( "加载下一页数据  当前页位置：chapterIndex=" + contentPage.getChapterIndex() + "    contentPageIndex=" + contentPage.getNowPage());
         if (contentPage.getNowPage() + 1 >= allDate.get(contentPage.getChapterIndex()).getPage()) {//如果下一页数据超出本章页数，需要取下一章数据
             if (contentPage.getChapterIndex() + 1 < allDate.size()) {//如果有下一章
                 nextPage.setChapterIndex(contentPage.getChapterIndex() + 1);
@@ -233,7 +245,7 @@ public class PullViewLayout extends FrameLayout {
         }
 
         if (nextPage != null) {
-            Log.i("小说", "下一页 ：chapterIndex：" + nextPage.getChapterIndex() + "    conttentpage：" + nextPage.getNowPage() + "     " + allDate.get(nextPage.getChapterIndex()).getChapterName());
+            MiLog.i( "下一页 ：chapterIndex：" + nextPage.getChapterIndex() + "    conttentpage：" + nextPage.getNowPage() + "     " + allDate.get(nextPage.getChapterIndex()).getChapterName());
             if (nextPage.getParent() != null) {
                 removeView(nextPage);
             }
@@ -252,7 +264,7 @@ public class PullViewLayout extends FrameLayout {
             fristPage = new NovelContentView(novelTextDrawInfo, getContext());
         }
         ChapterInfo nowChapterInfo = allDate.get(contentPage.getChapterIndex());
-        Log.i("小说", "加载上一页数据  当前页位置：chapterIndex=" + contentPage.getChapterIndex() + "    contentPageIndex=" + contentPage.getNowPage());
+        MiLog.i("加载上一页数据  当前页位置：chapterIndex=" + contentPage.getChapterIndex() + "    contentPageIndex=" + contentPage.getNowPage());
         if (contentPage.getNowPage() - 1 < 0) {
             if (contentPage.getChapterIndex() - 1 >= 0) {//如果有上一章
                 nowChapterInfo = allDate.get(contentPage.getChapterIndex() - 1);
@@ -268,7 +280,7 @@ public class PullViewLayout extends FrameLayout {
             fristPage.setContent(nowChapterInfo);
         }
         if (fristPage != null) {
-            Log.i("小说", "上一页   chapterIndex：" + fristPage.getChapterIndex() + "    conttentpage：" + fristPage.getNowPage() + "     " + allDate.get(fristPage.getChapterIndex()).getChapterName());
+            MiLog.i("上一页   chapterIndex：" + fristPage.getChapterIndex() + "    conttentpage：" + fristPage.getNowPage() + "     " + allDate.get(fristPage.getChapterIndex()).getChapterName());
 
             fristPage.setTranslationX(-getWidth());
             if (fristPage.getParent() != null) {
@@ -420,7 +432,7 @@ public class PullViewLayout extends FrameLayout {
         nextPage = contentPage;
         contentPage = fristPage;
         fristPage = null;
-        Log.i("小说", "当前页 chapterIndex=" + contentPage.getChapterIndex() + "   contentPageIndex=" + contentPage.getNowPage() + "   当前章节=" + allDate.get(contentPage.getChapterIndex()).getChapterName());
+        MiLog.i( "当前页 chapterIndex=" + contentPage.getChapterIndex() + "   contentPageIndex=" + contentPage.getNowPage() + "   当前章节=" + allDate.get(contentPage.getChapterIndex()).getChapterName());
         removeView(cachePage);
         if (listener != null) {
             listener.onPageChange(allDate.get(contentPage.getChapterIndex()));

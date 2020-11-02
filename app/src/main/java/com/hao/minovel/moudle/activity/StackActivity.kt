@@ -100,7 +100,7 @@ class StackActivity : MiMuneActivity(), View.OnClickListener {
 
     override fun eventBusOnEvent(str: LoadWebInfo?) {
         if (str!!.id.equals(loadWebInfo.id)) {
-            MiLog.i("小说", "加载完成");
+            MiLog.i("加载完成");
             if (str.loadStatus == SpiderUtils.Success) {
                 setView()
             }

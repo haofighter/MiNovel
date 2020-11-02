@@ -35,7 +35,7 @@ public class AppContext {
                     a.finish();
                 }
             } catch (Exception e) {
-                MiLog.i("错误", "Activity err" + a.getLocalClassName() + "  " + e.getMessage());
+                MiLog.i("错误  Activity err" + a.getLocalClassName() + "  " + e.getMessage());
             }
         }
     }

@@ -20,6 +20,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.view.ViewCompat
 import androidx.core.util.Pair
+import com.hao.minovel.log.MiLog
 import com.hao.minovel.moudle.service.LoadWebInfo
 import com.hao.minovel.moudle.service.ServiceManage
 import com.hao.minovel.tinker.app.AppContext
@@ -130,7 +131,7 @@ class WelcomeActivity : MiBaseActivity() {
     }
 
     override fun eventBusOnEvent(str: LoadWebInfo?) {
-        Log.i("服务", "小说服务：" + str!!.task + "    加载状态 " + str!!.loadStatus)
+        MiLog.i("小说服务：" + str!!.task + "    加载状态 " + str!!.loadStatus)
         super.eventBusOnEvent(str)
     }
 

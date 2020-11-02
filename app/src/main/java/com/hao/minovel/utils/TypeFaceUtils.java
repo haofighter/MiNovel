@@ -2,7 +2,10 @@ package com.hao.minovel.utils;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.text.TextUtils;
 
+import com.hao.annotetion.task.Type;
+import com.hao.minovel.jni.Test;
 import com.hao.minovel.tinker.app.AppContext;
 
 import java.io.File;
@@ -11,99 +14,83 @@ import java.util.HashMap;
 import java.util.List;
 
 public class TypeFaceUtils {
+    private static TypeFaceList typeFaceInfoList = new TypeFaceList();
 
-    private static HashMap<String, Typeface> fontCache = new HashMap<>();
-    private static List<TypeFaceInfo> typeFaceInfoList = new ArrayList<TypeFaceInfo>() {
-        @Override
-        public TypeFaceInfo get(int index) {
-            TypeFaceInfo typeFaceInfo = super.get(index);
-            typeFaceInfo.setTypeface(getTypeface(typeFaceInfo.typeFaceFileName,typeFaceInfo.getTypeFacename(), AppContext.application));
-            return typeFaceInfo;
-        }
-
-    };
-    private static TypeFaceUtils typeFaceUtils = new TypeFaceUtils();
-
-    private TypeFaceUtils() {
-        getTypeFaces();
-    }
-
-    public static List<TypeFaceInfo> getTypeFaceInfoList() {
-        synchronized (TypeFaceUtils.class) {
-            if (typeFaceUtils == null) {
-                typeFaceUtils = new TypeFaceUtils();
-            }
-        }
+    public static TypeFaceList getTypeFaceInfoList() {
         return typeFaceInfoList;
     }
 
+    public static void init(Context context) {
+        getTypeFaces(context);
+    }
+
+
     public static Typeface getTypeFaceByName(String typeFaceName) {
-        Typeface typeface = fontCache.get(typeFaceName);
-        if (typeface == null) {
-            typeface = Typeface.DEFAULT;
+        TypeFaceInfo typeface = typeFaceInfoList.get(typeFaceName);
+        if (typeface == null || typeface.getTypeface() == null) {
+            return Typeface.DEFAULT;
         }
-        return typeface;
+        return typeface.getTypeface();
     }
 
     public void addTypeFace(File file, String name) {
-        Typeface typeface = fontCache.get(name);
-        if (typeface == null) {
-            typeface = Typeface.createFromFile(file);
-            fontCache.put(name, typeface);
+        TypeFaceInfo typeface = typeFaceInfoList.get(name);
+        if (typeface == null || typeface.getTypeface() == null) {
+            typeface = new TypeFaceInfo(file, name);
+            typeFaceInfoList.add(typeface);
         }
-        if (typeFaceInfoList == null) {
-            typeFaceInfoList = new ArrayList<>();
-        }
-        typeFaceInfoList.add(new TypeFaceInfo(typeface, name));
     }
 
 
-    private static Typeface getTypeface(String fontFilename,String fonttname, Context context) {
-        Typeface typeface = fontCache.get(fonttname);
-        if (typeface == null) {
-            try {
-                typeface = Typeface.createFromAsset(context.getAssets(), fontFilename);
-            } catch (Exception e) {
-                return null;
-            }
-            fontCache.put(fonttname, typeface);
+    private Typeface getTypeface(String fontFilename, String fonttname, Context context) {
+        TypeFaceInfo typeface = typeFaceInfoList.get(fonttname);
+        if (typeface == null || typeface.getTypeface() == null) {
+            typeface = new TypeFaceInfo(fontFilename, fontFilename, context);
+            typeFaceInfoList.add(typeface);
         }
-        return typeface;
+        return typeface.getTypeface();
     }
 
-    private void getTypeFaces() {
+    private static void getTypeFaces(Context context) {
         typeFaceInfoList.add(new TypeFaceInfo(Typeface.DEFAULT, "默认字体"));
-        typeFaceInfoList.add(new TypeFaceInfo("FZBWKSJW.TTF", "方正北魏楷书简体"));
-        typeFaceInfoList.add(new TypeFaceInfo("FZJZJW.TTF", "方正剪纸简体"));
-        typeFaceInfoList.add(new TypeFaceInfo("FZPTYJW.TTF", "方正胖头鱼"));
-        typeFaceInfoList.add(new TypeFaceInfo("FZTJLSJW.TTF", "方正铁筋隶书简体"));
-        typeFaceInfoList.add(new TypeFaceInfo("HWCY.TTF", "华文彩云"));
-        typeFaceInfoList.add(new TypeFaceInfo("WRJZY.ttf", "微软简中圆"));
-        typeFaceInfoList.add(new TypeFaceInfo("HYZKJ.ttf", "汉仪中楷简"));
-        typeFaceInfoList.add(new TypeFaceInfo("HYCYJ.ttf", "汉仪粗圆简"));
-        typeFaceInfoList.add(new TypeFaceInfo("HYDYTJ.ttf", "汉仪蝶语体简"));
-        typeFaceInfoList.add(new TypeFaceInfo("JQT.TTF", "简启体"));
-        typeFaceInfoList.add(new TypeFaceInfo("FZQKBYSJT.TTF", "方正清刻本悦宋简体"));
-        typeFaceInfoList.add(new TypeFaceInfo("FZPWJT.ttf", "方正胖娃简体"));
-        typeFaceInfoList.add(new TypeFaceInfo("FZSEYVBT.ttf", "方正莎儿硬笔体"));
-        typeFaceInfoList.add(new TypeFaceInfo("HYWWZJ.ttf", "汉仪娃娃篆简"));
+        typeFaceInfoList.add(new TypeFaceInfo("FZBWKSJW.TTF", "方正北魏楷书简体", context));
+        typeFaceInfoList.add(new TypeFaceInfo("FZJZJW.TTF", "方正剪纸简体", context));
+        typeFaceInfoList.add(new TypeFaceInfo("FZPTYJW.TTF", "方正胖头鱼", context));
+        typeFaceInfoList.add(new TypeFaceInfo("FZTJLSJW.TTF", "方正铁筋隶书简体", context));
+        typeFaceInfoList.add(new TypeFaceInfo("HWCY.TTF", "华文彩云", context));
+        typeFaceInfoList.add(new TypeFaceInfo("WRJZY.TTF", "微软简中圆", context));
+        typeFaceInfoList.add(new TypeFaceInfo("HYZKJ.ttf", "汉仪中楷简", context));
+        typeFaceInfoList.add(new TypeFaceInfo("HYCYJ.ttf", "汉仪粗圆简", context));
+        typeFaceInfoList.add(new TypeFaceInfo("HYDYTJ.ttf", "汉仪蝶语体简", context));
+        typeFaceInfoList.add(new TypeFaceInfo("JQT.TTF", "简启体", context));
+        typeFaceInfoList.add(new TypeFaceInfo("FZQKBYSJT.TTF", "方正清刻本悦宋简体", context));
+        typeFaceInfoList.add(new TypeFaceInfo("FZPWJT.ttf", "方正胖娃简体", context));
+        typeFaceInfoList.add(new TypeFaceInfo("FZSEYVBT.ttf", "方正莎儿硬笔体", context));
+        typeFaceInfoList.add(new TypeFaceInfo("HYWWZJ.ttf", "汉仪娃娃篆简", context));
     }
 
 
-    public class TypeFaceInfo {
+    public static class TypeFaceInfo {
         Typeface typeface;
         String typeFacename;
         String typeFaceFileName;
 
-        public TypeFaceInfo(String typeFaceFileName, String typeFacename) {
+        public TypeFaceInfo(String typeFaceFileName, String typeFacename, Context context) {
             this.typeFaceFileName = typeFaceFileName;
             this.typeFacename = typeFacename;
+            this.typeface = Typeface.createFromAsset(context.getAssets(), typeFaceFileName);
         }
 
         public TypeFaceInfo(Typeface typeface, String typeFacename) {
             this.typeface = typeface;
             this.typeFacename = typeFacename;
         }
+
+        public TypeFaceInfo(File file, String typeFacename) {
+            this.typeface = Typeface.createFromFile(file);
+            this.typeFacename = typeFacename;
+        }
+
 
         public Typeface getTypeface() {
             return typeface;
@@ -119,6 +106,34 @@ public class TypeFaceUtils {
 
         public void setTypeFacename(String typeFacename) {
             this.typeFacename = typeFacename;
+        }
+    }
+
+    static class TypeFaceList extends ArrayList<TypeFaceInfo> {
+
+        public TypeFaceInfo get(String name) {
+            for (int i = 0; i < size(); i++) {
+                if (get(i).getTypeFacename().equals(name)) {
+                    return get(i);
+                }
+            }
+            return null;
+        }
+
+        @Override
+        public boolean add(TypeFaceInfo typeFaceInfo) {
+            for (int i = 0; i < size(); i++) {
+                if (get(i).getTypeFacename().equals(typeFaceInfo.getTypeFacename())) {
+                    return false;
+                }
+            }
+            if (TextUtils.isEmpty(typeFaceInfo.getTypeFacename())) {
+                return false;
+            }
+            if (typeFaceInfo.getTypeface() == null) {
+                return false;
+            }
+            return super.add(typeFaceInfo);
         }
     }
 

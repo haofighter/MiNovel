@@ -44,6 +44,7 @@ public class LoadTypeFaceActivity extends MiBaseActivity implements View.OnClick
     NovelTextDrawInfo novelTextDrawInfo = DBManage.chackNovelConfig();
     RecyclerView typefaceList;
     TextView tvShow;
+    TextView textsize;
     SeekBar seekBar;
 
     @Override
@@ -54,14 +55,17 @@ public class LoadTypeFaceActivity extends MiBaseActivity implements View.OnClick
     @Override
     protected void initView(View v) {
         ((TextView) v.findViewById(R.id.title)).setText("字体");
+        ((TextView) v.findViewById(R.id.title)).setTextSize(novelTextDrawInfo.getTextSize());
         v.findViewById(R.id.back).setOnClickListener(this);
         typefaceList = findViewById(R.id.typeface_show);
         tvShow = findViewById(R.id.tv_show);
         seekBar = findViewById(R.id.seekBar);
+        textsize = findViewById(R.id.textsize);
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                Log.i("小说", "进度：" + progress);
+                textsize.setText("字体大小：" + (14 + seekBar.getProgress() / 5));
+                tvShow.setTextSize(14 + seekBar.getProgress() / 5);
             }
 
             @Override
@@ -71,11 +75,10 @@ public class LoadTypeFaceActivity extends MiBaseActivity implements View.OnClick
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-
+                novelTextDrawInfo.setTextSize(14 + seekBar.getProgress() / 5);
             }
         });
-        seekBar.setProgress(60
-        );
+        seekBar.setProgress((int) ((novelTextDrawInfo.getTextSize() - 14) * 5));
         initTypeFace();
     }
 

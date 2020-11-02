@@ -5,6 +5,7 @@ import android.os.Parcelable;
 import android.util.Log;
 
 import com.hao.minovel.db.DBManage;
+import com.hao.minovel.log.MiLog;
 import com.hao.minovel.tinker.app.AppContext;
 import com.hao.minovel.utils.SystemUtil;
 
@@ -80,7 +81,7 @@ public class NovelTextDrawInfo implements Parcelable {
     }
 
     public boolean setTextSize(float textSize) {
-        Log.i("小说", "字体=" + textSize);
+        MiLog.i( "字体=" + textSize);
         if (textSize < 14) {
             return false;
         } else if (textSize > 34) {
@@ -111,6 +112,7 @@ public class NovelTextDrawInfo implements Parcelable {
     }
 
     public String getTypeFaceName() {
+        MiLog.i( "当前配置:" + typeFaceName);
         return typeFaceName;
     }
 
@@ -137,7 +139,7 @@ public class NovelTextDrawInfo implements Parcelable {
     }
 
     public int getTextSizeSp() {
-        return (int)SystemUtil.px2sp(AppContext.application, textSize);
+        return (int) SystemUtil.px2sp(AppContext.application, textSize);
     }
 
     public void setId(Long id) {

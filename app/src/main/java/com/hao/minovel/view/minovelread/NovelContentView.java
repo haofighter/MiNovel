@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.hao.minovel.R;
+import com.hao.minovel.log.MiLog;
 import com.hao.minovel.utils.SystemUtil;
 import com.hao.minovel.utils.TypeFaceUtils;
 
@@ -34,6 +35,7 @@ class NovelContentView extends FrameLayout {
         this(context);
         this.novelTextDrawInfo = novelTextDrawInfo;
         init();
+        initContentConfig();
         if (this.novelTextDrawInfo == null) {
             throw new NullPointerException("novelTextDrawInfo为空，需要配置一个不为空的对象");
         }
@@ -72,12 +74,12 @@ class NovelContentView extends FrameLayout {
             paddingTop = v.getPaddingTop() + SystemUtil.getStatusBarHeight(getContext());
         }
         v.setPadding(v.getPaddingLeft(), paddingTop, v.getPaddingRight(), v.getPaddingBottom());
-        initContentConfig();
+//        initContentConfig();
         post(new Runnable() {
             @Override
             public void run() {
                 maxLine = novelContent.getHeight() / novelContent.getLineHeight();
-                Log.i("小说", "字体高度：" + novelContent.getLineHeight() + "     " + novelContent.getHeight() + "    行数： " + maxLine);
+                MiLog.i("字体高度：" + novelContent.getLineHeight() + "     " + novelContent.getHeight() + "    行数： " + maxLine);
                 novelTextDrawInfo.setMaxLine(maxLine);
                 int useless = novelContent.getHeight() % novelContent.getLineHeight();
                 novelTitle.setPadding(novelTitle.getPaddingLeft(), novelTitle.getPaddingTop(), novelTitle.getPaddingRight(), novelTitle.getPaddingBottom() + useless / 2);

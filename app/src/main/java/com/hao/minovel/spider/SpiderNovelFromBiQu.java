@@ -188,7 +188,7 @@ public class SpiderNovelFromBiQu {
         novelType.setNextListUrl(novelTypeList.select("a[class=next]").attr("href"));
         Log.i("加载数据  完善数据", novelType.toString());
         if (novelType.getListUrl().equals("") || novelType.getNextListUrl().equals("")) {
-            MiLog.i("完善列表数据失败", novelTypeListContennt.html());
+            MiLog.i("完善列表数据失败" + novelTypeListContennt.html());
         } else {
             DBManage.addNovelType(novelType);
             NovelType nextNovelType = new NovelType();
@@ -261,7 +261,7 @@ public class SpiderNovelFromBiQu {
             novelTypeHot.setChapterlistUrl(novelUrl);
             novelTypeHots.add(novelTypeHot);
 
-            Log.i("小说", "保存热门：" + novelTypeHot.getType() + "      " + novelTypeHot.getChapterlistUrl() + "       " + auther + "      " + cover + "      " + name);
+            MiLog.i("保存热门：" + novelTypeHot.getType() + "      " + novelTypeHot.getChapterlistUrl() + "       " + auther + "      " + cover + "      " + name);
         }
         DBManage.addNovelTypeHot(novelTypeHots);
         return html.code;

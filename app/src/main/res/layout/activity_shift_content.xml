@@ -11,6 +11,7 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/shift_list"
+        android:background="@color/white"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/title" />

@@ -1,8 +1,14 @@
 package com.hao.minovel.log;
 
+import android.app.Application;
+import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
 
+import androidx.core.content.ContextCompat;
+
+import com.hao.minovel.R;
+import com.hao.minovel.tinker.app.AppContext;
 import com.hao.minovel.utils.DataUtils;
 import com.hao.minovel.utils.FileUtils;
 
@@ -13,7 +19,8 @@ public class MiLog {
     static boolean isSaveLog = false;
 
 
-    public static void i(String tag, String msg) {
+    public static void i(String msg) {
+        String tag = "小说";
         if (isShowLog) {
             Log.i(tag, msg);
         }
@@ -40,19 +47,19 @@ public class MiLog {
                         String[] fileNames = files[i].getName().split("_");
                         long fileCreatTime = Long.parseLong(fileNames[1].substring(0, 8));
                         if (Long.parseLong(DataUtils.getStringDateYMD()) - fileCreatTime > time) {
-                            MiLog.i("日志清除", "删除文件：" + files[i].getPath() + "   删除结果：" + files[i].delete());
+                            MiLog.i("日志清除  删除文件：" + files[i].getPath() + "   删除结果：" + files[i].delete());
                         }
                     } catch (Exception e) {
                         if (files[i].isDirectory()) {
-                            MiLog.i("日志清除", "删除文件：" + files[i].getPath() + "   删除结果：" + FileUtils.delAllFile(files[i].getPath()));
+                            MiLog.i("日志清除  删除文件：" + files[i].getPath() + "   删除结果：" + FileUtils.delAllFile(files[i].getPath()));
                         } else {
-                            MiLog.i("日志清除", "删除文件：" + files[i].getPath() + "   删除结果：" + files[i].delete());
+                            MiLog.i("日志清除  删除文件：" + files[i].getPath() + "   删除结果：" + files[i].delete());
                         }
                     }
                 }
             }
         } catch (Exception e) {
-            MiLog.i("日志清除", "失败 原因" + e.getMessage());
+            MiLog.i("日志清除失败 原因" + e.getMessage());
             if (file.exists()) {
                 FileUtils.delAllFile(file.getPath());
             }

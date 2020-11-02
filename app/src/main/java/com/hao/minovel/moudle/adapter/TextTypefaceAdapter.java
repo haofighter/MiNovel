@@ -73,10 +73,9 @@ public class TextTypefaceAdapter extends RecyclerView.Adapter<TextTypefaceAdapte
     }
 
     public void setSelect(String typeFaceName) {
-        this.nowSelect=typeFaceName;
+        this.nowSelect = typeFaceName;
         notifyDataSetChanged();
     }
-
 
 
     class NovelTextHolder extends RecyclerView.ViewHolder {

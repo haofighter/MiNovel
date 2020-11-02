@@ -1,5 +1,6 @@
 package com.hao.minovel.moudle.activity;
 
+import androidx.asynclayoutinflater.view.AsyncLayoutInflater;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;

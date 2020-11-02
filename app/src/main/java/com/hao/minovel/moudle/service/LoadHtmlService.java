@@ -46,7 +46,7 @@ public class LoadHtmlService extends IntentService {
             return;
         }
         EventBus.getDefault().post(task.setLoadStatus(SpiderUtils.LOADING));
-        MiLog.i("小说", "获取任务：" + task.task + "     id:" + task.id);
+        MiLog.i("获取任务：" + task.task + "     id:" + task.id);
         switch (task.task) {
             case none://不做任何操作
                 break;
@@ -79,13 +79,13 @@ public class LoadHtmlService extends IntentService {
                 loadState = SpiderNovelFromBiQu.getTypeNovelList(novelType);
                 break;
             default:
-                Log.i("小说", "任务：" + task.task + "      id" + task.id);
+                MiLog.i("任务：" + task.task + "      id" + task.id);
                 break;
         }
         try {
             EventBus.getDefault().post(task.setLoadStatus(loadState));
         } catch (Exception e) {
-            Log.i("小说", "任务执行完成执行回调出错:" + e.getMessage());
+            MiLog.i( "任务执行完成执行回调出错:" + e.getMessage());
         }
     }
 }

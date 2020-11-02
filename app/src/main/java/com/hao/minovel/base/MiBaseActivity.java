@@ -1,5 +1,6 @@
 package com.hao.minovel.base;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -15,7 +16,9 @@ import android.view.WindowManager;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
+import com.hao.minovel.R;
 import com.hao.minovel.moudle.entity.JumpInfo;
 import com.hao.minovel.moudle.service.LoadWebInfo;
 import com.hao.minovel.tinker.app.AppContext;
@@ -56,6 +59,7 @@ public abstract class MiBaseActivity extends AppCompatActivity {
         boolean isfull = beforOnCreate();
         super.onCreate(savedInstanceState);
         View v = LayoutInflater.from(this).inflate(layoutId(), null);
+        v.setBackgroundColor(ContextCompat.getColor(this,R.color.gray_01));
         doOnSetContent(v);
         setContentView(v);
         AppContext.addActivity(this);

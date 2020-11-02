@@ -1,5 +1,6 @@
 package com.hao.minovel.moudle.activity;
 
+import android.animation.Animator;
 import android.os.Build;
 import android.transition.ChangeBounds;
 import android.transition.ChangeTransform;
@@ -7,6 +8,8 @@ import android.transition.Fade;
 import android.transition.TransitionSet;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewAnimationUtils;
+import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -31,6 +34,9 @@ import com.hao.minovel.view.RoundLayout;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 书架
+ */
 @Bind
 public class ShiftActivity extends MiMuneActivity implements View.OnClickListener {
     RoundLayout shiftContent;

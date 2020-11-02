@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.appcompat.widget.AppCompatTextView;
 
 
+import com.hao.minovel.log.MiLog;
 import com.hao.minovel.utils.SystemUtil;
 import com.hao.minovel.utils.TypeFaceUtils;
 
@@ -23,6 +24,7 @@ import java.util.Observer;
 
 
 public class NovelTextView extends AppCompatTextView {
+
     public NovelTextView(Context context) {
         this(context, null);
     }
@@ -49,7 +51,7 @@ public class NovelTextView extends AppCompatTextView {
             Layout layout = new StaticLayout(getText(), paint, canvas.getWidth(), Layout.Alignment.ALIGN_NORMAL, getLineSpacingMultiplier(), getLineSpacingExtra(), false);
             layout.draw(canvas);
         } catch (Exception e) {
-            Log.e("小说", "ondraw报错:" + e.getMessage());
+            MiLog.i( "ondraw报错:" + e.getMessage());
         }
     }
 }

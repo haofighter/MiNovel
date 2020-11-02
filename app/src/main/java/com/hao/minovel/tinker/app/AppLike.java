@@ -13,6 +13,7 @@ import com.hao.annotationengine.Router;
 import com.hao.minovel.tinker.TinkerManager;
 import com.hao.minovel.tinker.Log.MyLogImp;
 import com.hao.minovel.utils.SystemConfigUtil;
+import com.hao.minovel.utils.TypeFaceUtils;
 import com.hao.skin.SkinManager;
 import com.tencent.tinker.anno.DefaultLifeCycle;
 import com.tencent.tinker.entry.DefaultApplicationLike;
@@ -39,6 +40,7 @@ public class AppLike extends DefaultApplicationLike {
         Router.init(application);
         SkinManager.init(application);
         SystemConfigUtil.getInstance().creatNotification();
+        TypeFaceUtils.init(application);
     }
 
     /**
