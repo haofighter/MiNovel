@@ -4,7 +4,7 @@ import android.Manifest
 import android.animation.ValueAnimator
 import android.app.Dialog
 import android.os.Build
-import android.util.Log
+import android.os.Environment
 import android.view.View
 import android.view.WindowManager
 import android.view.animation.LinearInterpolator
@@ -20,6 +20,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.view.ViewCompat
 import androidx.core.util.Pair
+import com.hao.minovel.jni.DragCrash
 import com.hao.minovel.log.MiLog
 import com.hao.minovel.moudle.service.LoadWebInfo
 import com.hao.minovel.moudle.service.ServiceManage

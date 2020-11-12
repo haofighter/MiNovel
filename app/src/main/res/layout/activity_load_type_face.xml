@@ -61,14 +61,14 @@
             android:layout_height="wrap_content"
             android:padding="10dp"
             android:text="字体大小："
-            android:textColor="@color/black"
             android:textSize="@dimen/text_second" />
 
 
         <SeekBar
             android:id="@+id/seekBar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            />
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView

@@ -10,6 +10,7 @@ import android.os.Build;
 import androidx.multidex.MultiDex;
 
 import com.hao.annotationengine.Router;
+import com.hao.minovel.jni.CrashTools;
 import com.hao.minovel.tinker.TinkerManager;
 import com.hao.minovel.tinker.Log.MyLogImp;
 import com.hao.minovel.utils.SystemConfigUtil;
@@ -20,7 +21,6 @@ import com.tencent.tinker.entry.DefaultApplicationLike;
 import com.tencent.tinker.lib.tinker.Tinker;
 import com.tencent.tinker.lib.tinker.TinkerInstaller;
 import com.tencent.tinker.loader.shareutil.ShareConstants;
-
 
 
 @SuppressWarnings("unused")
@@ -41,6 +41,7 @@ public class AppLike extends DefaultApplicationLike {
         SkinManager.init(application);
         SystemConfigUtil.getInstance().creatNotification();
         TypeFaceUtils.init(application);
+        CrashTools.init(application);
     }
 
     /**

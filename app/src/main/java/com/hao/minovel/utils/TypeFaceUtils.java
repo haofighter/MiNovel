@@ -4,14 +4,8 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.text.TextUtils;
 
-import com.hao.annotetion.task.Type;
-import com.hao.minovel.jni.Test;
-import com.hao.minovel.tinker.app.AppContext;
-
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 public class TypeFaceUtils {
     private static TypeFaceList typeFaceInfoList = new TypeFaceList();

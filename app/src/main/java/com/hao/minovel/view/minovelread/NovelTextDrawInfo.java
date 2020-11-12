@@ -112,7 +112,6 @@ public class NovelTextDrawInfo implements Parcelable {
     }
 
     public String getTypeFaceName() {
-        MiLog.i( "当前配置:" + typeFaceName);
         return typeFaceName;
     }
 

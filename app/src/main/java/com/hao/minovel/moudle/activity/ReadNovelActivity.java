@@ -305,6 +305,12 @@ public class ReadNovelActivity extends MiBaseActivity implements PullViewLayout.
     }
 
     Handler handler = new Handler() {
+
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            super.handleMessage(msg);
+        }
+
         @Override
         public void dispatchMessage(@NonNull Message msg) {
             super.dispatchMessage(msg);
