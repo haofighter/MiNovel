@@ -30,6 +30,15 @@ ext {
             "GreenDaoUpgradeHelper": "com.github.yuweiguocn:GreenDaoUpgradeHelper:v2.2.1",
             "multidex"             : "androidx.multidex:multidex:2.0.1",
             "appcompat"            : "androidx.appcompat:appcompat:1.1.0",
-            "swiperefreshlayout"   : "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
+            "swiperefreshlayout"   : "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0",
+            "Annotetion"           : "project",
+            "annotationengine"     : "project",
+            "skin"     : "project",
+            "sharelib"     : "project",
+    ]
+
+    // 定义依赖项，体现真实开发项目的过程
+    app_annotationProcessor = [
+            "Annotetion": 'project',
     ]
 }
