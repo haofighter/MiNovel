@@ -20,7 +20,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.hao.annotationengine.Router;
 import com.hao.annotetion.annotation.Bind;
-import com.hao.date.RouterContent;
 import com.hao.minovel.R;
 import com.hao.minovel.log.MiToast;
 import com.hao.minovel.moudle.adapter.ShiftAdapter;
@@ -37,7 +36,7 @@ import java.util.List;
 /**
  * 书架
  */
-@Bind
+@Bind(path = "app/ShiftActivity")
 public class ShiftActivity extends MiMuneActivity implements View.OnClickListener {
     RoundLayout shiftContent;
     FrameLayout fl_warn;
@@ -145,17 +144,17 @@ public class ShiftActivity extends MiMuneActivity implements View.OnClickListene
                 drawerLayout.openDrawer(Gravity.LEFT);
                 break;
             case R.id.stack:
-                Router.getInstance().build(RouterContent.STACKACTIVITY, null).skip();
+                Router.getInstance().build(ActivityConfig.STACKACTIVITY, null).skip();
                 break;
             case R.id.iv_warn_close:
                 fl_warn.setVisibility(View.GONE);
                 break;
             case R.id.setting:
 //                Router.getInstance().build(RouterContent.SETTINGACTIVITY, null).skip();
-                Router.getInstance().build(RouterContent.LOADTYPEFACEACTIVITY).skip();
+                Router.getInstance().build(ActivityConfig.LOADTYPEFACEACTIVITY).skip();
                 break;
             case R.id.search:
-                Router.getInstance().build(RouterContent.SEARCHNOVELACTIVITY).skip();
+                Router.getInstance().build(ActivityConfig.SEARCHNOVELACTIVITY).skip();
                 break;
         }
     }

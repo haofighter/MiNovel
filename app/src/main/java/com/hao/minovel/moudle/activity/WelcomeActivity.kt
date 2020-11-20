@@ -10,7 +10,6 @@ import android.view.WindowManager
 import android.view.animation.LinearInterpolator
 import com.hao.annotationengine.Router
 import com.hao.annotetion.annotation.Bind
-import com.hao.date.RouterContent
 
 import com.hao.minovel.base.MiBaseActivity
 import com.hao.minovel.utils.BackCall
@@ -28,7 +27,7 @@ import com.hao.minovel.tinker.app.AppContext
 import com.hao.minovel.utils.SystemConfigUtil
 
 
-@Bind
+@Bind(path = "app/WelcomeActivity")
 class WelcomeActivity : MiBaseActivity() {
 
     override fun doOnSetContent(v: View?) {
@@ -196,7 +195,7 @@ class WelcomeActivity : MiBaseActivity() {
             val activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(this, pair1)
             val bundle = activityOptionsCompat.toBundle()
             bundle!!.putBoolean("animal", true)
-            Router.getInstance().build(RouterContent.SHIFTACTIVITY, bundle, this).skip()
+            Router.getInstance().build("app/ShiftActivity", bundle, this).skip()
             //          ActivityCompat.startActivity(this, intent, activityOptionsCompat.toBundle());
             //          intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             //          ActivityCompat.startActivity(App.getInstance(), intent, bundle);

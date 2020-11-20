@@ -9,7 +9,7 @@ import com.hao.annotetion.annotation.Bind;
 import com.hao.minovel.R;
 import com.hao.minovel.base.MiBaseActivity;
 
-@Bind
+@Bind(path = "app/SettingActivity")
 public class SettingActivity extends MiBaseActivity {
 
 

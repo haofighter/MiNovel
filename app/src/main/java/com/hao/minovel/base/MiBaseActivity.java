@@ -48,6 +48,7 @@ public abstract class MiBaseActivity extends AppCompatActivity {
     private static float sNoncompatScaleDensity;// 系统的ScaledDensity
     private static final int customDensity = 360;//资源文件设计时的基础数值，主要来源于ui设计时候的参数
 
+    
     private static void setCustomDensity(Activity activity, final Application application) {
         final DisplayMetrics appDisplayMetrics = application.getResources().getDisplayMetrics();
 

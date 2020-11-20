@@ -34,7 +34,7 @@ import static com.hao.annotetion.task.Config.routeClassPath;
 public class Router {
     private static Application mContext;
     private static Router router;
-    static Map<String, BindInfo> allClass = new HashMap<>();
+    static Map<String, Map<String, BindInfo>> allClass = new HashMap<>();
     private static Activity mActivity;
 
     private Router() {
@@ -69,12 +69,16 @@ public class Router {
         Set<String> strings = getFileNameByPackageName(mContext, routeClassPath);
 
         for (String str : strings) {
-            HashMap<String, BindInfo> map = new HashMap<>();
+            HashMap<String, HashMap<String, BindInfo>> map = new HashMap<>();
             ((BaseSaveInfo) Class.forName(str).getConstructor().newInstance()).loadInfo(map);
             allClass.putAll(map);
         }
         for (String key : allClass.keySet()) {
-            Log.i("绑定数据为", "key=" + key + "      " + allClass.get(key).getDestination().getName());
+            Map<String, BindInfo> muduleInfo = allClass.get(key);
+            Log.i("绑定数据组", "key=" + key + "      " + allClass.get(key).toString());
+            for (String newkey : muduleInfo.keySet()) {
+                Log.i("绑定数据", "key=" + newkey + "      " + muduleInfo.get(newkey).getDestination().getName());
+            }
         }
     }
 
@@ -93,6 +97,7 @@ public class Router {
         final Set<String> classNames = new HashSet<>();
         List<String> paths = getSourcePaths(context);
         for (final String path : paths) {
+            Log.i("遍历", "path：" + path);
             DexFile dexFile = null;
             try {
                 //加载 apk中的dex 并遍历 获得所有包名为 {packageName} 的类
@@ -156,6 +161,10 @@ public class Router {
 
 
     public void skipActivity(BindDetailInfo bindDetailInfo) {
+        if (bindDetailInfo == null || bindDetailInfo.getDestination() == null) {
+            System.out.println("-------------------------暂未找到该实例对象----------------------------------");
+            return;
+        }
         Intent intent = new Intent(mContext, bindDetailInfo.getDestination());
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         if (bindDetailInfo.getBundle() != null) {
@@ -172,7 +181,20 @@ public class Router {
         }
     }
 
-    public Class skipClass(BindDetailInfo bindDetailInfo) {
-        return bindDetailInfo.getDestination();
+    public Object skipClass(BindDetailInfo bindDetailInfo) {
+        try {
+            if (bindDetailInfo.getDestination() != null) {
+                return bindDetailInfo.getDestination().newInstance();
+            } else {
+                return null;
+            }
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+            System.out.println("当前对象是无法打印出实例，" + e.getMessage());
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+            System.out.println("当前对象是无法打印出实例，" + e.getMessage());
+        }
+        return null;
     }
 }

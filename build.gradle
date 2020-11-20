@@ -1,8 +1,10 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
+apply from: 'mi.gradle'
 
 buildscript {
     ext.kotlin_version = '1.3.50'
     ext.greendao_version = "3.2.2"
+
     repositories {
         google()
         jcenter()

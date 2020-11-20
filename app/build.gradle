@@ -6,9 +6,8 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 
-static def version() {
-    return 6
-}
+def app_android = this.getRootProject().ext.app_android;
+def app_dependencies = this.rootProject.ext.app_dependencies;
 
 android {
     compileSdkVersion 29
@@ -50,18 +49,18 @@ android {
         enabled = true
     }
 
+    //保持数据库版本与app版本相同
     greendao {
-        schemaVersion version()
+        schemaVersion app_android.versionCode
     }
 
     defaultConfig {
         applicationId "com.hao.minovel"
-        minSdkVersion 16
-        targetSdkVersion 29
-        versionCode 1
-        versionName version
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-
+        minSdkVersion app_android.minSdkVersion
+        targetSdkVersion app_android.targetSdkVersion
+        versionCode app_android.versionCode
+        versionName app_android.versionName
+        testInstrumentationRunner app_android.testInstrumentationRunner
         /**
          * you can use multiDex and install it in your ApplicationLifeCycle implement
          */
@@ -114,7 +113,6 @@ android {
     }
 
 
-
     compileOptions {
         sourceCompatibility 1.8
         targetCompatibility 1.8
@@ -131,7 +129,6 @@ android {
             signingConfig signingConfigs.debug
         }
     }
-
 
 
     packagingOptions {
@@ -175,69 +172,59 @@ def buildWithTinker() {
 
 
 dependencies {
-    if (is_gradle_3()) {
-        implementation fileTree(dir: 'libs', include: ['*.jar'])
-        testImplementation 'junit:junit:4.12'
-        implementation "androidx.appcompat:appcompat:1.1.0"
-        api("com.tencent.tinker:tinker-android-lib:${TINKER_VERSION}") { changing = true }
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    testImplementation 'junit:junit:4.12'
+    implementation "androidx.appcompat:appcompat:1.1.0"
+    api("com.tencent.tinker:tinker-android-lib:${TINKER_VERSION}") { changing = true }
 
-        // Maven local cannot handle transist dependencies.
-        implementation("com.tencent.tinker:tinker-android-loader:${TINKER_VERSION}") {
-            changing = true
-        }
+    // Maven local cannot handle transist dependencies.
+    implementation("com.tencent.tinker:tinker-android-loader:${TINKER_VERSION}") {
+        changing = true
+    }
+    annotationProcessor("com.tencent.tinker:tinker-android-anno:${TINKER_VERSION}") {
+        changing = true
+    }
+    compileOnly("com.tencent.tinker:tinker-android-anno:${TINKER_VERSION}") { changing = true }
 
-        annotationProcessor("com.tencent.tinker:tinker-android-anno:${TINKER_VERSION}") {
-            changing = true
-        }
-        compileOnly("com.tencent.tinker:tinker-android-anno:${TINKER_VERSION}") { changing = true }
 
-        implementation "androidx.multidex:multidex:2.0.1"
-        //use to test multiDex
+    // 循环引入第三方库
+    app_dependencies.each {k, v ->
+        // if (k != "aa" && v != "cc") {}
+        implementation v
+    }
+//    implementation "androidx.multidex:multidex:2.0.1"
+    //use to test multiDex
 //    implementation group: 'com.google.guava', name: 'guava', version: '19.0'
 //    implementation "org.scala-lang:scala-library:2.11.7"
-    } else {
-        compile fileTree(dir: 'libs', include: ['*.jar'])
-        testCompile 'junit:junit:4.12'
-        compile "androidx.appcompat:appcompat:1.1.0"
-        compile("com.tencent.tinker:tinker-android-lib:${TINKER_VERSION}") { changing = true }
-        provided("com.tencent.tinker:tinker-android-anno:${TINKER_VERSION}") { changing = true }
-
-        compile "androidx.multidex:multidex:2.0.1"
-
-        //use to test multiDex
-//    compile group: 'com.google.guava', name: 'guava', version: '19.0'
-//    compile "org.scala-lang:scala-library:2.11.7"
-    }
 
 
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-    implementation "androidx.core:core-ktx:1.5.0-alpha01"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'androidx.cardview:cardview:1.0.0'
-//    implementation 'androidx.recyclerview:recyclerview:1.1.0-beta05'
-    implementation 'com.lcodecorex:tkrefreshlayout:1.0.7'
-    implementation 'com.github.bumptech.glide:glide:4.11.0'
-    implementation 'com.android.support:design:28.0.0'
-    implementation 'org.jsoup:jsoup:1.13.1'
+//    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+//    implementation "androidx.core:core-ktx:1.5.0-alpha01"
+//    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+//    implementation 'androidx.cardview:cardview:1.0.0'
+////    implementation 'androidx.recyclerview:recyclerview:1.1.0-beta05'
+////    implementation 'com.lcodecorex:tkrefreshlayout:1.0.7'
+//    implementation 'com.github.bumptech.glide:glide:4.11.0'
+//    implementation 'org.jsoup:jsoup:1.13.1'
+//    implementation 'com.squareup.okhttp3:okhttp:4.10.0-RC1'
+//    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+//    implementation 'com.android.support:design:28.0.0'
 
     /**********************************自定义注解***********************************/
     implementation project(path: ':Annotetion')
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'com.squareup.okhttp3:okhttp:4.10.0-RC1'
-    kapt project(path: ':Annotetion')
-    implementation project(path: ':Annotetion')
+    annotationProcessor project(path: ':Annotetion')
     implementation project(path: ':annotationengine')
-    /**********************************数据库***********************************/
-    implementation 'org.greenrobot:greendao:3.2.2'
-    implementation 'com.github.yuweiguocn:GreenDaoUpgradeHelper:v2.2.1'
-    //配合对数据库进行加密
-    implementation 'net.zetetic:android-database-sqlcipher:3.5.7@aar'
 
     /**************************共用库*********************************/
     implementation project(path: ':skin')
     implementation project(path: ':sharelib')
 
-
+    if (rootProject.ext.params.isRelease) {
+        // 依附app壳
+        implementation project(':secondactivity')
+    } else {
+        // 不能依附，因为 login register 都能独立运行啊，依附不了，否则报错
+    }
 }
 
 
@@ -276,6 +263,8 @@ def gitSha() {
     }
 }
 
+def date = new Date().format("MMdd")
+def version = "3.0.0"
 
 if (buildWithTinker()) {
     apply plugin: 'com.tencent.tinker.patch'
@@ -490,8 +479,7 @@ if (buildWithTinker()) {
 
     boolean hasFlavors = flavors.size() > 0
 //    def date = new Date().format("MMddHHmmss")
-    def date = new Date().format("MMdd")
-    def version = "3.0.0"
+
 
     /**
      * bak apk and mapping

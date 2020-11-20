@@ -42,7 +42,6 @@
             android:name=".tinker.service.SampleResultService"
             android:exported="false"
             android:permission="android.permission.BIND_JOB_SERVICE" />
-        <service android:name=".moudle.service.DownLoadNovelService" />
         <service
             android:name=".moudle.service.LoadHtmlService"
             tools:ignore="Instantiatable" />

@@ -9,16 +9,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager.widget.ViewPager
 import com.hao.annotationengine.Router
 import com.hao.annotetion.annotation.Bind
-import com.hao.date.RouterContent
 import com.hao.minovel.R
 import com.hao.minovel.db.DBManage
 import com.hao.minovel.log.MiLog
-import com.hao.minovel.moudle.adapter.StackPageAdapter
 import com.hao.minovel.moudle.adapter.StackMuneAdapter
-import com.hao.minovel.moudle.service.LoadWebInfo
+import com.hao.minovel.moudle.adapter.StackPageAdapter
 import com.hao.minovel.moudle.entity.StackTypeEntity
 import com.hao.minovel.moudle.fragment.StackFragment
 import com.hao.minovel.moudle.service.LoadHtmlService
+import com.hao.minovel.moudle.service.LoadWebInfo
 import com.hao.minovel.moudle.service.ServiceManage
 import com.hao.minovel.spider.SpiderUtils
 import com.hao.minovel.spider.data.NovelType
@@ -26,20 +25,19 @@ import com.hao.minovel.tinker.app.AppContext
 import com.hao.minovel.utils.SystemUtil
 import kotlinx.android.synthetic.main.activity_stack.*
 import kotlinx.android.synthetic.main.head_view.*
-import java.lang.Exception
 
 /**
  * 书库
  */
-@Bind
+@Bind(path = ActivityConfig.STACKACTIVITY)
 class StackActivity : MiMuneActivity(), View.OnClickListener {
     private var loadWebInfo = LoadWebInfo()
 
     override fun onClick(v: View) {
         when (v.id) {
             R.id.book_icon -> drawerLayout.openDrawer(Gravity.LEFT)
-            R.id.setting -> Router.getInstance().build(RouterContent.SETTINGACTIVITY).skip()
-            R.id.stack -> Router.getInstance().build(RouterContent.SEARCHNOVELACTIVITY).skip()
+            R.id.setting -> Router.getInstance().build(ActivityConfig.SETTINGACTIVITY).skip()
+            R.id.stack -> Router.getInstance().build(ActivityConfig.SEARCHNOVELACTIVITY).skip()
         }
     }
 

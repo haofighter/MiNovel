@@ -8,7 +8,6 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.hao.annotationengine.Router;
-import com.hao.date.RouterContent;
 import com.hao.minovel.R;
 import com.hao.minovel.base.MiDrawerActivity;
 import com.hao.minovel.moudle.adapter.ShiftMuneAdapter;
@@ -55,8 +54,8 @@ public abstract class MiMuneActivity extends MiDrawerActivity {
     }
 
     private void initMune() {
-        muneList.add(new ShiftMuneEntity(R.mipmap.icon_shuji_black, "书架", RouterContent.SHIFTACTIVITY));
-        muneList.add(new ShiftMuneEntity(R.mipmap.icon_booklist, "书库", RouterContent.STACKACTIVITY));
+        muneList.add(new ShiftMuneEntity(R.mipmap.icon_shuji_black, "书架", ActivityConfig.SHIFTACTIVITY));
+        muneList.add(new ShiftMuneEntity(R.mipmap.icon_booklist, "书库", ActivityConfig.STACKACTIVITY));
         mune.setLayoutManager(new LinearLayoutManager(this));
         ShiftMuneAdapter contentMuneAdapter = new ShiftMuneAdapter(this, muneList, new View.OnClickListener() {
             @Override

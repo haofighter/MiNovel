@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.hao.annotationengine.Router;
 import com.hao.annotetion.annotation.Bind;
-import com.hao.date.RouterContent;
 import com.hao.minovel.R;
 import com.hao.minovel.base.MiBaseActivity;
 import com.hao.minovel.db.DBManage;
@@ -31,7 +30,7 @@ import com.hao.sharelib.MMKVManager;
 import java.util.ArrayList;
 import java.util.List;
 
-@Bind
+@Bind(path = "app/SearchNovelActivity")
 public class SearchNovelActivity extends MiBaseActivity {
 
     private RecyclerView novel_list;
@@ -57,7 +56,7 @@ public class SearchNovelActivity extends MiBaseActivity {
                         NovelIntroduction novelListItemContent = ((List<NovelIntroduction>) textNovelAdapter.getDate()).get(position);
                         Bundle bundle = new Bundle();
                         bundle.putParcelable("novelDetail", novelListItemContent);
-                        Router.getInstance().build(RouterContent.NOVELDETAILACTIVITY, bundle).skip();
+                        Router.getInstance().build(ActivityConfig.NOVELDETAILACTIVITY, bundle).skip();
                     }
                 }
             });

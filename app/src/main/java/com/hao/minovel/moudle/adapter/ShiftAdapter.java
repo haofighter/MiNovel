@@ -19,9 +19,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.hao.annotationengine.Router;
-import com.hao.date.RouterContent;
 import com.hao.minovel.R;
 import com.hao.minovel.db.DBManage;
+import com.hao.minovel.moudle.activity.ActivityConfig;
 import com.hao.minovel.moudle.entity.JumpInfo;
 import com.hao.minovel.moudle.entity.ReadInfo;
 import com.hao.minovel.spider.data.NovelChapter;
@@ -174,9 +174,9 @@ public class ShiftAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     if (tv_watch.getText().equals("继续阅读")) {
                         Bundle bundle = new Bundle();
                         bundle.putParcelable("novelChapter", DBManage.checkNovelChaptterById(readInfo.getNovelChapterListUrl(), readInfo.getNovelChapterUrl()));
-                        EventBus.getDefault().post(new JumpInfo(RouterContent.READNOVELACTIVITY, bundle));
+                        EventBus.getDefault().post(new JumpInfo(ActivityConfig.READNOVELACTIVITY, bundle));
                     } else {
-                        EventBus.getDefault().post(new JumpInfo(RouterContent.STACKACTIVITY, null));
+                        EventBus.getDefault().post(new JumpInfo(ActivityConfig.STACKACTIVITY, null));
                     }
                 }
             });
@@ -196,7 +196,7 @@ public class ShiftAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         Bundle bundle = activityOptionsCompat.toBundle();
                         bundle.putParcelable("novelDetail", DBManage.checkNovelByUrl(readInfo.getNovelChapterListUrl()));
                         bundle.putBoolean("animal", true);
-                        Router.getInstance().build(RouterContent.NOVELDETAILACTIVITY, bundle, mContext).skip();
+                        Router.getInstance().build(ActivityConfig.NOVELDETAILACTIVITY, bundle, mContext).skip();
                     }
                 }
             });
@@ -380,9 +380,9 @@ public class ShiftAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 Bundle bundle = activityOptionsCompat.toBundle();
                 bundle.putParcelable("novelDetail", novelIntroduction);
                 bundle.putBoolean("animal", true);
-                Router.getInstance().build(RouterContent.NOVELDETAILACTIVITY, bundle, mContext).skip();
+                Router.getInstance().build(ActivityConfig.NOVELDETAILACTIVITY, bundle, mContext).skip();
             } else {
-                Router.getInstance().build(RouterContent.NOVELDETAILACTIVITY).skip();
+                Router.getInstance().build(ActivityConfig.NOVELDETAILACTIVITY).skip();
             }
         }
     }

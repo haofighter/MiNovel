@@ -305,7 +305,11 @@ public class DBManage {
     }
 
     public static NovelTextDrawInfo chackNovelConfig() {
-        return DBCore.getDaoSession().getNovelTextDrawInfoDao().queryBuilder().limit(1).unique();
+        NovelTextDrawInfo novelTextDrawInfo= DBCore.getDaoSession().getNovelTextDrawInfoDao().queryBuilder().limit(1).unique();
+        if(novelTextDrawInfo==null){
+            novelTextDrawInfo=new NovelTextDrawInfo();
+        }
+        return novelTextDrawInfo;
     }
 
     public static void saveNovelTextViewConfig(NovelTextDrawInfo novelTextDrawInfo) {

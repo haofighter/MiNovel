@@ -1,2 +1,5 @@
-include ':app', ':Annotetion', ':annotationengine', ':skin', ':sharelib', ':resource'
+include ':Annotetion'
+include ':annotationengine'
+include ':secondactivity'
+include ':app', ':skin', ':sharelib'
 rootProject.name='MiNovel'

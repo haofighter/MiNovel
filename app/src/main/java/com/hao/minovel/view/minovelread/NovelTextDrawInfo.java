@@ -29,6 +29,8 @@ public class NovelTextDrawInfo implements Parcelable {
 
     public NovelTextDrawInfo() {
         id = 1l;
+        textSize=14;
+        typeFaceName="";
     }
 
     protected NovelTextDrawInfo(Parcel in) {

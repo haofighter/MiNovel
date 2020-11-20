@@ -1,6 +1,5 @@
 package com.hao.minovel.moudle.activity;
 
-import androidx.asynclayoutinflater.view.AsyncLayoutInflater;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
@@ -19,7 +18,6 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.hao.annotationengine.Router;
 import com.hao.annotetion.annotation.Bind;
-import com.hao.date.RouterContent;
 import com.hao.minovel.R;
 import com.hao.minovel.base.MiBaseActivity;
 import com.hao.minovel.db.DBManage;
@@ -33,7 +31,7 @@ import com.hao.minovel.tinker.app.AppContext;
 
 import java.util.List;
 
-@Bind
+@Bind(path = "app/NovelDetailActivity")
 public class NovelDetailActivity extends MiBaseActivity implements View.OnClickListener {
     NovelIntroduction novelDetail;
     TextView startRead;
@@ -174,12 +172,12 @@ public class NovelDetailActivity extends MiBaseActivity implements View.OnClickL
                 if (((TextView) v).getText().toString().equals("继续阅读")) {
                     NovelChapter novelChapter = DBManage.checkNovelChaptterById(readInfo.getNovelChapterListUrl(), readInfo.getNovelChapterUrl());
                     bundle.putParcelable("novelChapter", novelChapter);
-                    Router.getInstance().build(RouterContent.READNOVELACTIVITY, bundle).skip();
+                    Router.getInstance().build(ActivityConfig.READNOVELACTIVITY, bundle).skip();
                 } else if (((TextView) v).getText().toString().equals("开始阅读")) {
                     List<NovelChapter> novelChapters = DBManage.getChapterById(novelDetail.getNovelChapterListUrl());
                     if (novelChapters.size() > 0) {
                         bundle.putParcelable("novelChapter", novelChapters.get(0));
-                        Router.getInstance().build(RouterContent.READNOVELACTIVITY, bundle).skip();
+                        Router.getInstance().build(ActivityConfig.READNOVELACTIVITY, bundle).skip();
                     } else {
                         initDate();
                     }

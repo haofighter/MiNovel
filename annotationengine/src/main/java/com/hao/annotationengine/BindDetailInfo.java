@@ -2,8 +2,11 @@ package com.hao.annotationengine;
 
 import android.os.Bundle;
 
+import com.hao.annotetion.annotation.Bind;
 import com.hao.annotetion.task.BindInfo;
 import com.hao.annotetion.task.Type;
+
+import java.util.Map;
 
 import static com.hao.annotationengine.Router.allClass;
 
@@ -21,23 +24,15 @@ public class BindDetailInfo extends BindInfo {
         this.bundle = bundle;
     }
 
-    public BindDetailInfo(Class<?> destination, String path) {
-        super(destination, path);
-    }
-
-    public BindDetailInfo(Class<?> destination, String path, Type type) {
-        super(destination, path, type);
-    }
-
 
     public void prapreDate() {
         try {
-            BindInfo bindInfo = allClass.get(getPath());
-            setDestination(bindInfo.getDestination());
-//            setElement(bindInfo.getElement());
-            setType(bindInfo.getType());
+            Map<String, BindInfo> bindInfoMap = allClass.get(getPath().split("/")[0]);
+            setDestination(bindInfoMap.get(getPath()).getDestination());
+//            setDestination(bindInfo.getDestination());
+            setType(bindInfoMap.get(getPath()).getType());
         } catch (Exception e) {
-
+            e.printStackTrace();
         } finally {
         }
     }

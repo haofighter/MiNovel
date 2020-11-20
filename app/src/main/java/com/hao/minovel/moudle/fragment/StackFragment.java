@@ -15,10 +15,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.hao.annotationengine.Router;
-import com.hao.date.RouterContent;
 import com.hao.minovel.R;
 import com.hao.minovel.base.MiBaseFragment;
 import com.hao.minovel.db.DBManage;
+import com.hao.minovel.moudle.activity.ActivityConfig;
 import com.hao.minovel.moudle.adapter.NovelListAdapter;
 import com.hao.minovel.moudle.service.LoadHtmlService;
 import com.hao.minovel.moudle.service.LoadWebInfo;
@@ -72,7 +72,7 @@ public class StackFragment extends MiBaseFragment {
                     NovelIntroduction novelIntroduction = ((NovelListAdapter) recyclerView.getAdapter()).getItem(position);
                     Bundle bundle = new Bundle();
                     bundle.putParcelable("novelDetail", novelIntroduction);
-                    Router.getInstance().build(RouterContent.NOVELDETAILACTIVITY, bundle).skip();
+                    Router.getInstance().build(ActivityConfig.NOVELDETAILACTIVITY, bundle).skip();
                 }
             }
         });

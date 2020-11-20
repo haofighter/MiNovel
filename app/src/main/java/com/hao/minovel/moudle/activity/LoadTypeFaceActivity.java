@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+//import com.hao.annotetion.annotation.Bind;
 import com.hao.annotetion.annotation.Bind;
 import com.hao.minovel.R;
 import com.hao.minovel.base.MiBaseActivity;
@@ -25,21 +26,9 @@ import com.hao.minovel.utils.TypeFaceUtils;
 import com.hao.minovel.view.minovelread.NovelTextDrawInfo;
 import com.hao.minovel.view.recycleviewhelp.RecycleViewDivider;
 
-import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.OkHttp;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-
-@Bind
+@Bind(path = ActivityConfig.LOADTYPEFACEACTIVITY)
 public class LoadTypeFaceActivity extends MiBaseActivity implements View.OnClickListener {
     NovelTextDrawInfo novelTextDrawInfo = DBManage.chackNovelConfig();
     RecyclerView typefaceList;

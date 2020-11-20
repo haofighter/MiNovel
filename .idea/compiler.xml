@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
-    <bytecodeTargetLevel target="1.7">
-      <module name="MiNovel.annotationengine" target="1.8" />
-      <module name="MiNovel.app" target="1.8" />
-      <module name="MiNovel.resource" target="1.8" />
-      <module name="MiNovel.sharelib" target="1.8" />
-      <module name="MiNovel.skin" target="1.8" />
-    </bytecodeTargetLevel>
+    <bytecodeTargetLevel target="1.8" />
   </component>
 </project>

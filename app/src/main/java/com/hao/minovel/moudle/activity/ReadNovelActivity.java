@@ -19,7 +19,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.hao.annotationengine.Router;
 import com.hao.annotetion.annotation.Bind;
-import com.hao.date.RouterContent;
 import com.hao.minovel.R;
 import com.hao.minovel.base.MiBaseActivity;
 import com.hao.minovel.db.DBManage;
@@ -42,7 +41,7 @@ import com.hao.minovel.view.recycleviewhelp.RecycleViewDivider;
 import java.util.concurrent.LinkedBlockingQueue;
 
 
-@Bind
+@Bind(path = "app/ReadNovelActivity")
 public class ReadNovelActivity extends MiBaseActivity implements PullViewLayout.PullViewLayoutListener, View.OnClickListener {
     NovelChapter novelChapter;//当前页下载的小说内容
     NovelTextView novelTextView;
@@ -67,7 +66,7 @@ public class ReadNovelActivity extends MiBaseActivity implements PullViewLayout.
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.from_setting_view:
-                Router.getInstance().build(RouterContent.LOADTYPEFACEACTIVITY).skip();
+                Router.getInstance().build(ActivityConfig.LOADTYPEFACEACTIVITY).skip();
                 break;
             case R.id.novel_all_chapter:
                 if (stateQueue.size() > 0) {
