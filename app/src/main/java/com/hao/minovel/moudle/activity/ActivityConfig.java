@@ -9,4 +9,5 @@ public class ActivityConfig {
     public static final String SHIFTACTIVITY="app/ShiftActivity";
     public static final String WELCOMEACTIVITY="app/WelcomeActivity";
     public static final String SEARCHNOVELACTIVITY="app/SearchNovelActivity";
+    public static final String SUSPENSIONWINDOWMAINACTIVITY="suspensionwindow/MainActivity";
 }

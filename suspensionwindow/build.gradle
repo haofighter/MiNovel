@@ -3,17 +3,13 @@ if (rootProject.ext.params.isRelease) {
 } else {
     apply plugin: 'com.android.application'
 }
-
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
-
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.2"
 
     defaultConfig {
         if (!rootProject.ext.params.isRelease) {
-            applicationId "com.example.secondactivity"
+            applicationId "com.hao.suspensionwindow"
         }
         minSdkVersion app_android.minSdkVersion
         targetSdkVersion app_android.targetSdkVersion
@@ -32,21 +28,6 @@ android {
         }
     }
 
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-    }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-    kotlinOptions {
-        jvmTarget = '1.8'
-    }
-
-
     sourceSets {
         main {
             if (!rootProject.ext.params.isRelease) {
@@ -63,9 +44,23 @@ android {
             }
         }
     }
+
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
+    implementation 'androidx.media2:media2:1.0.0-alpha04'
+
     // 循环引入第三方库
     app_dependencies.each { k, v ->
         String[] all = v.split("_");
@@ -88,7 +83,7 @@ dependencies {
                 } else {
                     annotationProcessor k
                 }
-            }  else if (v.equals("testImplementation")) {
+            } else if (v.equals("testImplementation")) {
                 if (rootProject.ext.params.isRelease) {
                     // 依附app壳
                     testImplementation k
@@ -98,5 +93,4 @@ dependencies {
             }
         }
     }
-
 }

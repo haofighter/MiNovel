@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.hao.suspensionwindow">
+
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+
+    <application>
+        <activity android:name=".MainActivity"></activity>
+        <service android:name=".suspension.FloatingButtonService"/>
+        <service android:name=".suspension.FloatingImageDisplayService"/>
+        <service android:name=".suspension.FloatingVideoService"/>
+    </application>
+
+</manifest>

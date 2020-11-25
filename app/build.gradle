@@ -3,6 +3,7 @@ apply plugin: 'org.greenrobot.greendao'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+project.logger.lifecycle('my message visible by default')
 
 
 def app_android = this.getRootProject().ext.app_android;
@@ -174,6 +175,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     testImplementation 'junit:junit:4.12'
     implementation "androidx.appcompat:appcompat:1.1.0"
+    implementation "androidx.multidex:multidex:2.0.1"
     api("com.tencent.tinker:tinker-android-lib:${TINKER_VERSION}") { changing = true }
 
     // Maven local cannot handle transist dependencies.
@@ -187,36 +189,40 @@ dependencies {
 
     // 循环引入第三方库
     app_dependencies.each { k, v ->
-        if (v.startsWith("project")) {
-            implementation project(path: ':'+k)
-        } else {
-            implementation v
+        String[] all = v.split("_");
+        for (int i = 0; i < all.size(); i++) {
+            v = all[i]
+            println v + "___________" + k
+            if (v.equals("implementation")) {
+                implementation k
+            } else if (v.equals("implementationproject")) {
+                implementation project(path: ':' + k)
+            } else if (v.equals("annotationProcessorproject")) {
+                if (app_android.isGradleBigThan35) {
+                    kapt project(path: ':' + k)
+                } else {
+                    annotationProcessor project(path: ':' + k)
+                }
+            } else if (v.equals("annotationProcessor")) {
+                if (app_android.isGradleBigThan35) {
+                    kapt k
+                } else {
+                    annotationProcessor k
+                }
+            } else if (v.equals("implementationRelease")) {
+                if (rootProject.ext.params.isRelease) {
+                    // 依附app壳
+                    implementation project(':' + k)
+                }
+            } else if (v.equals("testImplementation")) {
+                if (rootProject.ext.params.isRelease) {
+                    // 依附app壳
+                    testImplementation k
+                }
+            } else if (v.equals("androidTestImplementation")) {
+                androidTestImplementation k
+            }
         }
-    }
-
-    // 循环引入第三方库
-    app_annotationProcessor.each { k, v ->
-        if (v.startsWith("project")) {
-            annotationProcessor project(path: ':'+k)
-        } else {
-            annotationProcessor v
-        }
-    }
-
-//    /**********************************自定义注解***********************************/
-//    implementation project(path: ':Annotetion')
-//    annotationProcessor project(path: ':Annotetion')
-//    implementation project(path: ':annotationengine')
-//
-//    /**************************共用库*********************************/
-//    implementation project(path: ':skin')
-//    implementation project(path: ':sharelib')
-
-    if (rootProject.ext.params.isRelease) {
-        // 依附app壳
-        implementation project(':secondactivity')
-    } else {
-        // 不能依附，因为 login register 都能独立运行啊，依附不了，否则报错
     }
 }
 

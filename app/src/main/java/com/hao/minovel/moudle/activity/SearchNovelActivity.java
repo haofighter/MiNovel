@@ -37,7 +37,6 @@ public class SearchNovelActivity extends MiBaseActivity {
     private EditText search_novel_ed;
     List<NovelIntroduction> novelIntroductionList;
 
-
     TextNovelAdapter textNovelAdapter = new TextNovelAdapter(AppContext.application)
             .setItemClickLisener(new TextNovelAdapter.OnItemClickListener() {
                 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
