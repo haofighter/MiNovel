@@ -38,7 +38,6 @@ ext {
             /**************************共用库*********************************/
             "skin"                                                : "implementationproject",
             "sharelib"                                            : "implementationproject",
-            "secondactivity"                                      : "implementationRelease",
             "suspensionwindow"                                    : "implementationRelease",
             'junit:junit:4.12'                                    : "testImplementation",
             'androidx.test.ext:junit:1.1.2'                       : "androidTestImplementation",

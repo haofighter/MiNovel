@@ -3,14 +3,17 @@
     package="com.hao.suspensionwindow">
 
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application>
         <activity android:name=".MainActivity"></activity>
-        <service android:name=".suspension.FloatingButtonService"/>
-        <service android:name=".suspension.FloatingImageDisplayService"/>
-        <service android:name=".suspension.FloatingVideoService"/>
+
+        <service android:name=".suspension.FloatingButtonService"
+            android:foregroundServiceType="mediaProjection"    />
+        <service android:name=".suspension.FloatingImageDisplayService" />
+        <service android:name=".suspension.FloatingVideoService" />
     </application>
 
 </manifest>

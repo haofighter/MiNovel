@@ -1,11 +1,17 @@
 package com.hao.minovel.moudle.activity;
 
 import android.animation.Animator;
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
+import android.media.projection.MediaProjectionManager;
 import android.os.Build;
+import android.os.Environment;
 import android.transition.ChangeBounds;
 import android.transition.ChangeTransform;
 import android.transition.Fade;
 import android.transition.TransitionSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewAnimationUtils;
@@ -14,6 +20,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,8 +34,10 @@ import com.hao.minovel.moudle.entity.StackTypeEntity;
 import com.hao.minovel.moudle.entity.JumpInfo;
 import com.hao.minovel.moudle.service.ServiceManage;
 import com.hao.minovel.tinker.app.AppContext;
+import com.hao.minovel.tinker.service.FloatingButtonService;
 import com.hao.minovel.utils.SystemUtil;
 import com.hao.minovel.view.RoundLayout;
+import com.tencent.tinker.lib.tinker.TinkerInstaller;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -152,11 +161,41 @@ public class ShiftActivity extends MiMuneActivity implements View.OnClickListene
             case R.id.setting:
 //                Router.getInstance().build(RouterContent.SETTINGACTIVITY, null).skip();
 //                Router.getInstance().build(ActivityConfig.LOADTYPEFACEACTIVITY).skip();
-                Router.getInstance().build(ActivityConfig.SUSPENSIONWINDOWMAINACTIVITY).skip();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    createVirtualDisplay();
+                }
+//                Router.getInstance().build(ActivityConfig.SUSPENSIONWINDOWMAINACTIVITY).skip();
                 break;
             case R.id.search:
-                Router.getInstance().build(ActivityConfig.SEARCHNOVELACTIVITY).skip();
+//                Router.getInstance().build(ActivityConfig.SEARCHNOVELACTIVITY).skip();
+                TinkerInstaller.onReceiveUpgradePatch(getApplication(), Environment.getExternalStorageState()+"/patch.apk");
                 break;
         }
+    }
+
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    @SuppressLint("MissingSuperCall")
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 10086) {
+            Intent intent = new Intent(getApplicationContext(), FloatingButtonService.class);
+            intent.putExtra("resultCode", resultCode);
+            intent.putExtra("data", data);
+            startService(intent);
+        }
+    }
+
+
+    MediaProjectionManager mediaProjectionManager;
+
+    /**
+     * 创建VirtualDisplay
+     */
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    public void createVirtualDisplay() {
+        mediaProjectionManager = (MediaProjectionManager) getSystemService(Context.MEDIA_PROJECTION_SERVICE);
+        Intent captureIntent = mediaProjectionManager.createScreenCaptureIntent();
+        startActivityForResult(captureIntent, 10086);
     }
 }

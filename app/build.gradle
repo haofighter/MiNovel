@@ -3,14 +3,13 @@ apply plugin: 'org.greenrobot.greendao'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
-project.logger.lifecycle('my message visible by default')
 
 
 def app_android = this.getRootProject().ext.app_android;
 def app_dependencies = this.rootProject.ext.app_dependencies;
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 30
     buildToolsVersion "29.0.2"
 
     signingConfigs {
@@ -65,7 +64,6 @@ android {
          * you can use multiDex and install it in your ApplicationLifeCycle implement
          */
         multiDexEnabled true
-        multiDexKeepProguard file("tinker_multidexkeep.pro")
 
 
         /**
@@ -119,7 +117,7 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled true
+            minifyEnabled false
             signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), project.file('proguard-rules.pro')
         }
@@ -127,6 +125,7 @@ android {
             debuggable true
             minifyEnabled false
             signingConfig signingConfigs.debug
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), project.file('proguard-rules.pro')
         }
     }
 
@@ -192,7 +191,6 @@ dependencies {
         String[] all = v.split("_");
         for (int i = 0; i < all.size(); i++) {
             v = all[i]
-            println v + "___________" + k
             if (v.equals("implementation")) {
                 implementation k
             } else if (v.equals("implementationproject")) {

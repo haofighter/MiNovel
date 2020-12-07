@@ -101,21 +101,21 @@ public class SystemConfigUtil {
         }
     }
 
-    public void creatNotification() {
-        NotificationManager notificationManager = (NotificationManager) AppContext.application.getSystemService(Context.NOTIFICATION_SERVICE);
+    public Notification creatNotification(Context context) {
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             String channelId = "whatever"; //根据业务执行
             String channelName = "whatever conent"; //这个是channelid 的解释，在安装的时候会展示给用户看
             int importance = NotificationManager.IMPORTANCE_HIGH;
             NotificationChannel notificationChannel = new NotificationChannel(channelId, channelName, importance);
             notificationManager.createNotificationChannel(notificationChannel);
-            notification = new Notification.Builder(AppContext.application, "whatever");
+            notification = new Notification.Builder(context, "whatever");
         } else {
-            notification = new Notification.Builder(AppContext.application);
+            notification = new Notification.Builder(context);
         }
         String title = "暂无阅读历史";
         String content = "";
-        Intent intent = new Intent(AppContext.application, WelcomeActivity.class);
+        Intent intent = new Intent(context, WelcomeActivity.class);
         List<ReadInfo> readInfos = DBManage.checkedAllReadInfo();
         if (readInfos.size() > 0) {
             try {
@@ -123,7 +123,7 @@ public class SystemConfigUtil {
                 title = novelIntroduction.getNovelName();
                 NovelChapter chapter = DBManage.checkNovelChaptterByUrl(readInfos.get(0).getNovelChapterUrl());
                 content = chapter.getChapterName();
-                intent = new Intent(AppContext.application, NovelDetailActivity.class);
+                intent = new Intent(context, NovelDetailActivity.class);
                 intent.putExtra("novelId", novelIntroduction.getNovelChapterListUrl());
             } catch (Exception e) {
 
@@ -131,14 +131,15 @@ public class SystemConfigUtil {
         }
 
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(AppContext.application, 0, intent, 0);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
         notification.setContentTitle(title)  //设置标题
                 .setContentText(content) //设置内容
 //                .setWhen(System.currentTimeMillis())  //设置时间
                 .setSmallIcon(R.mipmap.icon_shuji_black)  //设置小图标
                 .setContentIntent(pendingIntent)
-                .setLargeIcon(BitmapFactory.decodeResource(AppContext.application.getResources(), R.mipmap.icon_shuji_black));
+                .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.icon_shuji_black));
         notificationManager.notify(0, notification.build());
+        return notification.build();
     }
 }
 

@@ -33,12 +33,60 @@
 
 -keep  class * extends  androidx.appcompat.app.AppCompatActivity{ *; }
 
--keep enum org.greenrobot.eventbus.ThreadMode { *; }
--keep  com.hao.minovel.spider.data.DaoMaster{*;}
--keep  com.hao.minovel.spider.data.DaoSession{*;}
 
+-keep class org.greenrobot.greendao.**{*;}
+-keepclassmembers class * extends org.greenrobot.greendao.AbstractDao { public static java.lang.String TABLENAME; }
+-keep class **$Properties
+
+-keep enum org.greenrobot.eventbus.ThreadMode { *; }
+-keep class com.hao.minovel.spider.data.*
+-keep class com.hao.minovel.db.*
+-keep class com.hao.minovel.moudle.entity.*
+-keep class com.hao.minovel.spider.data.*
+-keep class com.hao.minovel.view.minovelread.*
+-keep class **Dao
 
 # And if you use AsyncExecutor:
 -keepclassmembers class * extends org.greenrobot.eventbus.util.ThrowableFailureEvent {
     <init>(java.lang.Throwable);
 }
+
+
+
+
+
+
+#tinker multidex keep patterns:
+-keep public class * implements com.tencent.tinker.entry.ApplicationLifeCycle {
+    <init>(...);
+    void onBaseContextAttached(android.content.Context);
+}
+
+-keep public class com.tencent.tinker.entry.ApplicationLifeCycle {
+    *;
+}
+
+-keep public class * extends com.tencent.tinker.loader.TinkerLoader {
+    <init>(...);
+}
+
+-keep public class * extends android.app.Application {
+     <init>();
+     void attachBaseContext(android.content.Context);
+}
+
+-keep class com.tencent.tinker.loader.TinkerTestAndroidNClassLoader {
+    <init>(...);
+}
+
+#your dex.loader patterns here
+-keep class com.hao.minovel.tinker.app.App {
+    <init>(...);
+}
+
+-keep class com.tencent.tinker.loader.* {
+    <init>(...);
+}
+
+-keep class android.support.test.internal** { *; }
+-keep class org.junit.* { *; }

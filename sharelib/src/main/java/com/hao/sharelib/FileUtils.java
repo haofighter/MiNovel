@@ -3,6 +3,7 @@ package com.hao.sharelib;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
+import android.os.Environment;
 import android.util.Log;
 
 import java.io.BufferedOutputStream;
@@ -363,4 +364,23 @@ public class FileUtils {
     }
 
 
+    /**
+     * 获取Cache目录
+     *
+     * @param context context
+     * @return File
+     */
+    public static File getCacheDir(Context context) {
+        return context.getExternalCacheDir();
+    }
+    /**
+     * 获取Cache目录 Movie
+     *
+     * @param context context
+     * @return File
+     */
+    public static File getCacheMovieDir(Context context) {
+        String dir = Environment.DIRECTORY_MOVIES;
+        return new File(getCacheDir(context), dir);
+    }
 }

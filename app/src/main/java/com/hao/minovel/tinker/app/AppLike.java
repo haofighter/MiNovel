@@ -39,7 +39,7 @@ public class AppLike extends DefaultApplicationLike {
     private void init(Application application) {
         Router.init(application);
         SkinManager.init(application);
-        SystemConfigUtil.getInstance().creatNotification();
+//        SystemConfigUtil.getInstance().creatNotification();
         TypeFaceUtils.init(application);
         CrashTools.init(application);
     }
