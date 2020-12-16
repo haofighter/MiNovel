@@ -34,50 +34,11 @@ public class MainActivity extends AppCompatActivity {
         load_test = findViewById(R.id.load_test);
         initView();
         new ProxyTest().testProxy(this);
-        proxyStartActtivity();
+        ProxyUtils.proxyStartActtivity(this);
         startActivity(new Intent(this, SecondActivity.class));
     }
 
-    private void proxyStartActtivity() {
-/**
- * Activity的跳转
- * startActivity
- * ->startActivityForResult
- * ->mInstrumentation.execStartActivity
- * ->ActivityTaskManager.getService().startActivity
- *
- * ActivityTaskManager.getService()是一个实现了IActivityTaskManager的静态对象
- * 可以使用动态代理及反射 将这个对象替换为代理对象
- */
-        try {
-            Class ActivityTaskManager = Class.forName("android.app.ActivityTaskManager");
-            Field IActivityTaskManagerSingleton = ActivityTaskManager.getField("IActivityTaskManagerSingleton");
-            IActivityTaskManagerSingleton.setAccessible(true);
-            //获取到系统中的单例对象
-            Object singleton = IActivityTaskManagerSingleton.get(null);
 
-            //从单例中获取到IActivityTaskManager对象
-            Class Singleton = Class.forName("android.util.Singleton");
-            Field IActivityTaskManager = Singleton.getDeclaredField("mInstance");
-            IActivityTaskManager.setAccessible(true);
-            Object iActivityTaskManagerInstance = IActivityTaskManager.get(singleton);
-
-            Object iActivityTaskManagerInstanceProxy = Proxy.newProxyInstance(getClassLoader(), new Class[]{Class.forName("android.app.IActivityTaskManager")}, new InvocationHandler() {
-                        @Override
-                        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-                            Log.i("日志", "代理对象替换成功");
-                            return method.invoke(iActivityTaskManagerInstance, args);
-                        }
-                    }
-            );
-
-            IActivityTaskManagerSingleton.set(singleton, iActivityTaskManagerInstanceProxy);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-
-    }
 
     private void initView() {
         load_date.setOnClickListener(new View.OnClickListener() {

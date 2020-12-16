@@ -54,6 +54,7 @@ class StackActivity : MiMuneActivity(), View.OnClickListener {
     override fun initView(v: View?) {
         super.initView(v)
         setView()
+
     }
 
     private fun setView() {

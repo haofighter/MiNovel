@@ -139,6 +139,7 @@ android {
             dirs 'libs'
         }
     }
+    ndkVersion '21.3.6528147'
 
 
 }
@@ -172,8 +173,8 @@ def buildWithTinker() {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    testImplementation 'junit:junit:4.12'
-    implementation "androidx.appcompat:appcompat:1.1.0"
+    testImplementation 'junit:junit:4.13.1'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation "androidx.multidex:multidex:2.0.1"
     api("com.tencent.tinker:tinker-android-lib:${TINKER_VERSION}") { changing = true }
 
