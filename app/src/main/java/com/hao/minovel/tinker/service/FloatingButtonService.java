@@ -3,21 +3,30 @@ package com.hao.minovel.tinker.service;
 import android.app.Service;
 import android.content.Intent;
 import android.graphics.PixelFormat;
+import android.graphics.SurfaceTexture;
 import android.hardware.display.DisplayManager;
 import android.hardware.display.VirtualDisplay;
+import android.media.AudioManager;
+import android.media.MediaCodec;
+import android.media.MediaCodecInfo;
+import android.media.MediaFormat;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.media.projection.MediaProjection;
 import android.media.projection.MediaProjectionManager;
 import android.os.Build;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
+import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.TextureView;
 import android.view.View;
 import android.view.WindowManager;
 
@@ -30,7 +39,9 @@ import com.hao.sharelib.FileUtils;
 import com.hao.suspensionwindow.R;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Objects;
+import java.util.concurrent.Executors;
 
 
 public class FloatingButtonService extends Service {
@@ -49,7 +60,6 @@ public class FloatingButtonService extends Service {
     public void onCreate() {
         super.onCreate();
         layout = LayoutInflater.from(getApplicationContext()).inflate(R.layout.show_top_window, null);
-
         isStarted = true;
         windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
         layoutParams = new WindowManager.LayoutParams();
@@ -63,8 +73,8 @@ public class FloatingButtonService extends Service {
         layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
         layoutParams.width = (int) (200 * getResources().getDisplayMetrics().density);
         layoutParams.height = (int) (360 * getResources().getDisplayMetrics().density);
-        layoutParams.x = 0;
-        layoutParams.y = 0;
+        layoutParams.x = layout.getMeasuredWidth();
+        layoutParams.y = layout.getMeasuredHeight();
     }
 
     @Nullable
@@ -82,6 +92,7 @@ public class FloatingButtonService extends Service {
         Intent mResultData = intent.getParcelableExtra("data");
         MediaProjectionManager mMediaProjectionManager = (MediaProjectionManager) getSystemService(MEDIA_PROJECTION_SERVICE);
         mediaProjection = mMediaProjectionManager.getMediaProjection(mResultCode, Objects.requireNonNull(mResultData));
+        createMediaRecorder();
         showFloatingWindow();
         return super.onStartCommand(intent, flags, startId);
     }
@@ -117,6 +128,30 @@ public class FloatingButtonService extends Service {
                 });
                 layout.setOnTouchListener(new FloatingOnTouchListener());
 
+                layout.findViewById(R.id.close).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        windowManager.removeView(layout);
+                        FloatingButtonService.this.stopSelf();
+                    }
+                });
+
+
+//                TextureView textureView = layout.findViewById(R.id.surfaceview);
+//                textureView.post(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        Surface surface = new Surface(textureView.getSurfaceTexture());
+//                        if (virtualDisplayMediaRecorder == null) {
+//                            virtualDisplayMediaRecorder = mediaProjection.createVirtualDisplay("MediaRecorder",
+//                                    720, 1080, 1, DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR,
+//                                    surface, null, null);
+//                        } else {
+//                            virtualDisplayMediaRecorder.setSurface(surface);
+//                        }
+//                    }
+//                });
+
             }
         }
     }
@@ -151,6 +186,7 @@ public class FloatingButtonService extends Service {
             return false;
         }
     }
+
 
     String filePath;
 
@@ -199,8 +235,6 @@ public class FloatingButtonService extends Service {
         } else {
             virtualDisplayMediaRecorder.setSurface(mediaRecorder.getSurface());
         }
-
-
     }
 
 
@@ -211,7 +245,6 @@ public class FloatingButtonService extends Service {
     public void startRecording() {
         createMediaRecorder();
         mediaRecorder.start();
-
     }
 
     /**
