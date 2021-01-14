@@ -72,7 +72,7 @@ public class FloatingButtonService extends Service {
         layoutParams.gravity = Gravity.LEFT | Gravity.TOP;
         layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
         layoutParams.width = (int) (200 * getResources().getDisplayMetrics().density);
-        layoutParams.height = (int) (360 * getResources().getDisplayMetrics().density);
+        layoutParams.height = (int) (200 * getResources().getDisplayMetrics().density);
         layoutParams.x = layout.getMeasuredWidth();
         layoutParams.y = layout.getMeasuredHeight();
     }
@@ -92,7 +92,7 @@ public class FloatingButtonService extends Service {
         Intent mResultData = intent.getParcelableExtra("data");
         MediaProjectionManager mMediaProjectionManager = (MediaProjectionManager) getSystemService(MEDIA_PROJECTION_SERVICE);
         mediaProjection = mMediaProjectionManager.getMediaProjection(mResultCode, Objects.requireNonNull(mResultData));
-        createMediaRecorder();
+
         showFloatingWindow();
         return super.onStartCommand(intent, flags, startId);
     }
@@ -102,6 +102,14 @@ public class FloatingButtonService extends Service {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (Settings.canDrawOverlays(this)) {
                 windowManager.addView(layout, layoutParams);
+                layout.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        layoutParams.width = layout.getWidth();
+                        layoutParams.height =layout.getHeight();
+                    }
+                });
+
                 layout.findViewById(R.id.start).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -136,22 +144,21 @@ public class FloatingButtonService extends Service {
                     }
                 });
 
-
-//                TextureView textureView = layout.findViewById(R.id.surfaceview);
-//                textureView.post(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        Surface surface = new Surface(textureView.getSurfaceTexture());
-//                        if (virtualDisplayMediaRecorder == null) {
-//                            virtualDisplayMediaRecorder = mediaProjection.createVirtualDisplay("MediaRecorder",
-//                                    720, 1080, 1, DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR,
-//                                    surface, null, null);
-//                        } else {
-//                            virtualDisplayMediaRecorder.setSurface(surface);
-//                        }
-//                    }
-//                });
-
+                TextureView textureView = layout.findViewById(R.id.surfaceview);
+                textureView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Surface surface = new Surface(textureView.getSurfaceTexture());
+                        if (virtualDisplayMediaRecorder == null) {
+                            createMediaRecorder();
+                            virtualDisplayMediaRecorder = mediaProjection.createVirtualDisplay("MediaRecorder",
+                                    textureView.getMeasuredWidth(), textureView.getMeasuredHeight(), 1, DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR,
+                                    surface, null, null);
+                        } else {
+                            virtualDisplayMediaRecorder.setSurface(surface);
+                        }
+                    }
+                });
             }
         }
     }
@@ -190,7 +197,7 @@ public class FloatingButtonService extends Service {
 
     String filePath;
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @RequiresApi(api = Build.VERSION_CODES.M)
     private void createMediaRecorder() {
         filePath = "MediaRecorder_" + System.currentTimeMillis() + ".mp4";
         int width = 720;
@@ -213,6 +220,7 @@ public class FloatingButtonService extends Service {
         mediaRecorder.setVideoFrameRate(30);
         mediaRecorder.setVideoEncodingBitRate(5 * width * height);
 
+
         mediaRecorder.setOnErrorListener(new MediaRecorder.OnErrorListener() {
             @Override
             public void onError(MediaRecorder mr, int what, int extra) {
@@ -228,13 +236,13 @@ public class FloatingButtonService extends Service {
             e.printStackTrace();
         }
 
-        if (virtualDisplayMediaRecorder == null) {
-            virtualDisplayMediaRecorder = mediaProjection.createVirtualDisplay("MediaRecorder",
-                    width, height, densityDpi, DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR,
-                    mediaRecorder.getSurface(), null, null);
-        } else {
-            virtualDisplayMediaRecorder.setSurface(mediaRecorder.getSurface());
-        }
+//        if (virtualDisplayMediaRecorder == null) {
+//            virtualDisplayMediaRecorder = mediaProjection.createVirtualDisplay("MediaRecorder",
+//                    width, height, densityDpi, DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR,
+//                    mediaRecorder.getSurface(), null, null);
+//        } else {
+//            virtualDisplayMediaRecorder.setSurface(mediaRecorder.getSurface());
+//        }
     }
 
 
@@ -243,7 +251,6 @@ public class FloatingButtonService extends Service {
      */
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public void startRecording() {
-        createMediaRecorder();
         mediaRecorder.start();
     }
 
